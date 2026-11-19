@@ -90,3 +90,24 @@ Context: enabled actions must preserve existing data and remain testable.
 Decision: Start retains history/focuses practice, Stop retains history, Clear preserves state/practice text, Export remains disabled. App supplies TimeProvider timestamps; Core only stores supplied values.
 Rationale: make collection and time ownership explicit, with deterministic native timestamp tests.
 Consequences: current data is memory-only and discarded at process close. Canceled closing leaves recording stopped. Inactive timestamps/rows are never backfilled.
+
+## ADR-014 — Deterministic TSV text — 2026-11-19
+
+Context: exported records must preserve time/offset/order and open in ordinary editors.
+Decision: Core formats a short header/count and tab-separated Timestamp/EventType/KeyName rows; invariant milliseconds/offset, CRLF and a final newline. App writes strict UTF-8 without BOM.
+Rationale: no runtime/machine metadata or typed-text reconstruction is needed. Core key-name validation already excludes tabs/newlines.
+Consequences: empty formatting produces headers with count zero, while UI export requires records. No parser/import or extra package.
+
+## ADR-015 — Local staged commit and path scope — 2026-11-19
+
+Context: failed exports must not truncate existing files and cannot deliver to a network destination.
+Decision: validate normal local .txt paths/drive metadata; reject UNC/device/network drives, invalid/reserved names and directory/file reparse redirects. Stage with CreateNew in the selected folder, flush/close, then [File.Move with overwrite](https://learn.microsoft.com/en-us/dotnet/api/system.io.file.move?view=net-10.0).
+Rationale: formatting/write errors occur before commit; only an owned temporary is cleaned up.
+Consequences: no folder creation or delete-before-replace. Linked/cloud-placeholder destinations may be unsupported. No guarantee against power loss, concurrent path changes or OS-managed synchronization; cleanup errors are surfaced and a temporary can remain if removal fails.
+
+## ADR-016 — Stop-before-dialog and synchronous export — 2026-11-19
+
+Context: owned modal dialogs must not depend on deactivation timing, and tests should isolate selection from disk work.
+Decision: stop explicitly, take a stable snapshot and disable actions before calling an owned/disposed picker. Use two small App interfaces for selection/write tests. Keep short local I/O synchronous with a busy guard and bounded separate feedback.
+Rationale: preserve simple lifetime/state behavior and avoid background writes after closing. [OverwritePrompt](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog.overwriteprompt?view=windowsdesktop-10.0) provides normal user confirmation.
+Consequences: cancel/error/success retain records and remain stopped; Start is always explicit. A closed owner after selection cannot write. Large exports may briefly pause UI. Native save/overwrite manual acceptance remains pending; substituted-dialog tests are labeled separately.

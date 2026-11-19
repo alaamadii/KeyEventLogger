@@ -20,7 +20,7 @@ public sealed class MainFormTests
             Assert.Equal("0 events", Count(form));
             Assert.Empty(Events(form).Items);
             Assert.True(WindowsUi.Find<Label>(form, "emptyState").Visible);
-            Assert.Contains("Stage 03", WindowsUi.Find<Label>(form, "featureAvailability").Text);
+            Assert.Contains("Export TXT stops", WindowsUi.Find<Label>(form, "featureAvailability").Text);
             Assert.Contains("active", WindowsUi.Find<Label>(form, "scopeNotice").Text);
 
             foreach (var name in new[] { "startButton", "stopButton", "clearButton", "exportButton" })
@@ -79,7 +79,7 @@ public sealed class MainFormTests
             }, Rows(form));
             Assert.Equal("a", practice.Text);
             Assert.Equal("2 events", Count(form));
-            Assert.False(Button(form, "exportButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
         }, clock);
     }
 
@@ -267,7 +267,7 @@ public sealed class MainFormTests
     }
 
     [Fact]
-    public void NativeTabRemainsNavigationAndExportStaysUnavailable()
+    public void NativeTabRemainsNavigationAndEmptyExportStaysDisabled()
     {
         WindowsUi.Run(form =>
         {

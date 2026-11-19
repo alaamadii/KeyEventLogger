@@ -10,8 +10,8 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 | --- | --- | --- | --- |
 | 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Merged in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) on 2026-11-19 |
 | 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Merged in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) on 2026-11-19 |
-| 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Published in [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3); owner review pending |
-| 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Planned |
+| 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Merged in [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3) on 2026-11-19 |
+| 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Published in [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4); owner review pending |
 | 04 | docs/final-submission | Usability, regression QA, authentic screenshots and final checklist | Planned |
 
 ## Stage 00 — Initialization
@@ -49,13 +49,19 @@ Progress on 2026-11-19: immutable records/session, explicit controls, practice-o
 
 - [x] Behavior implemented and locally validated without export.
 - [x] Event policies, focus gates, actual captures and limitations documented.
-- [ ] Owner accepts the recording PR; physical input/desktop-focus checks remain pending.
+- [x] Owner merged PR #3; physical input/desktop-focus checks remain pending.
 
 ## Stage 03 — Local TXT export
 
 Implement a deterministic format and explicit SaveFileDialog destination. Export a stable record snapshot, handle cancellation as a normal action, and report file errors without losing records or crashing. Do not add autosave, transmission or export-on-exit.
 
 Acceptance: assert formatting and Unicode/timestamp consistency, cancellation and representative failures. Use isolated test directories and synthetic input. Keep exports out of Git.
+
+Progress on 2026-11-19: formatter, local staged writer, owned SaveFileDialog, snapshot-before-dialog stop, feedback and retry are implemented. The full local check passes 72 cases (26 Core, 46 App). The real dialog was opened/canceled; save/overwrite automation was not reliable and is not counted as a pass. Real I/O and UI with dialog substitutes are independently verified.
+
+- [x] Export implemented without automatic saving or network collection.
+- [x] Format, failure retention, evidence and pending native/manual checks documented.
+- [ ] Owner accepts the export PR. Stage 04 has not begun.
 
 ## Stage 04 — QA and submission
 

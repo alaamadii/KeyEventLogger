@@ -9,17 +9,17 @@ Source reviewed on **2026-11-19**: the supplied `YMH219_Ek_Uygulama_Odevleri_Ogr
 | FR-001 | Local keyboard events | Key names and times shown only for input within the active application | 02 implemented, native controlled-window tests; physical desktop check pending |
 | FR-002 | Start/Stop | Explicit controls govern recording, with no appends while stopped | 02 implemented/tested |
 | FR-003 | Clear | Clear removes displayed records | 02 implemented/tested; state/practice text retained |
-| FR-004 | TXT export | User can save records to a local text file | 03, planned |
+| FR-004 | TXT export | User can save records to a local text file | 03 implemented, real I/O and UI-substitute tests; native save/overwrite review pending |
 | FR-005 | Status | Visible recording state accurately reflects actual capture | 02 actual recording/stopped status and count implemented/tested |
-| NFR-001 | Desktop/OOP | Working C#/.NET WinForms app with clear responsibilities and error handling | 02 UI/session/values implemented/tested; export errors pending |
-| NFR-002 | File resilience | Export errors are reported without an application crash | 03, planned |
+| NFR-001 | Desktop/OOP | Working C#/.NET WinForms app with clear responsibilities and error handling | 03 recording/format/export separation implemented/tested |
+| NFR-002 | File resilience | Export errors are reported without an application crash | 03 real failure/retention and UI retry tests passed |
 | SEC-001 | Active-window scope | Other applications and inactive/minimized periods yield no recorded input | 02 gates/stop behavior tested with owned windows; external-app physical check pending |
 | SEC-002 | No system collection | No global hooks, hidden/background operation or Windows autostart | Required throughout |
 | SEC-003 | No credential collection | No password/credential capture or other-app collection | Required throughout |
 | SEC-004 | No transmission | Recorded events are never sent across a network | Required throughout |
 | SUB-001 | Public separate repository | Source, .gitignore and README accessible on student's own account | Existing public KeyEventLogger selected; delivery tracked separately |
 | SUB-002 | README | Purpose, technologies/packages, run steps, features, limitations and student details | Draft implemented; owner exception below |
-| SUB-003 | Screenshots | At least two authentic screenshots embedded in final README | Two authentic Stage 02 captures embedded; owner/final refresh pending |
+| SUB-003 | Screenshots | At least two authentic screenshots embedded in final README | Two authentic Stage 03 captures embedded; controlled picker disclosed, owner review pending |
 | SUB-004 | Meaningful history | Commits represent actual incremental work | Required throughout |
 | SUB-005 | Second computer | Project opens/runs on another computer | 04, pending |
 | SUB-006 | Timely delivery | Final work on GitHub by 2026-11-30 23:59 | Pending final delivery |
@@ -44,9 +44,9 @@ Key-count/frequency statistics and date/time filtering are optional in the PDF. 
 - [x] Stage 01 interface merged in PR #2.
 - [x] Stage 02 recording controls, practice-only events and session tests; owner review pending.
 - [x] Development commands, package versions and exclusions documented.
-- [ ] FR-001 through FR-005 implemented and tested.
+- [x] FR-001 through FR-005 implemented with automated coverage; native/manual and owner acceptance remain pending.
 - [ ] Active-window/privacy boundaries verified with real focus changes.
-- [ ] TXT success/cancel/failure checks complete.
+- [x] TXT success/cancel/failure covered with real I/O and dialog substitutes; native save/overwrite review pending.
 - [ ] Two real screenshots and final README accepted.
 - [ ] Second-computer check and owner sign-off.
 - [ ] Final reviewed work published before deadline.

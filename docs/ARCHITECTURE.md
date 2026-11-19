@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented through Stage 02
+## Implemented through Stage 03
 
 App targets net10.0-windows and owns the STA entry point, PerMonitorV2 DPI, controls, local keyboard events and lifecycle. Core targets net10.0 and owns immutable event values and recording state. Core.Tests and App.Tests cover their respective behavior.
 
@@ -16,7 +16,7 @@ Arrival order is retained, including repeated identical records and backward clo
 
 ## App event path
 
-MainForm.cs constructs the native layout. MainForm.Recording.cs is another part of the same Form, grouping control references, event wiring and lifecycle. No separate presenter or export abstraction is introduced.
+MainForm.cs constructs the native layout. MainForm.Recording.cs is another part of the same Form, grouping control references, event wiring and lifecycle. No separate presenter is introduced; export ownership is described below.
 
 Only practiceText.KeyDown/KeyUp are subscribed. A delivered event is accepted when the session is recording, WinForms has activated this Form, the Form contains focus, Practice text is focused, and the window is neither minimized nor closing/disposed. Other controls have no recording subscriptions.
 
@@ -32,7 +32,7 @@ Activated/Deactivate track window activity. Deactivation stops the session; resi
 
 Closing stops collection before native shutdown. A canceled close leaves recording stopped and permits an explicit new Start. Disposal stops the session and removes local input/button subscriptions before disposing controls and owned fonts.
 
-Start is enabled while stopped, Stop while recording, Clear when records exist; all are disabled while closing. Export remains disabled. Status explains state in text; its accessible description is updated with it.
+Start is enabled while stopped, Stop while recording, Clear when records exist; all are disabled while closing. Export is enabled when records exist and no close/export is in progress. Export feedback is separate from recording status.
 
 ## Delivery semantics
 
@@ -46,10 +46,20 @@ The resizable root TableLayoutPanel retains automatic instruction/status rows an
 
 The 96-DPI design client remains 960 × 720, minimum design window 820 × 680. Actual 120-DPI captures have a 1200 × 900 client and 1218 × 947 window. Minimum/wide state layouts are checked; physical 100%/150% transitions remain pending.
 
-Form-owned point-unit fonts are disposed; system colors, native focus, accessible names and distinct mnemonics remain. Practice label uses Alt+I, group Alt+P, event group Alt+E, Start Alt+S, Stop Alt+T, Clear Alt+C; Export Alt+X remains disabled.
+Form-owned point-unit fonts are disposed; system colors, native focus, accessible names and distinct mnemonics remain. Practice label uses Alt+I, group Alt+P, event group Alt+E, Start Alt+S, Stop Alt+T, Clear Alt+C; Export uses Alt+X when records are available.
 
-## Planned export — Stage 03 only
+## TXT export ownership — Stage 03
 
-A future explicit action will take a stable snapshot, ask for a local destination, and format/write records with recoverable errors. Dialog focus loss must stop recording. Cancellation is normal; no automatic save or network delivery is permitted.
+TextLogFormatter in Core creates a deterministic header/count and tab-separated rows with CRLF and a final newline. It has no encoding, clock, file or dialog dependency. App supplies strict UTF-8 without BOM.
 
-File format, encoding, replacement policy and I/O service are not implemented. Statistics/filtering are deferred. See [decisions](DECISIONS.md), [requirements](REQUIREMENTS.md) and [testing](TESTING.md).
+MainForm.Export groups the explicit export action. It sets a busy guard, stops recording before selection and obtains RecordingSession.GetSnapshot. IExportDestinationPicker separates modal selection from UI tests; its production implementation owns/disposes SaveFileDialog with TXT/default extension, overwrite confirmation and path validation. ITextLogExporter separates file writing from dialog/lifetime tests; production is TextLogExporter.
+
+LocalExportPath accepts normal fully qualified local-drive .txt paths. It rejects UNC/device paths, mapped network/unsupported drives, invalid/reserved names, and reparse-point directories/files to avoid redirection. It creates no destination folders. DriveInfo is real in production; a small optional drive-type delegate allows network-drive policy tests without network connections.
+
+TextLogExporter formats the supplied snapshot before staging. A CreateNew, same-folder GUID temporary is written with strict UTF-8, flushed and closed, then File.Move(overwrite: true) commits it. No delete-before-replace occurs. The finally block deletes only a temporary successfully created by that operation. Cleanup failures propagate as errors; cleanup is best effort, not a power-loss guarantee.
+
+MainForm displays success only after Export returns. Cancellation skips writing. Recoverable path/I/O/access/encoding/native-dialog errors produce separate nonmodal feedback, preserving records/count/practice text. All outcomes remain stopped. Long feedback is bounded with ellipsis, full accessible description and a Form-owned/disposed tooltip.
+
+Export is synchronous, with actions disabled while selection/write is active. Start/Clear/reentrant Export are guarded; a closed/disposed owner after selection cannot start a write or receive feedback updates. No asynchronous work outlives the window. Large logs/slow local drives can pause the UI.
+
+No persistent sessions, autosave, import, statistics/filtering or network delivery are added. See [export contract](EXPORT.md), [decisions](DECISIONS.md) and [testing](TESTING.md).

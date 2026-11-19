@@ -28,13 +28,14 @@ public sealed partial class MainForm
         startButton.Click += StartClicked;
         stopButton.Click += StopClicked;
         clearButton.Click += ClearClicked;
+        exportButton.Click += ExportClicked;
         recordingReady = true;
         RefreshPresentation();
     }
 
     private void StartClicked(object? sender, EventArgs e)
     {
-        if (closing || !windowActive || !ContainsFocus || WindowState == FormWindowState.Minimized)
+        if (closing || exportInProgress || !windowActive || !ContainsFocus || WindowState == FormWindowState.Minimized)
         {
             return;
         }
@@ -49,6 +50,7 @@ public sealed partial class MainForm
 
     private void ClearClicked(object? sender, EventArgs e)
     {
+        if (exportInProgress || closing) { return; }
         session.Clear();
         eventList.Items.Clear();
         RefreshPresentation();
@@ -96,10 +98,10 @@ public sealed partial class MainForm
             ? "Recording — practice area only."
             : stoppedReason;
         recordingStatus.AccessibleDescription = recordingStatus.Text;
-        startButton.Enabled = !session.IsRecording && !closing;
-        stopButton.Enabled = session.IsRecording && !closing;
-        clearButton.Enabled = session.Count > 0 && !closing;
-        exportButton.Enabled = false;
+        startButton.Enabled = !session.IsRecording && !closing && !exportInProgress;
+        stopButton.Enabled = session.IsRecording && !closing && !exportInProgress;
+        clearButton.Enabled = session.Count > 0 && !closing && !exportInProgress;
+        exportButton.Enabled = session.Count > 0 && !closing && !exportInProgress;
         eventCount.Text = string.Create(CultureInfo.InvariantCulture, $"{session.Count} {(session.Count == 1 ? "event" : "events")}");
         emptyState.Visible = session.Count == 0;
     }
@@ -163,5 +165,6 @@ public sealed partial class MainForm
         startButton.Click -= StartClicked;
         stopButton.Click -= StopClicked;
         clearButton.Click -= ClearClicked;
+        exportButton.Click -= ExportClicked;
     }
 }

@@ -15,10 +15,10 @@ The PDF recommends YMH219-KeyEventLogger; the owner selected [alaamadii/KeyEvent
 - [x] SDK policy, local commands, VS Code configuration and exclusions.
 - [x] Requirements, architecture, decisions and completion plan.
 - [x] Stage 02 local recording/status/start/stop/clear implemented with 38 passing cases; owner/physical acceptance pending.
-- [ ] TXT export success, cancellation and error handling complete.
+- [x] Stage 03 export success/cancel/failure implemented with 72 total cases; native/manual review pending.
 - [ ] Recording boundaries verified.
 - [ ] Final exact-head local/hosted checks pass.
-- [x] Two authentic Stage 02 recording/stopped screenshots embedded in README; final refresh/owner approval pending.
+- [x] Two authentic Stage 03 recording/export screenshots embedded in README; picker substitution disclosed and owner approval pending.
 - [ ] README accurately describes final behavior and limitations.
 - [ ] Final diff excludes generated output, personal data and captured logs.
 - [ ] Owner accepts final PR.
@@ -29,13 +29,13 @@ The PDF recommends YMH219-KeyEventLogger; the owner selected [alaamadii/KeyEvent
 | --- | --- | --- |
 | Recording lifecycle | Actual key input, start/stop/clear, repeats/modifiers | Not performed |
 | Focus scope | Switch to another app/minimize; no events; return requires Start | Not performed |
-| Export | Destination, cancel, successful file, representative errors | Not performed |
+| Export | Native destination/save/overwrite/cancel/error review | Native open/cancel scripted; file/UI logic tested separately; human save/overwrite review pending |
 | Display/debugging | Physical scaling and VS Code F5 | Not performed |
 | Second computer | Date, Windows/SDK, commit and results | Not performed |
-| Screenshots | Authentic captures and owner approval | Two synthetic-demo actual Stage 02 captures included; final refresh/owner approval pending |
+| Screenshots | Authentic captures and owner approval | Two actual Stage 03 captures with controlled picker and actual writer; owner approval pending |
 
 ## Delivery
 
 The course deadline is 2026-11-30 at 23:59; later commits may count as late. Working schedules use Asia/Riyadh; confirm the institution's timezone if different. The owner submits only their GitHub profile link through Classroom. The assistant must not submit or merge without explicit authorization.
 
-Stages 00–02 provide the foundation, interface and local recording. Export and final acceptance remain outstanding. CI success does not replace manual acceptance.
+Stages 00–03 implement recording and explicit export. Stage 04 final QA and owner submission acceptance remain outstanding. CI success does not replace manual acceptance.

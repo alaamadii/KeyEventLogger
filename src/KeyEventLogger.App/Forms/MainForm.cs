@@ -1,3 +1,5 @@
+using KeyEventLogger.App.Export;
+
 namespace KeyEventLogger.App.Forms;
 
 public sealed partial class MainForm : Form
@@ -9,10 +11,18 @@ public sealed partial class MainForm : Form
     {
     }
 
-    public MainForm(TimeProvider timeProvider)
+    public MainForm(TimeProvider timeProvider) : this(timeProvider, new SaveFileDestinationPicker(), new TextLogExporter())
+    {
+    }
+
+    public MainForm(TimeProvider timeProvider, IExportDestinationPicker destinationPicker, ITextLogExporter textExporter)
     {
         ArgumentNullException.ThrowIfNull(timeProvider);
+        ArgumentNullException.ThrowIfNull(destinationPicker);
+        ArgumentNullException.ThrowIfNull(textExporter);
         clock = timeProvider;
+        this.destinationPicker = destinationPicker;
+        this.textExporter = textExporter;
         SuspendLayout();
         Text = "Key Event Logger";
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -22,7 +32,7 @@ public sealed partial class MainForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = SystemColors.Window;
         ForeColor = SystemColors.WindowText;
-        AccessibleDescription = "Educational keyboard-event recorder. Only practice-area events are collected after Start. Export is not implemented.";
+        AccessibleDescription = "Educational keyboard-event recorder. Only practice-area events are collected after Start. Export is an explicit local TXT operation.";
 
         titleFont = new Font(Font.FontFamily, 18F, FontStyle.Bold);
         emphasisFont = new Font(Font, FontStyle.Bold);
@@ -33,7 +43,7 @@ public sealed partial class MainForm : Form
             Dock = DockStyle.Fill,
             Padding = new Padding(24),
             ColumnCount = 1,
-            RowCount = 6,
+            RowCount = 7,
             TabStop = false
         };
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
@@ -71,12 +81,12 @@ public sealed partial class MainForm : Form
         stopButton = CreateActionButton("stopButton", "S&top", "Stop recording");
         clearButton = CreateActionButton("clearButton", "&Clear", "Clear recorded events");
         exportButton = CreateActionButton("exportButton", "Export T&XT", "Export TXT");
-        exportButton.AccessibleDescription = "Unavailable until Stage 03. No export or automatic saving.";
+        exportButton.AccessibleDescription = "Save a snapshot of recorded events to a local TXT file; recording will stop.";
         actions.Controls.AddRange([startButton, stopButton, clearButton, exportButton]);
         layout.Controls.Add(actions, 0, 2);
 
         var availability = CreateLabel("featureAvailability",
-            "Each delivered KeyDown / KeyUp is one event, including held-key repeats. Export TXT arrives in Stage 03.");
+            "Each delivered KeyDown / KeyUp is one event, including held-key repeats. Export TXT stops recording before choosing a file.");
         availability.Margin = new Padding(0, 8, 0, 16);
         layout.Controls.Add(availability, 0, 3);
 
@@ -107,6 +117,19 @@ public sealed partial class MainForm : Form
         scope.Margin = new Padding(0, 16, 0, 0);
         layout.Controls.Add(scope, 0, 5);
 
+        exportFeedback = new Label
+        {
+            Name = "exportFeedback",
+            Text = "No export yet. Choose Export TXT to save a snapshot.",
+            AccessibleName = "Export result",
+            AutoEllipsis = true,
+            Dock = DockStyle.Fill,
+            Height = Font.Height * 2 + 8,
+            Margin = new Padding(0, 12, 0, 0),
+            UseMnemonic = false
+        };
+        layout.Controls.Add(exportFeedback, 0, 6);
+
         Controls.Add(layout);
         ActiveControl = practiceText;
         BindRecording();
@@ -119,6 +142,7 @@ public sealed partial class MainForm : Form
         if (disposing)
         {
             ReleaseRecording();
+            exportFeedbackTip.Dispose();
         }
         base.Dispose(disposing);
         if (disposing)
@@ -185,7 +209,7 @@ public sealed partial class MainForm : Form
         label.UseMnemonic = true;
         label.TabIndex = 0;
         content.Controls.Add(label, 0, 0);
-        var hint = CreateLabel("practiceHint", "Press Start to record key events here. Nothing is saved.");
+        var hint = CreateLabel("practiceHint", "Press Start to record key events here. Only Export TXT writes a file.");
         hint.TabIndex = 2;
         hint.Margin = new Padding(0, 0, 0, 8);
         content.Controls.Add(hint, 0, 1);
