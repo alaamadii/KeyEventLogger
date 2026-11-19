@@ -96,3 +96,18 @@ Branch: feat/text-export.
 - Pushed implementation/tests 40845cb and documentation/captures 7977fe8 to feat/text-export; remote matched 7977fe8efc5e52242da130d16721bb90ad35df3b.
 - Opened [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4) targeting main. This follow-up records the actual link; exact final-head hosted results are recorded in its description.
 - Native/manual Save/overwrite and owner acceptance remain pending. No automatic merge, Stage 04 work, visibility change or Classroom action.
+
+## 2026-11-19 — Stage 04 final review preparation
+
+Branch: docs/final-submission.
+
+- Confirmed owner merge of PR #4 at 8e01e08, preserved the clean working tree/title, fast-forwarded main and created the final branch.
+- Reread the assignment PDF pages 1, 2–3 and 5, source/test responsibilities and evidence. Mapped required features to source/test links; no missing optional feature was implemented.
+- Doctor confirmed SDK 10.0.402 / WindowsDesktop 10.0.13 on Windows 10.0.22631. Baseline check passed restore/build/test/format: 26 Core + 46 App, zero failures/skips/build warnings/errors. Actual Release EXE title/Stopped/normal close exit 0 passed.
+- Made one improved bounded native-dialog attempt with UI Automation separated into a controller process, exact isolated target validation and owned cleanup. Dialog discovery was still unreliable, so no Save/overwrite pass or human acceptance is claimed.
+- No reproducible functional defect was established; application code/configuration/tests remain unchanged and no placeholder tests were added.
+- Added a source-linked CODE_GUIDE and precise owner procedures/evidence register. Retained authentic current screenshots because UI/source behavior is unchanged, preserving controlled-picker disclosure and hashes.
+- Owner physical keyboard/external-app focus/native Save/display/F5/accessibility, screenshot approval and second-computer evidence remain missing. Final PR must stay draft.
+- Validated 80 local targets across 13 Markdown files, five unchanged capture hashes, Core/API boundaries, narrow exclusions and a limited tracked-file credential-pattern scan with no matches. Public metadata remains public.
+- Published candidate 9254884ce285517ade1ea947af1defc3ae12c4bf was cloned into a fresh isolated directory: documented doctor/check passed with the same 72 cases, no failures/skips/build warnings/errors and clean formatting. The actual cloned EXE started Stopped and closed normally with exit 0; the clone stayed clean, without needing local configuration or build/run diagnostic helpers. This was the same computer, not a second Windows computer.
+- Anonymous HTTP 200 confirmed public metadata (private=false), candidate README/CODE_GUIDE and both current README images. Opened [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5); exact final-head hosted SHA/run/results are recorded in its description separately from the clean-checkout candidate. No automatic merge, visibility/license change or Classroom submission.

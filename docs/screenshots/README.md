@@ -33,3 +33,7 @@ All were captured on 2026-11-19 using target-window PrintWindow at 120 DPI, 1218
 ```
 
 Owner approval, physical display/input, F5 and another-computer checks remain pending. Never edit images to manufacture evidence; refresh images/provenance when behavior changes.
+
+## Stage 04 review
+
+The current images were visually reinspected and retained unchanged because the final review changes documentation only; recording rows, stopped/export feedback and controls remain readable in the original captures. Their source, capture date, controlled-picker method and hashes above remain authoritative. Re-reviewing these images does not imply owner approval or a new capture. Final display/keyboard/native-dialog acceptance remains separate.

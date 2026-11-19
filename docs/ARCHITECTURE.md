@@ -63,3 +63,7 @@ MainForm displays success only after Export returns. Cancellation skips writing.
 Export is synchronous, with actions disabled while selection/write is active. Start/Clear/reentrant Export are guarded; a closed/disposed owner after selection cannot start a write or receive feedback updates. No asynchronous work outlives the window. Large logs/slow local drives can pause the UI.
 
 No persistent sessions, autosave, import, statistics/filtering or network delivery are added. See [export contract](EXPORT.md), [decisions](DECISIONS.md) and [testing](TESTING.md).
+
+## Final audit boundary — Stage 04
+
+The final preparation reviews the existing design without adding runtime layers. CODE_GUIDE links the actual class/method paths, and REQUIREMENTS maps code/tests to criteria. Native dialog substitutes and script-owned windows do not establish physical desktop or owner acceptance. A fresh checkout on this machine does not satisfy another-computer testing. [Submission](SUBMISSION.md) remains the acceptance register.

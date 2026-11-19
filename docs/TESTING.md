@@ -1,6 +1,32 @@
 # Testing strategy and evidence
 
-## Current evidence — Stage 03, 2026-11-19
+## Current Stage 04 review — 2026-11-19
+
+| Check | Executed result |
+| --- | --- |
+| Baseline | PR #4 owner-merged; main 8e01e08 |
+| ./scripts/dev.ps1 doctor | SDK 10.0.402, Windows 10.0.22631, WindowsDesktop 10.0.13, Git available |
+| ./scripts/dev.ps1 check | Restore/Release build/test/format pass; 26 Core + 46 App = 72, zero failures/skips/build warnings/errors |
+| Actual production EXE | Correct title/Stopped state; normal main-window close exits 0 |
+| Native export follow-up | One improved, bounded external-controller attempt failed to discover the owned Save dialog reliably; not a passing Save/overwrite result |
+| Code/configuration | No changes; no reproducible application defect established in executed checks |
+| Screenshots | Current Stage 03 images retained because behavior/source is unchanged; controlled picker remains disclosed |
+| Documentation/repository | 80 local targets across 13 Markdown files, five unchanged capture hashes, Core/API boundaries, narrow exclusions and limited tracked-file credential scan passed |
+| Published clean checkout | 9254884ce285517ade1ea947af1defc3ae12c4bf: doctor/check pass; 26 Core + 46 App, zero failures/skips/build warnings/errors, formatting clean; actual cloned EXE title/Stopped and normal close exit 0 |
+| Anonymous public artifacts | HTTP 200 without credentials: repo metadata (private=false), candidate README/CODE_GUIDE and both current README images |
+| Final PR / hosted CI | [Draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5) records the exact final-head SHA, run and confirmed result separately from the clean-checkout candidate |
+
+The published candidate was cloned into a new isolated directory on the same Windows 10.0.22631 development computer, using SDK 10.0.402 / WindowsDesktop 10.0.13. The documented commands restored and built without inherited project output, local configuration or diagnostic helpers. A separate bounded observer launched the actual cloned executable and requested normal close. The clone's working tree remained clean. Later evidence-only documentation commits do not change code/configuration; their exact hosted results belong to PR #5. This is not second-computer, physical-input, native Save or F5 evidence.
+
+Source/PDF audit maps required behavior to code/tests in [REQUIREMENTS](REQUIREMENTS.md). Current checks cover session invariants, native synthetic Down/Up/repeat/modifier delivery, scope/stop gates, Clear/no backfill, cancel/retry/snapshot/closing, exact byte format and local file preservation. Existing real I/O and dialog-substitute tests remain distinct from actual native dialog acceptance.
+
+The revised diagnostic separated UI Automation into another process, validated the exact isolated destination, used deadlines and limited cleanup to its own helper windows/processes. It still could not reliably locate the Save dialog, so no native Save/overwrite result is inferred. No further unmodified hanging retries were made.
+
+Physical keyboard, switching to another desktop application, native Save/overwrite/error review, real 100%/150% and monitor transitions, F5, assistive technology/high contrast, a second Windows computer and screenshot approval have **not been supplied/performed**. The final PR remains draft for those owner checks; automated success does not accept Stage 04.
+
+See [precise owner steps and evidence fields](SUBMISSION.md) and the [source walkthrough](CODE_GUIDE.md). The historical records below are retained separately.
+
+## Historical Stage 03 evidence — 2026-11-19
 
 | Check | Actual result |
 | --- | --- |

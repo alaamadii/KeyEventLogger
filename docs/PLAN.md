@@ -11,8 +11,8 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 | 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Merged in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) on 2026-11-19 |
 | 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Merged in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) on 2026-11-19 |
 | 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Merged in [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3) on 2026-11-19 |
-| 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Published in [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4); owner review pending |
-| 04 | docs/final-submission | Usability, regression QA, authentic screenshots and final checklist | Planned |
+| 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Merged in [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4) on 2026-11-19 |
+| 04 | docs/final-submission | Final regression/evidence audit, code guide and submission checklist | Technical preparation in progress; owner/manual acceptance pending |
 
 ## Stage 00 — Initialization
 
@@ -61,13 +61,21 @@ Progress on 2026-11-19: formatter, local staged writer, owned SaveFileDialog, sn
 
 - [x] Export implemented without automatic saving or network collection.
 - [x] Format, failure retention, evidence and pending native/manual checks documented.
-- [ ] Owner accepts the export PR. Stage 04 has not begun.
+- [x] Owner merged PR #4. Missing manual/native checks remain tracked in Stage 04.
 
 ## Stage 04 — QA and submission
 
 Reconcile documentation with actual behavior. Capture at least two authentic application screenshots, covering recording/status and useful results/export. Verify a clean checkout, physical input/focus, scaling, VS Code F5, normal shutdown and another Windows computer.
 
 Acceptance: all mandatory requirements have evidence; owner signs off manual results, authentic captures and final PR. Publish final work before the deadline. Classroom submission is the owner's action.
+
+Progress on 2026-11-19: reviewed the source/PDF requirement mapping, reran doctor/check (72 passes), verified actual EXE normal close, and prepared the source-linked CODE_GUIDE plus precise manual procedures. The improved bounded external-controller native Save attempt could not reliably discover the dialog and is not passing evidence. Application code/configuration and authentic current images are retained unchanged; no reproducible functional defect was established.
+
+- [x] Baseline regression, source review and evidence classification.
+- [x] Documentation walkthrough and explicit owner procedure.
+- [x] Published-candidate clean-checkout and public artifact receipts recorded; exact final-head hosted evidence tracked on [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5).
+- [ ] Owner manual results, screenshot approval and second-computer evidence.
+- [ ] Owner accepts the final PR. Draft status is required while acceptance evidence is missing.
 
 ## Explicitly deferred
 

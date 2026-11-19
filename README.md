@@ -4,7 +4,7 @@ An educational Windows Forms application for **Nesne Tabanlı Programlama (YMH21
 
 The application demonstrates keyboard events, recording state and timestamps inside its active practice area. Recorded events can be exported explicitly to a user-selected local TXT file.
 
-**Current status: Stage 03 TXT export, awaiting owner review.** Start, Stop and Clear manage in-memory records; Export TXT saves a stable snapshot to a local file. Recording is restricted to the practice TextBox while this window is active; leaving or minimizing the window stops it.
+**Implementation complete; Stage 04 submission review is in progress.** Start, Stop and Clear manage in-memory records; Export TXT saves a stable snapshot to a local file. Recording is restricted to the practice TextBox while this window is active; leaving or minimizing the window stops it.
 
 ## Application screenshots
 
@@ -105,16 +105,17 @@ App and Core have no third-party package dependencies. Both test projects refere
 
 ## Development and documentation
 
-Work progresses through one stage branch and PR at a time. The owner reviews and approves merging; the assistant does not merge automatically.
+Stages 00–03 are merged through [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4). The final documentation/QA candidate is tracked in [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5). The owner approves merging; the assistant does not merge automatically. Implementation and CI completion do not establish course submission acceptance.
 
 | Guide | Purpose |
 | --- | --- |
 | [Plan](docs/PLAN.md) | Five stages, deliverables, and acceptance gates |
 | [Requirements](docs/REQUIREMENTS.md) | Instructor requirements, owner choices, acceptance criteria |
-| [Architecture](docs/ARCHITECTURE.md) | Current scaffold and planned responsibilities |
+| [Architecture](docs/ARCHITECTURE.md) | Implemented responsibilities and dependency boundaries |
 | [Decisions](docs/DECISIONS.md) | Design rationale and consequences |
 | [Setup](docs/SETUP.md) | Tools, commands, SDK policy, troubleshooting |
 | [Testing](docs/TESTING.md) | Actual results and planned verification |
+| [Code walkthrough](docs/CODE_GUIDE.md) | Source-linked behavior and OOP explanation |
 | [TXT export](docs/EXPORT.md) | Format, encoding, destinations, cancellation and errors |
 | [Development log](docs/DEVELOPMENT.md) | Dated implementation and review history |
 | [Submission](docs/SUBMISSION.md) | Course deliverables and remaining owner actions |
@@ -124,7 +125,7 @@ Work progresses through one stage branch and PR at a time. The owner reviews and
 
 Two authentic Stage 03 captures are included above. Earlier Stage 01/02 images are explicitly historical in the capture guide. Owner screenshot approval and final submission review remain pending.
 
-Statistics and filtering are not implemented. Records are retained only in memory unless explicitly exported; no automatic saving occurs. Export uses synchronous local I/O, so a large log or slow drive can briefly pause the UI. Physical Save dialog save/overwrite review remains pending; native opening/cancellation was checked, while file/interaction logic was tested independently. Human UI/DPI acceptance and another-computer testing remain pending. No distribution package is provided and no license has been selected.
+Statistics and filtering are not implemented. Records are retained only in memory unless explicitly exported; no automatic saving occurs. Export uses synchronous local I/O, so a large log or slow drive can briefly pause the UI. Physical Save dialog save/overwrite review remains pending; native opening/cancellation was checked, while file/interaction logic was tested independently. The final review records missing human evidence explicitly and remains a draft until required owner checks are supplied. Human UI/DPI acceptance and another-computer testing remain pending. No distribution package is provided and no license has been selected.
 
 ## Course submission
 
