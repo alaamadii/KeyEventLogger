@@ -1,0 +1,25 @@
+# .NET output
+**/bin/
+**/obj/
+.vs/
+TestResults/
+artifacts/
+.local/
+
+# Personal editor/settings files
+*.user
+*.suo
+*.rsuser
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# Temporary files
+*.tmp
+*.bak
+~$*
+
+# User event exports: keep these outside source control
+/exports/
+*.keyevents.txt
