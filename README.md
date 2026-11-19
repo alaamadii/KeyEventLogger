@@ -2,40 +2,49 @@
 
 An educational Windows Forms application for **Nesne Tabanlı Programlama (YMH219)**, developed by **Alaa Madi** using C#/.NET 10.
 
-The completed application will demonstrate keyboard events, recording state, timestamps, and user-selected local TXT export. It will observe input only while its own window is active.
+The application demonstrates keyboard events, recording state and timestamps inside its active practice area. User-selected local TXT export is planned for Stage 03.
 
-**Current status: Stage 01 interface preview, awaiting owner review.** A resizable workspace now includes a practice area, an empty event list, a zero-event count, and an explicit nonrecording status. Start, Stop, Clear, and Export TXT are visible but disabled.
+**Current status: Stage 02 recording, awaiting owner review.** Start, Stop and Clear work with in-memory records. Export TXT remains disabled. Recording is restricted to the practice TextBox while this window is active; leaving or minimizing the window stops it.
 
-## Interface preview
+## Application screenshots
 
-![Key Event Logger interface with disabled controls, an empty practice area, zero events, and an explicit nonrecording status](docs/screenshots/ui-preview.png)
+![Recording state with synthetic demo input and eight actual key-event records](docs/screenshots/recording.png)
 
-Actual MainForm capture at 125% DPI on November 19, 2026. This is a UI preview, not evidence of working recording or export. [Capture provenance](docs/screenshots/README.md) records its source and limitations.
+*Recording: four synthetic demonstration keys produce eight delivered Down/Up events.*
 
-| Area | Available now |
+![Stopped state retaining the same eight records with Start available](docs/screenshots/stopped.png)
+
+*Stopped: earlier events remain available; resuming requires Start.*
+
+These actual MainForm captures were made at 125% DPI on November 19, 2026 using controlled native input to the application's real event handlers. They are not human keyboard or desktop-focus test evidence. [Capture provenance and checksums](docs/screenshots/README.md) explain the method.
+
+## Controls and behavior
+
+| Control | Behavior |
 | --- | --- |
-| Practice text | Ordinary multiline local editing; Tab moves to the event display |
-| Recorded events | Empty, noneditable ListBox with a count of zero |
-| Status | Clearly states that recording is unavailable |
-| Start, Stop, Clear | Disabled; behavior planned for Stage 02 |
-| Export TXT | Disabled; behavior planned for Stage 03 |
-| Window | Resizable native layout, minimum size, accessible labels and focus |
+| Start | Begin recording and focus Practice text; retain previous events |
+| Stop | Stop collection immediately; retain records |
+| Clear | Remove event records/count, preserving recording state and practice text |
+| Practice text | Ordinary multiline editing; only its delivered Down/Up events are recorded after Start |
+| Event display | Noneditable rows with time, event type and key name |
+| Export TXT | Disabled until Stage 03; no file is written |
+| Leave or minimize | Stop recording; return/restore requires Start again |
 
-No practice text is inspected by application logic, added to an event log, saved, or transmitted.
+Existing practice text is never inspected or backfilled into records. Starting again does not log what was typed while stopped. Closing discards in-memory data.
 
-## Planned features
+## Event policy
 
-- Show key names, event types, and timestamps in a ListBox or RichTextBox.
-- Start and stop recording explicitly; show a clear recording status.
-- Stop recording on focus loss and require Start before recording again.
-- Clear displayed records and export them to a user-selected local TXT file.
-- Handle export errors without terminating the application.
+Each delivered **KeyDown** or **KeyUp** is one event, including native held-key Down repeats. An ordinary press can produce two rows; the counter counts events, not characters or unique key presses. Delivered modifier events are retained.
 
-Statistics and date/time filtering are optional and deferred.
+Names come from Windows Forms virtual-key names, not translated typed characters. Navigation, shortcuts, keyboard layouts and input methods affect delivery. Tab remains navigation. Down/Up pairs may be incomplete across start, stop, focus or clear boundaries; missing events are not invented.
+
+Rows preserve arrival order and show `yyyy-MM-dd HH:mm:ss.fff zzz` timestamps from the system clock. The domain preserves supplied offsets and does not reorder records if the clock moves backward.
+
+TXT export/error handling follows in Stage 03. Statistics and date/time filtering are deferred.
 
 ## Recording scope
 
-This is an application-local event demonstration. It will not use global hooks, observe other applications, run hidden, start with Windows, capture passwords or credentials, save logs automatically, or transmit recorded input. Export will require an explicit local user action. No keyboard events are recorded in this preview.
+This is an application-local event demonstration. It will not use global hooks, observe other applications, run hidden, start with Windows, capture passwords or credentials, save logs automatically, or transmit recorded input. Export will require an explicit local user action. No events are accepted before Start, outside the practice area or after deactivation.
 
 ## Getting started
 
@@ -59,11 +68,11 @@ Open the repository root in VS Code and install the recommended extensions. Use 
 
 ```text
 src/
-  KeyEventLogger.App/          Windows Forms entry point and resizable UI
-  KeyEventLogger.Core/         Independent domain-library scaffold
+  KeyEventLogger.App/          Windows Forms UI, local input and lifecycle
+  KeyEventLogger.Core/         Immutable records and recording session
 tests/
-  KeyEventLogger.Core.Tests/   Infrastructure; zero domain tests until Stage 02
-  KeyEventLogger.App.Tests/    Native STA interface tests
+  KeyEventLogger.Core.Tests/   Record/session behavior tests
+  KeyEventLogger.App.Tests/    Native STA input/lifecycle/layout tests
 scripts/dev.ps1                doctor, restore, build, test, check, run
 docs/                          Requirements, design, plan, evidence, submission
 .github/                       Windows CI and PR template
@@ -80,7 +89,7 @@ App and Core have no third-party package dependencies. Both test projects refere
 
 `./scripts/dev.ps1 check` restores, builds Release, runs available tests, and verifies formatting. Windows CI runs the same command on PRs targeting main and pushes to main.
 
-**Nine App tests pass; Core still has zero test cases.** Native STA checks cover disabled actions, truthful status, local editing without event collection, noneditable events, tab navigation, minimum/resized layouts, and a blank fresh window. Core remains a scaffold; these tests do not establish recording or export coverage. Executed local checks, UI lifecycle evidence, exact hosted results, and pending manual checks are recorded in [TESTING.md](docs/TESTING.md).
+**38 tests pass: 19 Core and 19 App.** Coverage includes immutable values, protected snapshots, recording transitions, native control messages, focus/minimize/restore boundaries, count/display consistency and layouts. Scripted UI checks use only test-owned windows and synthetic input; they do not establish physical desktop-focus or keyboard acceptance. Executed local checks, UI lifecycle evidence, exact hosted results, and pending manual checks are recorded in [TESTING.md](docs/TESTING.md).
 
 ## Development and documentation
 
@@ -100,9 +109,9 @@ Work progresses through one stage branch and PR at a time. The owner reviews and
 
 ## Screenshots and limitations
 
-One authentic interface capture is included above. The final README still needs at least two screenshots showing the completed application's useful behavior.
+Two authentic Stage 02 recording/stopped captures are included above. Owner approval and final refresh after export remain pending. The earlier Stage 01 preview is retained only as historical evidence in the capture guide.
 
-The controls are presentation only. Key handlers, recording lifecycle, records, clearing behavior, export, statistics, and filtering are not implemented. Human UI/DPI acceptance and another-computer testing remain pending. No distribution package is provided and no license has been selected.
+TXT export, file error handling, statistics, and filtering are not implemented. Records are kept only in memory; no automatic saving occurs. Human UI/DPI acceptance and another-computer testing remain pending. No distribution package is provided and no license has been selected.
 
 ## Course submission
 

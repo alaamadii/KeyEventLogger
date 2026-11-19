@@ -1,6 +1,31 @@
 # Testing strategy and evidence
 
-## Current evidence — Stage 01, 2026-11-19
+## Current evidence — Stage 02, 2026-11-19
+
+| Check | Actual result |
+| --- | --- |
+| Final ./scripts/dev.ps1 check | Restore, Release build, test and formatting passed; zero build warnings/errors |
+| Core.Tests | 19 passed, 0 failed/skipped |
+| App.Tests | 19 passed, 0 failed/skipped; total 38 |
+| Actual Release EXE | Title/Stopped status found; normal close exited 0 |
+| Actual MainForm diagnostic | Synthetic DEMO Down/Up/character messages create 8 real records; Stop/Clear, clear mid-pair, thread deactivation/return, minimize/restore and active close passed |
+| Visual inspection | Default/minimum/wide actual window images at 120 DPI (125%) inspected |
+| Captures | Recording and Stopped from source 3494e0a; [provenance](screenshots/README.md) |
+| Documentation/source checks | 28 local targets across 11 Markdown files, all capture hashes, output exclusions, Core independence and production API inspection passed |
+| Hosted CI | Exact final-head hosted evidence is tracked on [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3); owner review is pending |
+
+Core tests cover values/offsets, invalid names/types, stopped acceptance, repeated Start/Stop, repeated events, backward-clock arrival order, Clear in both states, read-only stable snapshots and invalid input without mutation.
+
+App cases cover stopped editing/no backfill, deterministic timestamp offset, Down/Up/repeats/modifiers, Stop/restart, both Clear states, practice-only focus, deactivation/inactive rejection, minimize/restore, native Space button activation, pumped Tab plus reverse control navigation, repeated cycles, canceled close, fresh Form and four multi-state layout configurations.
+
+All UI tests are serialized STA work and dispose Forms. Synthetic WM_KEYDOWN/UP/CHAR messages are sent only to owned control handles; Tab is posted through the normal message pump. Start/Stop/Clear usually use button PerformClick, with a separate native button-key test. No test manually invokes private record handlers or inserts ListBox rows.
+
+Activation tests use SetActiveWindow for the test thread's own windows, not a desktop foreground change or external-app typing. An initial ActiveForm-dependent fixture failed because transparent background windows were not foreground; activation callbacks plus focus gates and thread-scoped activation resolved this. A pointer-width compile issue in test messages was also corrected before the final full check.
+
+Physical keyboard input, desktop switching to another application, real 100%/150% and cross-monitor transitions, screen-reader/high-contrast acceptance, VS Code F5 and second-computer testing remain **not performed**. TXT export/failures are not implemented. Scripted images/messages do not establish those checks.
+
+
+## Historical Stage 01 evidence — 2026-11-19
 
 | Check | Actual result |
 | --- | --- |

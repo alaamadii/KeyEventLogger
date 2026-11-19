@@ -54,3 +54,24 @@ Branch: feat/logger-ui.
 - Pushed implementation/tests 57d0ecb and documentation/capture d39cbde to feat/logger-ui. Verified remote head d39cbdedcdf509dd8c15d0c082c84baf619a4142.
 - Opened [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) targeting main. This follow-up records its actual link; exact final-head hosted checks are recorded on the PR.
 - Stage 01 remains awaiting owner review. No automatic merge, Stage 02 implementation, repository visibility change or Classroom submission was performed.
+
+## 2026-11-19 — Stage 02 local keyboard events
+
+Branch: feat/local-key-events.
+
+- Confirmed owner merge of PR #2 at 2664bf9, inspected a clean tree, fetched/fast-forwarded main and created the stage branch. Preserved the owner's README title.
+- Added validated immutable event values and an encapsulated session with idempotent Start/Stop, count, Clear and protected stable snapshots. Core remains independent of Windows/I/O.
+- Connected only practice KeyDown/KeyUp, virtual-key names and App-owned TimeProvider timestamps. Added activation/focus/minimized/closing gates, immediate stopping and explicit restart; practice text is never inspected/backfilled.
+- Implemented enabled control states and incremental event rows/count/empty-state updates. Clear retains practice text and recording state. Export remains disabled; no Stage 03 functionality.
+- Core tests passed first. Corrected a test-message pointer-width constant. Initial hidden App tests exposed ActiveForm's foreground dependency; ADR-012 records the switch to native activation/focus gates and controlled test-thread activation without desktop focus theft.
+- Final ./scripts/dev.ps1 check passed restore/build/test/format: 19 Core + 19 App = 38 cases, no failures/skips, zero build warnings/errors.
+- Actual Release EXE launched with Stopped status and closed normally with exit 0. A separate actual-MainForm diagnostic verified synthetic native input, Stop/Clear including a mid-pair clear, deactivation/return, minimize/restore and close while recording.
+- Source commit 3494e0a produced the two unedited actual-window captures: synthetic DEMO input generated eight real events through the production handlers/session and system clock. Inspected default/minimum/wide captures at 120 DPI; no human input or desktop focus acceptance is claimed.
+- Updated current documentation and kept the Stage 01 screenshot explicitly historical. Physical keyboard/external-app focus, screen-reader/high-contrast, actual 100%/150% transitions, F5 and a second computer remain pending.
+- Validated 28 local targets across 11 Markdown files, all current/historical image hashes, output exclusions, Core independence, production API inspection and final whitespace/diff. Publication/hosted results are tracked separately. No merge, visibility change, Classroom action or Stage 03 work.
+
+### Stage 02 publication
+
+- Pushed implementation/tests 3494e0a and documentation/captures 8880eb1 to feat/local-key-events. Remote head matched 8880eb106c3c2a28b2503640d2c06f21dfaa3cad.
+- Opened [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3) targeting main. This follow-up records its actual link; exact final-head CI results are tracked in the PR description.
+- Stage 02 remains awaiting owner review. No automatic merge, Stage 03 work, visibility change or Classroom submission was performed.
