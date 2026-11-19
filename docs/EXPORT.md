@@ -48,3 +48,7 @@ The full local check passes 72 cases (26 Core, 46 App). Tests inspect real UTF-8
 The real native SaveFileDialog was opened/canceled. Native Save/overwrite automation was attempted but was unreliable and is not claimed as passing. Physical save/overwrite/error checks and owner acceptance remain pending. See [testing](TESTING.md).
 
 Development logs must stay under ignored exports/ or use *.keyevents.txt. Other chosen .txt names inside the repository are not automatically ignored; never stage captured records. Do not broaden exclusions to hide documentation/source text.
+
+## Stage 04 follow-up
+
+Baseline regression still passes all 72 cases with unchanged writer/format. A bounded external-controller UI Automation follow-up could not reliably discover the owned Save dialog; it is not a successful save/overwrite result. No production change was made merely to satisfy automation. Follow the [owner native-dialog procedure](SUBMISSION.md) and record actual outcomes.

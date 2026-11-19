@@ -44,3 +44,9 @@ The command-line lifecycle probe does not prove that an owner pressed F5; actual
 | Export accidentally appears in Git | Unstage it without deleting user data; place future development exports under exports/ or *.keyevents.txt |
 
 The application starts Stopped. Press Start, then use synthetic non-sensitive practice input to inspect Down/Up events. Stop retains records. Clear removes events while preserving practice text/state. Leaving/minimizing stops recording; return requires Start. Tab navigates normally. Export becomes available when events exist. It stops recording, requests a local .txt destination, and reports a separate result. Cancel/failure keep records; Start is required again. Use ignored exports/ or *.keyevents.txt for development exports. See [export behavior](EXPORT.md).
+
+## Final review evidence
+
+Use the exact candidate commit when reproducing final checks. A fresh clone's doctor/check and actual executable launch verify the documented dependencies; the ignored development probes are not required to build or run.
+
+Record the commit, Windows and SDK with results. Physical F5/display checks and a second Windows computer remain separate from command-line or same-computer clean-clone success. See [owner procedure](SUBMISSION.md) and [code walkthrough](CODE_GUIDE.md).

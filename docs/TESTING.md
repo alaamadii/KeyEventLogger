@@ -1,6 +1,28 @@
 # Testing strategy and evidence
 
-## Current evidence — Stage 03, 2026-11-19
+## Current Stage 04 review — 2026-11-19
+
+| Check | Executed result |
+| --- | --- |
+| Baseline | PR #4 owner-merged; main 8e01e08 |
+| ./scripts/dev.ps1 doctor | SDK 10.0.402, Windows 10.0.22631, WindowsDesktop 10.0.13, Git available |
+| ./scripts/dev.ps1 check | Restore/Release build/test/format pass; 26 Core + 46 App = 72, zero failures/skips/build warnings/errors |
+| Actual production EXE | Correct title/Stopped state; normal main-window close exits 0 |
+| Native export follow-up | One improved, bounded external-controller attempt failed to discover the owned Save dialog reliably; not a passing Save/overwrite result |
+| Code/configuration | No changes; no reproducible application defect established in executed checks |
+| Screenshots | Current Stage 03 images retained because behavior/source is unchanged; controlled picker remains disclosed |
+| Documentation/repository | 79 local targets across 13 Markdown files, five unchanged capture hashes, Core/API boundaries, narrow exclusions and limited tracked-file credential scan passed |
+| Clean checkout / publication / CI | Candidate-specific results will be recorded after execution |
+
+Source/PDF audit maps required behavior to code/tests in [REQUIREMENTS](REQUIREMENTS.md). Current checks cover session invariants, native synthetic Down/Up/repeat/modifier delivery, scope/stop gates, Clear/no backfill, cancel/retry/snapshot/closing, exact byte format and local file preservation. Existing real I/O and dialog-substitute tests remain distinct from actual native dialog acceptance.
+
+The revised diagnostic separated UI Automation into another process, validated the exact isolated destination, used deadlines and limited cleanup to its own helper windows/processes. It still could not reliably locate the Save dialog, so no native Save/overwrite result is inferred. No further unmodified hanging retries were made.
+
+Physical keyboard, switching to another desktop application, native Save/overwrite/error review, real 100%/150% and monitor transitions, F5, assistive technology/high contrast, a second Windows computer and screenshot approval have **not been supplied/performed**. The final PR remains draft for those owner checks; automated success does not accept Stage 04.
+
+See [precise owner steps and evidence fields](SUBMISSION.md) and the [source walkthrough](CODE_GUIDE.md). The historical records below are retained separately.
+
+## Historical Stage 03 evidence — 2026-11-19
 
 | Check | Actual result |
 | --- | --- |
