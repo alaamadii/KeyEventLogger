@@ -61,3 +61,9 @@ Windows GitHub Actions runs check on PRs targeting main and pushes to main, then
 Before submission: clean-clone restore/build/run, authentic screenshots, physical focus/input, supported scaling/debugger checks and another Windows computer with date, Windows/SDK, tested commit and outcomes.
 
 Use [SUBMISSION](SUBMISSION.md) to track owner acceptance. No manual checkbox should be completed from scripted evidence alone.
+
+## Hosted CI and publication
+
+The initialization is published in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) from `chore/initialize-project` to `main`. Implementation/tooling commit `8beaa58` and documentation commit `955dfcc` were pushed and their remote head verified.
+
+Hosted checks for the final documentation head are pending at this entry's creation. The PR description records the exact final commit, workflow run and confirmed outcome once available. Do not interpret local success or workflow configuration as hosted success. Zero unit-test cases remains the expected Stage 00 discovery result.

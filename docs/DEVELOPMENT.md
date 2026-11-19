@@ -28,3 +28,9 @@ Objective: prepare a professional, documented .NET 10 Windows Forms foundation w
 - JSON, project boundaries, 20 local Markdown links across 10 files, and intended Git ignore behavior passed inspection. Actual TRX counters and the staged diff are checked before publication.
 - No application defect was encountered. Future-stage tests, human review, physical display/input, F5 and another-computer checks remain pending.
 - Local evidence is detailed in [TESTING](TESTING.md); exact hosted CI/publication results will be linked from the PR. This entry does not imply owner acceptance or an automatic merge.
+
+### Publication
+
+- Pushed implementation/tooling `8beaa58` and documentation/evidence `955dfcc` to `chore/initialize-project`; remote head matched `955dfccb81a7dbbff6ca17137774793ad5af659c`.
+- Opened [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) against main. This follow-up records the actual publication rather than predicting a PR number.
+- Final-head hosted results are tracked on the PR. It remains open for owner review; no merge, visibility change, Classroom submission or Stage 01 implementation was performed.

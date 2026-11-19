@@ -8,7 +8,7 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 
 | Stage | Branch | Deliverable | Current status |
 | --- | --- | --- | --- |
-| 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Implemented locally; validation/publication evidence in TESTING; owner review pending |
+| 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Published in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1); owner review pending |
 | 01 | feat/logger-ui | Event-list layout, practice area, Start/Stop/Clear/Export controls and status | Planned |
 | 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Planned |
 | 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Planned |
