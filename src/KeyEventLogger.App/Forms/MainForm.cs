@@ -1,12 +1,18 @@
 namespace KeyEventLogger.App.Forms;
 
-public sealed class MainForm : Form
+public sealed partial class MainForm : Form
 {
     private readonly Font titleFont;
     private readonly Font emphasisFont;
 
-    public MainForm()
+    public MainForm() : this(TimeProvider.System)
     {
+    }
+
+    public MainForm(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        clock = timeProvider;
         SuspendLayout();
         Text = "Key Event Logger";
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -16,7 +22,7 @@ public sealed class MainForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = SystemColors.Window;
         ForeColor = SystemColors.WindowText;
-        AccessibleDescription = "Educational keyboard-event interface. Recording and export are unavailable in this preview.";
+        AccessibleDescription = "Educational keyboard-event recorder. Only practice-area events are collected after Start. Export is not implemented.";
 
         titleFont = new Font(Font.FontFamily, 18F, FontStyle.Bold);
         emphasisFont = new Font(Font, FontStyle.Bold);
@@ -43,14 +49,13 @@ public sealed class MainForm : Form
         header.Controls.Add(CreateLabel("purpose", "A focused workspace for understanding keyboard events."), 0, 1);
         layout.Controls.Add(header, 0, 0);
 
-        var status = CreateLabel("recordingStatus",
-            "Not recording — recording will be available in a later stage.");
-        status.Font = emphasisFont;
-        status.BackColor = SystemColors.Control;
-        status.Padding = new Padding(12);
-        status.Margin = new Padding(0, 12, 0, 12);
-        status.AccessibleName = "Recording status";
-        layout.Controls.Add(status, 0, 1);
+        recordingStatus = CreateLabel("recordingStatus", "Stopped — press Start to record practice-area keys.");
+        recordingStatus.Font = emphasisFont;
+        recordingStatus.BackColor = SystemColors.Control;
+        recordingStatus.Padding = new Padding(12);
+        recordingStatus.Margin = new Padding(0, 12, 0, 12);
+        recordingStatus.AccessibleName = "Recording status";
+        layout.Controls.Add(recordingStatus, 0, 1);
 
         var actions = new FlowLayoutPanel
         {
@@ -62,14 +67,16 @@ public sealed class MainForm : Form
             TabStop = false,
             WrapContents = true
         };
-        actions.Controls.Add(CreateUnavailableButton("startButton", "&Start", "Start recording"));
-        actions.Controls.Add(CreateUnavailableButton("stopButton", "S&top", "Stop recording"));
-        actions.Controls.Add(CreateUnavailableButton("clearButton", "&Clear", "Clear recorded events"));
-        actions.Controls.Add(CreateUnavailableButton("exportButton", "Export T&XT", "Export TXT"));
+        startButton = CreateActionButton("startButton", "&Start", "Start recording");
+        stopButton = CreateActionButton("stopButton", "S&top", "Stop recording");
+        clearButton = CreateActionButton("clearButton", "&Clear", "Clear recorded events");
+        exportButton = CreateActionButton("exportButton", "Export T&XT", "Export TXT");
+        exportButton.AccessibleDescription = "Unavailable until Stage 03. No export or automatic saving.";
+        actions.Controls.AddRange([startButton, stopButton, clearButton, exportButton]);
         layout.Controls.Add(actions, 0, 2);
 
         var availability = CreateLabel("featureAvailability",
-            "Start, Stop and Clear arrive in Stage 02. Export TXT arrives in Stage 03.");
+            "Each delivered KeyDown / KeyUp is one event, including held-key repeats. Export TXT arrives in Stage 03.");
         availability.Margin = new Padding(0, 8, 0, 16);
         layout.Controls.Add(availability, 0, 3);
 
@@ -85,29 +92,34 @@ public sealed class MainForm : Form
         workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
         workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
         workspace.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        var practice = CreatePracticeArea(out var practiceText);
+        var practice = CreatePracticeArea(out practiceText);
         practice.Margin = new Padding(0, 0, 8, 0);
         practice.TabIndex = 0;
         workspace.Controls.Add(practice, 0, 0);
-        var events = CreateEventArea();
+        var events = CreateEventArea(out eventList, out eventCount, out emptyState);
         events.Margin = new Padding(8, 0, 0, 0);
         events.TabIndex = 1;
         workspace.Controls.Add(events, 1, 0);
         layout.Controls.Add(workspace, 0, 4);
 
         var scope = CreateLabel("scopeNotice",
-            "Future recording will observe only this application's active window. Losing focus will stop it; returning will require Start.");
+            "Recording is limited to Practice text while this window is active. Leaving the window stops it; returning requires Start.");
         scope.Margin = new Padding(0, 16, 0, 0);
         layout.Controls.Add(scope, 0, 5);
 
         Controls.Add(layout);
         ActiveControl = practiceText;
+        BindRecording();
         ResumeLayout(false);
         PerformLayout();
     }
 
     protected override void Dispose(bool disposing)
     {
+        if (disposing)
+        {
+            ReleaseRecording();
+        }
         base.Dispose(disposing);
         if (disposing)
         {
@@ -138,12 +150,12 @@ public sealed class MainForm : Form
         TabStop = false
     };
 
-    private static Button CreateUnavailableButton(string name, string text, string accessibleName) => new()
+    private static Button CreateActionButton(string name, string text, string accessibleName) => new()
     {
         Name = name,
         Text = text,
         AccessibleName = accessibleName,
-        AccessibleDescription = "Unavailable in this preview. See the stage availability note.",
+        AccessibleDescription = "Controls recording only in this application's practice area.",
         AutoSize = true,
         MinimumSize = new Size(104, 36),
         Margin = new Padding(0, 0, 8, 0),
@@ -169,11 +181,11 @@ public sealed class MainForm : Form
         content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         content.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-        var label = CreateLabel("practiceLabel", "Practice &text");
+        var label = CreateLabel("practiceLabel", "Pract&ice text");
         label.UseMnemonic = true;
         label.TabIndex = 0;
         content.Controls.Add(label, 0, 0);
-        var hint = CreateLabel("practiceHint", "Type here to try the interface. Nothing is recorded or saved.");
+        var hint = CreateLabel("practiceHint", "Press Start to record key events here. Nothing is saved.");
         hint.TabIndex = 2;
         hint.Margin = new Padding(0, 0, 0, 8);
         content.Controls.Add(hint, 0, 1);
@@ -181,7 +193,7 @@ public sealed class MainForm : Form
         {
             Name = "practiceText",
             AccessibleName = "Practice text",
-            AccessibleDescription = "Temporary local text only. Recording is not implemented.",
+            AccessibleDescription = "Type here. Key events are recorded only after Start while this window is active.",
             Multiline = true,
             AcceptsReturn = true,
             AcceptsTab = false,
@@ -195,7 +207,7 @@ public sealed class MainForm : Form
         return group;
     }
 
-    private static GroupBox CreateEventArea()
+    private static GroupBox CreateEventArea(out ListBox eventList, out Label eventCount, out Label emptyState)
     {
         var group = new GroupBox
         {
@@ -212,23 +224,24 @@ public sealed class MainForm : Form
         content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         content.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        var count = CreateLabel("eventCount", "0 events");
-        count.AccessibleName = "Recorded event count";
-        content.Controls.Add(count, 0, 0);
-        var empty = CreateLabel("emptyState", "No events yet. Recording is not implemented.");
-        empty.Margin = new Padding(0, 0, 0, 8);
-        content.Controls.Add(empty, 0, 1);
-        content.Controls.Add(new ListBox
+        eventCount = CreateLabel("eventCount", "0 events");
+        eventCount.AccessibleName = "Recorded event count";
+        content.Controls.Add(eventCount, 0, 0);
+        emptyState = CreateLabel("emptyState", "No events yet. Press Start, then type in Practice text.");
+        emptyState.Margin = new Padding(0, 0, 0, 8);
+        content.Controls.Add(emptyState, 0, 1);
+        eventList = new ListBox
         {
             Name = "eventList",
             AccessibleName = "Recorded events",
-            AccessibleDescription = "Empty, noneditable event display. Recording is not implemented.",
+            AccessibleDescription = "Noneditable key event display showing timestamp, event type and key name.",
             Dock = DockStyle.Fill,
             IntegralHeight = false,
             HorizontalScrollbar = true,
             Margin = Padding.Empty,
             TabIndex = 0
-        }, 0, 2);
+        };
+        content.Controls.Add(eventList, 0, 2);
         group.Controls.Add(content);
         return group;
     }

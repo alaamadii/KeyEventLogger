@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
 using KeyEventLogger.App.Forms;
 using Xunit;
@@ -15,14 +16,14 @@ internal static class WindowsUi
         Application.SetCompatibleTextRenderingDefault(false);
     }
 
-    public static void Run(Action<MainForm> assertion)
+    public static void Run(Action<MainForm> assertion, TimeProvider? clock = null)
     {
         Exception? failure = null;
         var thread = new Thread(() =>
         {
             try
             {
-                using var form = new MainForm
+                using var form = new MainForm(clock ?? TimeProvider.System)
                 {
                     ShowInTaskbar = false,
                     Opacity = 0,
@@ -30,6 +31,7 @@ internal static class WindowsUi
                     Location = new Point(-10000, -10000)
                 };
                 form.Show();
+                Activate(form);
                 Application.DoEvents();
                 assertion(form);
                 form.Close();
@@ -54,6 +56,21 @@ internal static class WindowsUi
             ExceptionDispatchInfo.Capture(failure).Throw();
         }
     }
+
+    public static void Activate(Form form)
+    {
+        SetActiveWindow(form.Handle);
+        form.ActiveControl?.Focus();
+        Application.DoEvents();
+    }
+
+    public static IntPtr ActiveWindow => GetActiveWindow();
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr SetActiveWindow(IntPtr handle);
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetActiveWindow();
 
     public static T Find<T>(Control root, string name) where T : Control =>
         Assert.IsType<T>(Assert.Single(root.Controls.Find(name, true)));
