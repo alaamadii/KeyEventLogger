@@ -48,3 +48,9 @@ Branch: feat/logger-ui.
 - Inspected actual default, minimum and wide target-window captures at reported 120 DPI. Committed one blank actual interface capture with source/hash provenance; no practice text, fake records or unrelated desktop content is included.
 - Application/test implementation is commit 57d0ecb. Validated 24 local targets across 11 Markdown files, output exclusions, screenshot hash/provenance, production source boundary and final diff; hosted results will be associated with the final PR head.
 - Physical keyboard/accessibility review, actual 100%/150% and cross-monitor transitions, VS Code F5, second-computer work and owner acceptance remain pending. No merge or Stage 02 work was performed.
+
+### Stage 01 publication
+
+- Pushed implementation/tests 57d0ecb and documentation/capture d39cbde to feat/logger-ui. Verified remote head d39cbdedcdf509dd8c15d0c082c84baf619a4142.
+- Opened [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) targeting main. This follow-up records its actual link; exact final-head hosted checks are recorded on the PR.
+- Stage 01 remains awaiting owner review. No automatic merge, Stage 02 implementation, repository visibility change or Classroom submission was performed.

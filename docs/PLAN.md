@@ -9,7 +9,7 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 | Stage | Branch | Deliverable | Current status |
 | --- | --- | --- | --- |
 | 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Merged in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) on 2026-11-19 |
-| 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Implemented and locally checked; owner review pending |
+| 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Published in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2); owner review pending |
 | 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Planned |
 | 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Planned |
 | 04 | docs/final-submission | Usability, regression QA, authentic screenshots and final checklist | Planned |

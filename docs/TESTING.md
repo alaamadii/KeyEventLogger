@@ -13,7 +13,7 @@
 | Visual inspection | Actual target-window default/minimum/wide captures inspected at 120 DPI (125%); no clipped instructions or hidden content areas observed |
 | Screenshot | One authentic blank UI capture; [provenance and checksum](screenshots/README.md) |
 | Documentation/exclusions | 24 local targets across 11 Markdown files, image SHA-256, source boundary inspection and generated/export exclusions passed |
-| Hosted checks | Final-head evidence will be recorded on the interface PR after publication |
+| Hosted checks | Exact final-head hosted results are tracked in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2); owner review remains pending |
 
 App tests initialize the same DPI/visual-style defaults as Program, serialize native work, use STA threads, and dispose Forms. They assert disabled/visible future actions and status, native practice editing without collected events, noneditable empty events, tab traversal, four minimum/resized configurations with text/content bounds, and a blank fresh Form. Tests use only synthetic character messages to their own controls; production has no keyboard handlers.
 
