@@ -69,3 +69,9 @@ Branch: feat/local-key-events.
 - Source commit 3494e0a produced the two unedited actual-window captures: synthetic DEMO input generated eight real events through the production handlers/session and system clock. Inspected default/minimum/wide captures at 120 DPI; no human input or desktop focus acceptance is claimed.
 - Updated current documentation and kept the Stage 01 screenshot explicitly historical. Physical keyboard/external-app focus, screen-reader/high-contrast, actual 100%/150% transitions, F5 and a second computer remain pending.
 - Validated 28 local targets across 11 Markdown files, all current/historical image hashes, output exclusions, Core independence, production API inspection and final whitespace/diff. Publication/hosted results are tracked separately. No merge, visibility change, Classroom action or Stage 03 work.
+
+### Stage 02 publication
+
+- Pushed implementation/tests 3494e0a and documentation/captures 8880eb1 to feat/local-key-events. Remote head matched 8880eb106c3c2a28b2503640d2c06f21dfaa3cad.
+- Opened [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3) targeting main. This follow-up records its actual link; exact final-head CI results are tracked in the PR description.
+- Stage 02 remains awaiting owner review. No automatic merge, Stage 03 work, visibility change or Classroom submission was performed.

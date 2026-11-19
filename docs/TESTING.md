@@ -12,7 +12,7 @@
 | Visual inspection | Default/minimum/wide actual window images at 120 DPI (125%) inspected |
 | Captures | Recording and Stopped from source 3494e0a; [provenance](screenshots/README.md) |
 | Documentation/source checks | 28 local targets across 11 Markdown files, all capture hashes, output exclusions, Core independence and production API inspection passed |
-| Hosted CI | Exact final-head result will be recorded on the recording PR after publication |
+| Hosted CI | Exact final-head hosted evidence is tracked on [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3); owner review is pending |
 
 Core tests cover values/offsets, invalid names/types, stopped acceptance, repeated Start/Stop, repeated events, backward-clock arrival order, Clear in both states, read-only stable snapshots and invalid input without mutation.
 
