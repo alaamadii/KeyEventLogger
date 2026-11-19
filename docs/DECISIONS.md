@@ -69,3 +69,24 @@ Context: Core still has no domain behavior, while the UI now has meaningful cont
 Decision: add Windows App.Tests referencing App; run cases serially on STA threads with matching DPI/visual-style defaults and dispose windows.
 Rationale: test disabled actions, ordinary editing without collection, noneditable events, tab order and unclipped minimum/resized layouts directly.
 Consequences: nine App cases cover this stage, while Core stays at zero. Synthetic WM_CHAR messages are directed only to test-owned controls; production has no keyboard handler or hook. Automated assertions do not replace physical or assistive-technology review.
+
+## ADR-011 — Delivered key events and immutable values — 2026-11-19
+
+Context: recording must show names/times without reconstructing TextBox content.
+Decision: use immutable validated KeyEventRecord values, KeyDown/KeyUp types, private session storage and read-only copied snapshots. Count delivered events, including repeats/modifiers.
+Rationale: preserve explainable arrival semantics and collection ownership without Windows types in Core.
+Consequences: count differs from characters/presses; boundaries can leave unmatched events. Clock offsets/order are preserved. Pure local UI display formatting does not define future TXT export.
+
+## ADR-012 — Activation and focused practice gates — 2026-11-19
+
+Context: capture is restricted to the active practice area. Initial invisible UI tests could not use ActiveForm because it queries the desktop foreground window.
+Decision: combine WinForms Activated/Deactivate tracking, ContainsFocus, practice focus, session state and minimized/closing/disposed gates. Deactivation/minimize/closing stop; activation never resumes.
+Rationale: use the Form's native lifecycle and keep desktop focus out of isolated automation. The [WinForms source](https://github.com/dotnet/winforms/blob/main/src/System.Windows.Forms/System/Windows/Forms/Form.cs) documents ActiveForm's foreground query and activation callbacks.
+Consequences: test-owned native SetActiveWindow calls operate within their STA thread, with real window messages and local input handlers. They do not establish physical foreground switching between external applications; that remains manual. No production P/Invoke, global polling or input hook is added.
+
+## ADR-013 — Explicit controls and clock boundary — 2026-11-19
+
+Context: enabled actions must preserve existing data and remain testable.
+Decision: Start retains history/focuses practice, Stop retains history, Clear preserves state/practice text, Export remains disabled. App supplies TimeProvider timestamps; Core only stores supplied values.
+Rationale: make collection and time ownership explicit, with deterministic native timestamp tests.
+Consequences: current data is memory-only and discarded at process close. Canceled closing leaves recording stopped. Inactive timestamps/rows are never backfilled.

@@ -9,8 +9,8 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 | Stage | Branch | Deliverable | Current status |
 | --- | --- | --- | --- |
 | 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Merged in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) on 2026-11-19 |
-| 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Published in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2); owner review pending |
-| 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Planned |
+| 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Merged in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) on 2026-11-19 |
+| 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Implemented/locally checked; owner review pending |
 | 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Planned |
 | 04 | docs/final-submission | Usability, regression QA, authentic screenshots and final checklist | Planned |
 
@@ -35,7 +35,7 @@ Progress on 2026-11-19: resizable native layout, disabled actions, practice edit
 
 - [x] Interface implemented without recording or export.
 - [x] Meaningful native tests and local validation recorded.
-- [ ] Owner accepts the interface PR. CI success alone does not accept this stage.
+- [x] Owner merged PR #2. Pending physical checks are not inferred complete.
 
 ## Stage 02 — Local event recording
 
@@ -44,6 +44,12 @@ Implement an immutable record and an encapsulated session, then connect local Wi
 Start is explicit. Stop prevents further appends. Deactivation/minimize stops recording; activation alone never resumes. Clearing removes the current records without hidden saving. Keep the UI status and session state consistent.
 
 Acceptance: test state transitions, record ordering, timestamps, stop/clear, held keys and focus transitions. Verify that input in another application is not recorded. No global hooks, background collection or credentials.
+
+Progress on 2026-11-19: immutable records/session, explicit controls, practice-only Down/Up events, count/presentation and activation/minimize/close stopping are implemented. Native repeats are independent events; Tab stays navigation. 38 tests pass (19 Core, 19 App). Scripted native evidence and two actual captures are recorded in TESTING.
+
+- [x] Behavior implemented and locally validated without export.
+- [x] Event policies, focus gates, actual captures and limitations documented.
+- [ ] Owner accepts the recording PR; physical input/desktop-focus checks remain pending.
 
 ## Stage 03 — Local TXT export
 

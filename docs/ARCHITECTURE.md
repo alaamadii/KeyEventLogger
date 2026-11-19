@@ -1,62 +1,55 @@
 # Architecture
 
-## Implemented through Stage 01
+## Implemented through Stage 02
 
-The solution contains:
-- **App (net10.0-windows)**: STA entry point, PerMonitorV2 DPI policy, visual styles and a programmatic MainForm.
-- **Core (net10.0)**: independent scaffold; no domain types or project/package dependencies.
-- **Core.Tests (net10.0)**: xUnit infrastructure; zero domain test cases.
-- **App.Tests (net10.0-windows)**: nine native UI assertions/cases using App.
+App targets net10.0-windows and owns the STA entry point, PerMonitorV2 DPI, controls, local keyboard events and lifecycle. Core targets net10.0 and owns immutable event values and recording state. Core.Tests and App.Tests cover their respective behavior.
 
-Dependencies are App → Core, Core.Tests → Core and App.Tests → App. Core is unchanged by Stage 01 and has no Windows Forms, drawing, timer or file-dialog dependency.
+Dependencies remain App → Core, Core.Tests → Core and App.Tests → App. Core has no WinForms, drawing, timer, Windows API, file-dialog or third-party dependency.
 
-## Interface ownership and behavior
+## Core values and collection ownership
 
-MainForm owns the control tree and two custom point-unit fonts, disposed when the Form is disposed. Small private construction methods organize the layout; no separate presenter, recording session or export service is needed yet.
+KeyEventType has KeyDown and KeyUp. KeyEventRecord is a sealed immutable record containing a trimmed key name without control characters, a defined event type and DateTimeOffset. Validation precedes assignment. The type does not know Windows Keys or a clock.
 
-A root TableLayoutPanel has automatic rows for heading, status, actions, availability and scope notes, plus a remaining-height row for the workspace. Two equal-width columns contain native GroupBoxes for practice and recorded events. A wrapping FlowLayoutPanel holds the four disabled buttons. Labels size to text and wrap within the available width.
+RecordingSession owns a private List. Start/Stop are idempotent; TryRecord validates its argument and appends only while recording. Count derives from the list. Clear removes records without changing state. GetSnapshot returns a read-only copy: callers cannot mutate the session or observe later changes through an earlier snapshot.
 
-The practice TextBox is multiline, accepts Return, and leaves Tab for navigation. It supports ordinary native editing without application handlers inspecting its text. The event ListBox cannot be edited through typing; it starts empty and its separate count remains zero. Start/Stop/Clear/Export have no handlers and remain disabled. Visible stage notes explain availability without depending on tooltips.
+Arrival order is retained, including repeated identical records and backward clock changes. No Down/Up pairing, sorting or unique-key counting is performed. This small session is UI-thread-owned, not a concurrent collection.
 
-Accessible names/descriptions, group mnemonics and the practice label accompany native keyboard focus. Tab/Shift+Tab traverse the usable practice and event controls; disabled actions are skipped. System colors and ordinary Windows text keep the visual design restrained. Screen-reader and high-contrast user acceptance are still pending.
+## App event path
 
-## Resizing and DPI
+MainForm.cs constructs the native layout. MainForm.Recording.cs is another part of the same Form, grouping control references, event wiring and lifecycle. No separate presenter or export abstraction is introduced.
 
-Stage 01 replaces the fixed 640 × 360 initialization window with a resizable window. The requested design client is 960 × 720, with a design minimum window size of 820 × 680 at the 96-DPI baseline. Native nonclient metrics and DPI scaling affect actual dimensions.
+Only practiceText.KeyDown/KeyUp are subscribed. A delivered event is accepted when the session is recording, WinForms has activated this Form, the Form contains focus, Practice text is focused, and the window is neither minimized nor closing/disposed. Other controls have no recording subscriptions.
 
-Construction suspends layout until the full control tree is attached, then resumes/executes layout so initial DPI scaling applies consistently. PerMonitorV2 remains configured at entry. Dock, percentages, AutoSize, wrapping and point-unit fonts handle available space; no custom pixel renderer or scaling transform is introduced.
+App maps KeyEventArgs.KeyCode.ToString() into a Core name and supplies TimeProvider.GetLocalNow(). Production uses TimeProvider.System; the constructor also accepts a TimeProvider for deterministic timestamp tests. Application logic never reads the practice TextBox.Text value.
 
-At the observed 120 DPI (125%), the preview reported a 1200 × 900 client and 1218 × 947 full window. Minimum and wider captures were also inspected. Those checks do not establish physical 100%/150% monitor transitions; they remain pending.
+Each accepted event appends one ListBox row, scrolls to the newest row and updates count/empty-state/button presentation. It does not rebind the full collection or copy snapshots on each key. The invariant-culture display is time with milliseconds/offset, type and key name; it is not yet an export format.
 
-## Planned responsibilities — not implemented
+## Recording and focus lifecycle
 
-| Component | Responsibility | Intended owner |
-| --- | --- | --- |
-| KeyEventRecord | Immutable normalized key name, event type, timestamp with offset | Core |
-| RecordingSession | Encapsulated active/stopped state, records, start/stop/clear | Core |
-| MainForm integration | Future local event wiring into the existing interface | App |
-| TXT formatter | Stable text representation of synthetic/real records | Core if pure and justified |
-| Export service | Explicit destination writing and recoverable I/O results | App |
-| SaveFileDialog | Destination choice and ordinary cancellation | App |
+Start is explicit and focuses practice without clearing history. Stop keeps records. Clear removes model/display records but preserves recording state and practice text; while recording it returns focus to practice.
 
-Do not create these classes merely to match the table. Add them with the behavior that needs them. Interfaces are justified by replaceable boundaries, not by a requirement to put every class behind one.
+Activated/Deactivate track window activity. Deactivation stops the session; resize-to-minimized also stops it. Activation/restore never calls Start. Moving focus within the same Form does not stop the session, but the practice-focus gate prevents input elsewhere from being recorded.
 
-## Planned event and recording lifecycle
+Closing stops collection before native shutdown. A canceled close leaves recording stopped and permits an explicit new Start. Disposal stops the session and removes local input/button subscriptions before disposing controls and owned fonts.
 
-A local KeyDown/KeyUp and/or KeyPress event is normalized by App and offered to the session only when recording was explicitly started and the application is active. Core does not receive WinForms Keys values, control handles or global keyboard state.
+Start is enabled while stopped, Stop while recording, Clear when records exist; all are disabled while closing. Export remains disabled. Status explains state in text; its accessible description is updated with it.
 
-The exact event/repeat/modifier policy will be decided and tested in Stage 02. Store names and timestamps; do not accumulate a hidden text reconstruction.
+## Delivery semantics
 
-The planned states are Stopped and Recording. Start permits appends. Stop and deactivation/minimize prevent appends immediately. Activation does not resume; the user must press Start. Clear removes the in-memory/displayed records without causing file writes. Resolve any pending event state at stop/focus boundaries so stale input cannot leak into another session.
+Every delivered Down/Up, including native Down repeats and modifier events, is independent. Native editing/shortcuts are not suppressed; Tab remains navigation. Some navigation, shortcut, layout and input-method behavior is handled by Windows before local key events. Names identify virtual keys, not reconstructed text.
 
-## Planned export flow
+A boundary may leave unmatched events. No missing Down/Up is fabricated, and practice text typed before Start is not backfilled.
 
-An explicit Export action takes a stable record snapshot, requests a destination through SaveFileDialog, formats consistently and writes locally. Dialog focus loss also stops recording. Cancellation is normal. A file failure must preserve in-memory records and show a readable error. No automatic saving, network delivery or hidden persistence is permitted.
+## Layout, DPI and resources
 
-The timestamp format, encoding, newline policy and replacement behavior will be specified with Stage 03, not claimed as current functionality.
+The resizable root TableLayoutPanel retains automatic instruction/status rows and a proportional two-column workspace. FlowLayoutPanel holds actions; native GroupBoxes contain multiline practice and noneditable events. Layout is suspended during construction before the initial DPI pass.
 
-## OOP and maintenance
+The 96-DPI design client remains 960 × 720, minimum design window 820 × 680. Actual 120-DPI captures have a 1200 × 900 client and 1218 × 947 window. Minimum/wide state layouts are checked; physical 100%/150% transitions remain pending.
 
-Use immutable values, encapsulated session state and small UI/I/O responsibilities. Prefer composition over unnecessary inheritance. Tests will isolate rules and formatting from the native window. Optional statistics can later consume snapshots, but are deferred.
+Form-owned point-unit fonts are disposed; system colors, native focus, accessible names and distinct mnemonics remain. Practice label uses Alt+I, group Alt+P, event group Alt+E, Start Alt+S, Stop Alt+T, Clear Alt+C; Export Alt+X remains disabled.
 
-See [decisions](DECISIONS.md), [requirements](REQUIREMENTS.md), and [test strategy](TESTING.md).
+## Planned export — Stage 03 only
+
+A future explicit action will take a stable snapshot, ask for a local destination, and format/write records with recoverable errors. Dialog focus loss must stop recording. Cancellation is normal; no automatic save or network delivery is permitted.
+
+File format, encoding, replacement policy and I/O service are not implemented. Statistics/filtering are deferred. See [decisions](DECISIONS.md), [requirements](REQUIREMENTS.md) and [testing](TESTING.md).

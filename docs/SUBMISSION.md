@@ -11,14 +11,14 @@ The PDF recommends YMH219-KeyEventLogger; the owner selected [alaamadii/KeyEvent
 ## Implementation and repository
 
 - [x] Initial solution and nonrecording window; PR #1 merged.
-- [x] Stage 01 UI implemented with nine App tests and one authentic preview; owner acceptance pending.
+- [x] Stage 01 interface merged in PR #2.
 - [x] SDK policy, local commands, VS Code configuration and exclusions.
 - [x] Requirements, architecture, decisions and completion plan.
-- [ ] Mandatory local recording/status/start/stop/clear complete.
+- [x] Stage 02 local recording/status/start/stop/clear implemented with 38 passing cases; owner/physical acceptance pending.
 - [ ] TXT export success, cancellation and error handling complete.
 - [ ] Recording boundaries verified.
 - [ ] Final exact-head local/hosted checks pass.
-- [ ] At least two authentic screenshots embedded in README.
+- [x] Two authentic Stage 02 recording/stopped screenshots embedded in README; final refresh/owner approval pending.
 - [ ] README accurately describes final behavior and limitations.
 - [ ] Final diff excludes generated output, personal data and captured logs.
 - [ ] Owner accepts final PR.
@@ -32,10 +32,10 @@ The PDF recommends YMH219-KeyEventLogger; the owner selected [alaamadii/KeyEvent
 | Export | Destination, cancel, successful file, representative errors | Not performed |
 | Display/debugging | Physical scaling and VS Code F5 | Not performed |
 | Second computer | Date, Windows/SDK, commit and results | Not performed |
-| Screenshots | Authentic captures and owner approval | One Stage 01 blank preview included; final functional pair/owner approval pending |
+| Screenshots | Authentic captures and owner approval | Two synthetic-demo actual Stage 02 captures included; final refresh/owner approval pending |
 
 ## Delivery
 
 The course deadline is 2026-11-30 at 23:59; later commits may count as late. Working schedules use Asia/Riyadh; confirm the institution's timezone if different. The owner submits only their GitHub profile link through Classroom. The assistant must not submit or merge without explicit authorization.
 
-Stages 00–01 provide the foundation and interface, not a completed assignment. CI success does not replace manual acceptance.
+Stages 00–02 provide the foundation, interface and local recording. Export and final acceptance remain outstanding. CI success does not replace manual acceptance.
