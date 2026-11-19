@@ -105,13 +105,13 @@ App and Core have no third-party package dependencies. Both test projects refere
 
 ## Development and documentation
 
-Stages 00–03 are merged through [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4). The final documentation/QA candidate is reviewed separately. The owner approves merging; the assistant does not merge automatically. Implementation and CI completion do not establish course submission acceptance.
+Stages 00–03 are merged through [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4). The final documentation/QA candidate is tracked in [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5). The owner approves merging; the assistant does not merge automatically. Implementation and CI completion do not establish course submission acceptance.
 
 | Guide | Purpose |
 | --- | --- |
 | [Plan](docs/PLAN.md) | Five stages, deliverables, and acceptance gates |
 | [Requirements](docs/REQUIREMENTS.md) | Instructor requirements, owner choices, acceptance criteria |
-| [Architecture](docs/ARCHITECTURE.md) | Current scaffold and planned responsibilities |
+| [Architecture](docs/ARCHITECTURE.md) | Implemented responsibilities and dependency boundaries |
 | [Decisions](docs/DECISIONS.md) | Design rationale and consequences |
 | [Setup](docs/SETUP.md) | Tools, commands, SDK policy, troubleshooting |
 | [Testing](docs/TESTING.md) | Actual results and planned verification |

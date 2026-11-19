@@ -60,7 +60,7 @@ Key-count/frequency statistics and date/time filtering are optional in the PDF. 
 | FR-004, NFR-002 | [Export flow](../src/KeyEventLogger.App/Forms/MainForm.Export.cs), [real file cases](../tests/KeyEventLogger.App.Tests/TextLogExporterTests.cs), [UI integration](../tests/KeyEventLogger.App.Tests/ExportUiTests.cs) | Human native Save/overwrite/error flow |
 | SEC-001 through SEC-004 | Practice-only subscriptions, activity/focus/stop gates, no production hook/polling/network API; [code walkthrough](CODE_GUIDE.md) | External-app physical check; no claim of system monitoring |
 | NFR-001 / explanation | App/Core boundaries, small value/session/export responsibilities, [walkthrough](CODE_GUIDE.md) | Student oral explanation |
-| SUB-001 through SUB-004 | Public repo, source/README/exclusions, authentic captures and staged commit history | Final publication/current-head checks and owner image acceptance |
+| SUB-001 through SUB-004 | Public repo, source/README/exclusions, authentic captures and staged commit history | Current-head CI tracked on PR #5; owner image acceptance remains pending |
 | SUB-005 / SUB-006 | Explicit [submission procedure](SUBMISSION.md) | Second computer, final owner acceptance and Classroom action |
 
 All required application features are implemented. This audit does not waive the owner-directed student-number omission or mark missing manual evidence complete.

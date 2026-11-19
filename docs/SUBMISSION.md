@@ -18,8 +18,8 @@ The selected public repository is [alaamadii/KeyEventLogger](https://github.com/
 - [x] Regression baseline: 72 cases, zero build warnings/errors/failures/skips.
 - [x] Two authentic current screenshots; controlled picker explicitly disclosed.
 - [x] Source-linked [code walkthrough](CODE_GUIDE.md).
-- [ ] Published candidate clean-checkout evidence recorded.
-- [ ] Exact final-head hosted CI and public artifact checks recorded.
+- [x] Published candidate 9254884 clean-checkout, actual launch/normal close and anonymous public artifact evidence recorded in [TESTING](TESTING.md).
+- [x] Exact final-head hosted CI evidence tracked on [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5), separately from the tested clean-checkout candidate.
 - [ ] Owner manual results, image approval and second-computer evidence.
 - [ ] Owner approves final PR and course submission readiness.
 

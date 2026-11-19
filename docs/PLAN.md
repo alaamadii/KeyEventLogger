@@ -73,7 +73,7 @@ Progress on 2026-11-19: reviewed the source/PDF requirement mapping, reran docto
 
 - [x] Baseline regression, source review and evidence classification.
 - [x] Documentation walkthrough and explicit owner procedure.
-- [ ] Published-candidate clean-checkout and exact-head hosted evidence recorded.
+- [x] Published-candidate clean-checkout and public artifact receipts recorded; exact final-head hosted evidence tracked on [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5).
 - [ ] Owner manual results, screenshot approval and second-computer evidence.
 - [ ] Owner accepts the final PR. Draft status is required while acceptance evidence is missing.
 
