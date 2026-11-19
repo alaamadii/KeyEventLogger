@@ -4,6 +4,7 @@
     <Project Path="src/KeyEventLogger.Core/KeyEventLogger.Core.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/KeyEventLogger.App.Tests/KeyEventLogger.App.Tests.csproj" />
     <Project Path="tests/KeyEventLogger.Core.Tests/KeyEventLogger.Core.Tests.csproj" />
   </Folder>
 </Solution>
