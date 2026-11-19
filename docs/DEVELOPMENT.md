@@ -1,0 +1,30 @@
+# Development workflow and log
+
+Use one dedicated branch per stage. Inspect status, preserve user work, validate, review the diff, make meaningful commits, then publish/open a PR when authorized. The owner approves merging. Stage numbers and actual GitHub PR numbers differ.
+
+## 2026-11-19 — Stage 00 initialization
+
+Branch: chore/initialize-project.
+
+Objective: prepare a professional, documented .NET 10 Windows Forms foundation without recording functionality.
+
+### Preparation and implemented work
+
+- Verified the intended keyEventLoger directory was empty and writable, with no applicable ancestor/local AGENTS.md. The owner explicitly authorized working in this separate directory; FlappyBird is untouched.
+- Confirmed the existing alaamadii/KeyEventLogger repository is public and has no remote branches. Verified Git identity/authentication and installed SDK 10.0.402.
+- Reviewed PDF pages 1, 2–3 and 5, separating instructor rules from owner/project choices.
+- Created minimal bootstrap commit 35e28f7 on main and pushed it as explicitly authorized, then created chore/initialize-project for substantive work.
+- Added App/Core/Core.Tests, a single programmatic initialization window, SDK pin, development commands, VS Code configuration, formatting settings and output exclusions.
+- Added professional README and guides for requirements, plan, architecture, decisions, setup, testing and submission.
+- Planned future local recording/export without implementing handlers, session types, controls, file writes or statistics.
+- Added Windows CI and a review template. Removed the need for template/empty test cases; Core intentionally has no behavior yet.
+- Preserved the owner-directed student-number omission and supplied author name.
+
+### Validation and delivery
+
+- `./scripts/dev.ps1 doctor` passed with SDK 10.0.402 and WindowsDesktop runtime 10.0.13 on Windows 10.0.22631.
+- `./scripts/dev.ps1 check` passed restore, zero-warning/error Release build, test-runner invocation and formatting. Core.Tests discovered zero cases, as expected for a behavior-free scaffold; this is not claimed as a passing unit-test suite.
+- The ignored native probe launched the actual Release EXE, inspected its title and exact Label at reported 120 DPI, then requested normal close and observed exit 0. No input was captured.
+- JSON, project boundaries, 20 local Markdown links across 10 files, and intended Git ignore behavior passed inspection. Actual TRX counters and the staged diff are checked before publication.
+- No application defect was encountered. Future-stage tests, human review, physical display/input, F5 and another-computer checks remain pending.
+- Local evidence is detailed in [TESTING](TESTING.md); exact hosted CI/publication results will be linked from the PR. This entry does not imply owner acceptance or an automatic merge.
