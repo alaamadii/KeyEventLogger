@@ -40,7 +40,7 @@ The command-line lifecycle probe does not prove that an owner pressed F5; actual
 | NuGet restore fails | Check connectivity and NuGet sources; do not add credentials to Git |
 | WindowsDesktop unavailable | Use supported Windows with the matching SDK/runtime |
 | PowerShell policy blocks scripts | Follow the machine's script-signing/execution policy; do not weaken system-wide policy |
-| Missing test discovery | Stage 02 now has 19 Core and 19 App cases; check restore, test SDK/adapters and project targets |
+| Missing test discovery | Stage 03 now has 26 Core and 46 App cases; check restore, test SDK/adapters and project targets |
 | Export accidentally appears in Git | Unstage it without deleting user data; place future development exports under exports/ or *.keyevents.txt |
 
-The application starts Stopped. Press Start, then use synthetic non-sensitive practice input to inspect Down/Up events. Stop retains records. Clear removes events while preserving practice text/state. Leaving/minimizing stops recording; return requires Start. Tab navigates normally. Export remains disabled until Stage 03.
+The application starts Stopped. Press Start, then use synthetic non-sensitive practice input to inspect Down/Up events. Stop retains records. Clear removes events while preserving practice text/state. Leaving/minimizing stops recording; return requires Start. Tab navigates normally. Export becomes available when events exist. It stops recording, requests a local .txt destination, and reports a separate result. Cancel/failure keep records; Start is required again. Use ignored exports/ or *.keyevents.txt for development exports. See [export behavior](EXPORT.md).

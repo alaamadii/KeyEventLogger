@@ -1,6 +1,31 @@
 # Testing strategy and evidence
 
-## Current evidence — Stage 02, 2026-11-19
+## Current evidence — Stage 03, 2026-11-19
+
+| Check | Actual result |
+| --- | --- |
+| Final ./scripts/dev.ps1 check | Restore/build/test/format passed; zero build warnings/errors |
+| Core.Tests | 26 passed, 0 failures/skips |
+| App.Tests | 46 passed, 0 failures/skips; total 72 |
+| Actual Release EXE | Title/Stopped state verified; normal close exited 0 |
+| Real native SaveFileDialog | Opened and canceled; recording stayed stopped |
+| Native Save/overwrite automation | Attempted but did not complete reliably; not recorded as passing |
+| Real MainForm + controlled picker + actual exporter | 8 synthetic events; file bytes checked; success/cancel/read-only failure/retry preserve data and stopped state |
+| Visual checks | Actual 120-DPI default/minimum/wide windows inspected |
+| Screenshots | Current captures identify source 40845cb and controlled picker; [provenance](screenshots/README.md) |
+| Documentation/source checks | 35 local targets across 12 Markdown files, five capture hashes, narrow exclusions and Core/API boundaries passed |
+| Hosted CI | Exact final-head outcome will be recorded on the export PR |
+
+Formatter assertions cover exact header/count/tabs/CRLF/final newline, milliseconds/offsets, Arabic/Turkish cultures, Unicode, repeats/backward clock order, empty input and nulls. Real file tests verify no-BOM bytes, new/overwrite, missing folders, locks, read-only retry, encoding failure retention/cleanup, invalid snapshots/names, UNC/device paths and substituted network-drive metadata. No real network drive is contacted.
+
+UI tests use picker/exporter substitutes only where specified, with separate real-writer integration. They verify disabled-empty/busy states, stop before selection, cancel/no-write, stable model snapshot, success/failure/retry retention, close during selection and long feedback bounds. Existing serialized STA native recording/layout cases remain.
+
+Initial build/test assumptions were corrected: SaveFileDialog has no singular SupportMultiDottedExtension property, and Windows reports some locked replacement failures as UnauthorizedAccessException rather than IOException. No final test was skipped or replaced by a placeholder.
+
+Physical Save dialog save/overwrite confirmation and error review remain pending, as do physical keyboard/external-app focus, actual 100%/150% monitor transitions, assistive technology/high contrast, F5 and a second computer. GUI automation attempts are not human/manual evidence.
+
+
+## Historical Stage 02 evidence — 2026-11-19
 
 | Check | Actual result |
 | --- | --- |

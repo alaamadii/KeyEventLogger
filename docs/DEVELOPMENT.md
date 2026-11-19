@@ -75,3 +75,18 @@ Branch: feat/local-key-events.
 - Pushed implementation/tests 3494e0a and documentation/captures 8880eb1 to feat/local-key-events. Remote head matched 8880eb106c3c2a28b2503640d2c06f21dfaa3cad.
 - Opened [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3) targeting main. This follow-up records its actual link; exact final-head CI results are tracked in the PR description.
 - Stage 02 remains awaiting owner review. No automatic merge, Stage 03 work, visibility change or Classroom submission was performed.
+
+## 2026-11-19 — Stage 03 local TXT export
+
+Branch: feat/text-export.
+
+- Confirmed owner merge of PR #3 at d9fdd60, fast-forwarded main from a clean tree and created the branch. Preserved README title and identity omission.
+- Added a pure Core formatter, App local destination policy and same-directory staged UTF-8 writer. Existing destination is not deleted first; owned temporary cleanup follows failures.
+- Added owned SaveFileDialog selection and two focused App boundaries for UI tests. Export stops before snapshot/selection, guards reentry/closing, preserves data and reports results separately from recording state.
+- Added bounded accessible/tooltip feedback and retained practice-only focus/lifecycle behavior.
+- Corrected an unsupported SaveFileDialog property during the first build, and adjusted the locked-file test to accept the OS's IO/access exception categories without weakening data-retention/cleanup assertions.
+- Final ./scripts/dev.ps1 check passed: zero build warnings/errors, 26 Core + 46 App = 72 cases, no failures/skips, formatting clean. Actual Release EXE title/Stopped status and normal close exited 0.
+- A scripted real SaveFileDialog opened/canceled successfully. Save/overwrite automation did not complete reliably and was not counted as passing; only the verified temporary helper process was closed. Native/manual save/overwrite checks remain pending.
+- A separate actual-MainForm probe with a controlled picker and real exporter verified synthetic DEMO events, actual UTF-8 bytes, success/cancel/read-only failure/retry and data/state retention. Inspected 125% default/minimum/wide captures.
+- Source 40845cb produced two new direct window captures. Provenance explicitly identifies the substituted picker and real file writer; no exported TXT or unrelated desktop data is committed.
+- Validated 35 local targets across 12 Markdown files, five current/historical image hashes, narrow exclusions, Core/API boundaries and final whitespace/diff. Publication and hosted results are tracked separately. No merge, Stage 04 work, visibility change or Classroom action.
