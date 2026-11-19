@@ -90,3 +90,9 @@ Branch: feat/text-export.
 - A separate actual-MainForm probe with a controlled picker and real exporter verified synthetic DEMO events, actual UTF-8 bytes, success/cancel/read-only failure/retry and data/state retention. Inspected 125% default/minimum/wide captures.
 - Source 40845cb produced two new direct window captures. Provenance explicitly identifies the substituted picker and real file writer; no exported TXT or unrelated desktop data is committed.
 - Validated 35 local targets across 12 Markdown files, five current/historical image hashes, narrow exclusions, Core/API boundaries and final whitespace/diff. Publication and hosted results are tracked separately. No merge, Stage 04 work, visibility change or Classroom action.
+
+### Stage 03 publication
+
+- Pushed implementation/tests 40845cb and documentation/captures 7977fe8 to feat/text-export; remote matched 7977fe8efc5e52242da130d16721bb90ad35df3b.
+- Opened [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4) targeting main. This follow-up records the actual link; exact final-head hosted results are recorded in its description.
+- Native/manual Save/overwrite and owner acceptance remain pending. No automatic merge, Stage 04 work, visibility change or Classroom action.

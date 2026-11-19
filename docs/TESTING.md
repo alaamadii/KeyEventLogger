@@ -14,7 +14,7 @@
 | Visual checks | Actual 120-DPI default/minimum/wide windows inspected |
 | Screenshots | Current captures identify source 40845cb and controlled picker; [provenance](screenshots/README.md) |
 | Documentation/source checks | 35 local targets across 12 Markdown files, five capture hashes, narrow exclusions and Core/API boundaries passed |
-| Hosted CI | Exact final-head outcome will be recorded on the export PR |
+| Hosted CI | Exact final-head hosted outcome is tracked on [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4); owner review pending |
 
 Formatter assertions cover exact header/count/tabs/CRLF/final newline, milliseconds/offsets, Arabic/Turkish cultures, Unicode, repeats/backward clock order, empty input and nulls. Real file tests verify no-BOM bytes, new/overwrite, missing folders, locks, read-only retry, encoding failure retention/cleanup, invalid snapshots/names, UNC/device paths and substituted network-drive metadata. No real network drive is contacted.
 
