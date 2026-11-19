@@ -1,4 +1,4 @@
-# YMH219 — Key Event Logger
+# YMH219 : Key Event Logger
 
 An educational Windows Forms application for **Nesne Tabanlı Programlama (YMH219)**, developed by **Alaa Madi** using C#/.NET 10.
 
