@@ -48,3 +48,24 @@ Context: the PDF requests name and student number; the owner explicitly excludes
 Decision: publish the supplied name Alaa Madi, omit and do not request the student number.
 Rationale: follow the owner's publication instruction.
 Consequences: record the instructor requirement separately; do not claim compliance with that field or a waiver. See [submission](SUBMISSION.md).
+
+## ADR-008 — Resizable native layout and initial DPI — 2026-11-19
+
+Context: the initialization label is being replaced with instructions, controls and two usable content areas.
+Decision: use native controls, nested TableLayoutPanels, a wrapping action panel, automatic text rows and a proportional workspace. Permit resizing with a minimum, retaining PerMonitorV2 and a 96-DPI baseline.
+Rationale: keep layout understandable and make available space serve the text rather than absolute coordinates.
+Consequences: layout is suspended during construction before one completed initial layout/scaling pass. Two point-unit fonts are Form-owned/disposed. Minimum/resized text bounds are asserted; actual physical DPI transitions still require owner checks.
+
+## ADR-009 — Truthful preview controls — 2026-11-19
+
+Context: UI is Stage 01; recording and export belong to later stages.
+Decision: disable all four future actions, show explicit nonrecording/stage notes and use an empty noneditable ListBox. The practice TextBox performs native local editing only.
+Rationale: the interface must not imply working capture or manufacture events.
+Consequences: no lifecycle/model/keyboard handlers or export I/O are added. Clear is also deferred; no faux status toggles or sample event rows.
+
+## ADR-010 — Native UI assertions — 2026-11-19
+
+Context: Core still has no domain behavior, while the UI now has meaningful contracts.
+Decision: add Windows App.Tests referencing App; run cases serially on STA threads with matching DPI/visual-style defaults and dispose windows.
+Rationale: test disabled actions, ordinary editing without collection, noneditable events, tab order and unclipped minimum/resized layouts directly.
+Consequences: nine App cases cover this stage, while Core stays at zero. Synthetic WM_CHAR messages are directed only to test-owned controls; production has no keyboard handler or hook. Automated assertions do not replace physical or assistive-technology review.

@@ -1,15 +1,32 @@
 # Architecture
 
-## Implemented in Stage 00
+## Implemented through Stage 01
 
 The solution contains:
-- **App (net10.0-windows)**: STA entry point, explicit PerMonitorV2 DPI policy, visual styles, and programmatically constructed MainForm.
-- **Core (net10.0)**: library scaffold with no domain types or project/package dependencies.
-- **Core.Tests (net10.0)**: xUnit infrastructure referencing Core; no test cases yet.
+- **App (net10.0-windows)**: STA entry point, PerMonitorV2 DPI policy, visual styles and a programmatic MainForm.
+- **Core (net10.0)**: independent scaffold; no domain types or project/package dependencies.
+- **Core.Tests (net10.0)**: xUnit infrastructure; zero domain test cases.
+- **App.Tests (net10.0-windows)**: nine native UI assertions/cases using App.
 
-The dependency direction is App → Core and Core.Tests → Core. Core must never reference App or Windows UI APIs.
+Dependencies are App → Core, Core.Tests → Core and App.Tests → App. Core is unchanged by Stage 01 and has no Windows Forms, drawing, timer or file-dialog dependency.
 
-MainForm owns its single Label through the WinForms control tree. It opens centered with a fixed 640 × 360 logical client area, a 96-DPI baseline, and maximize disabled. It contains no custom drawing resources, keyboard handlers, timers, session model, file access or network code. The window title is Key Event Logger; its status says recording is not implemented.
+## Interface ownership and behavior
+
+MainForm owns the control tree and two custom point-unit fonts, disposed when the Form is disposed. Small private construction methods organize the layout; no separate presenter, recording session or export service is needed yet.
+
+A root TableLayoutPanel has automatic rows for heading, status, actions, availability and scope notes, plus a remaining-height row for the workspace. Two equal-width columns contain native GroupBoxes for practice and recorded events. A wrapping FlowLayoutPanel holds the four disabled buttons. Labels size to text and wrap within the available width.
+
+The practice TextBox is multiline, accepts Return, and leaves Tab for navigation. It supports ordinary native editing without application handlers inspecting its text. The event ListBox cannot be edited through typing; it starts empty and its separate count remains zero. Start/Stop/Clear/Export have no handlers and remain disabled. Visible stage notes explain availability without depending on tooltips.
+
+Accessible names/descriptions, group mnemonics and the practice label accompany native keyboard focus. Tab/Shift+Tab traverse the usable practice and event controls; disabled actions are skipped. System colors and ordinary Windows text keep the visual design restrained. Screen-reader and high-contrast user acceptance are still pending.
+
+## Resizing and DPI
+
+Stage 01 replaces the fixed 640 × 360 initialization window with a resizable window. The requested design client is 960 × 720, with a design minimum window size of 820 × 680 at the 96-DPI baseline. Native nonclient metrics and DPI scaling affect actual dimensions.
+
+Construction suspends layout until the full control tree is attached, then resumes/executes layout so initial DPI scaling applies consistently. PerMonitorV2 remains configured at entry. Dock, percentages, AutoSize, wrapping and point-unit fonts handle available space; no custom pixel renderer or scaling transform is introduced.
+
+At the observed 120 DPI (125%), the preview reported a 1200 × 900 client and 1218 × 947 full window. Minimum and wider captures were also inspected. Those checks do not establish physical 100%/150% monitor transitions; they remain pending.
 
 ## Planned responsibilities — not implemented
 
@@ -17,7 +34,7 @@ MainForm owns its single Label through the WinForms control tree. It opens cente
 | --- | --- | --- |
 | KeyEventRecord | Immutable normalized key name, event type, timestamp with offset | Core |
 | RecordingSession | Encapsulated active/stopped state, records, start/stop/clear | Core |
-| MainForm | Local event wiring, status, practice area, controls | App |
+| MainForm integration | Future local event wiring into the existing interface | App |
 | TXT formatter | Stable text representation of synthetic/real records | Core if pure and justified |
 | Export service | Explicit destination writing and recoverable I/O results | App |
 | SaveFileDialog | Destination choice and ordinary cancellation | App |

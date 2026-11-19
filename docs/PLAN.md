@@ -8,8 +8,8 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 
 | Stage | Branch | Deliverable | Current status |
 | --- | --- | --- | --- |
-| 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Published in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1); owner review pending |
-| 01 | feat/logger-ui | Event-list layout, practice area, Start/Stop/Clear/Export controls and status | Planned |
+| 00 | chore/initialize-project | Scaffold, docs, tooling, Windows CI | Merged in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) on 2026-11-19 |
+| 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Published in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2); owner review pending |
 | 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Planned |
 | 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Planned |
 | 04 | docs/final-submission | Usability, regression QA, authentic screenshots and final checklist | Planned |
@@ -21,7 +21,7 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 - [x] Add App/Core/test infrastructure and a compiling nonrecording window.
 - [x] Add development commands, VS Code settings, exclusions and CI configuration.
 - [x] Document assignment scope, planned architecture and future acceptance.
-- [ ] Owner accepts the PR after reviewing validation and hosted checks.
+- [x] Owner merged PR #1; this records stage acceptance, not completion of pending physical/manual checks.
 
 See [TESTING](TESTING.md) for executed results rather than interpreting configuration or a checklist as proof.
 
@@ -30,6 +30,12 @@ See [TESTING](TESTING.md) for executed results rather than interpreting configur
 Create the event list, dedicated practice area, clear status and accessible controls. Recording/export controls must truthfully indicate that their behavior is not implemented until its stage. Establish tab order, resizing/DPI behavior and readable empty/error states. Do not add keyboard recording or export yet.
 
 Acceptance: owner can inspect the UI; keyboard navigation and supported display checks are documented; no control suggests active capture. Include meaningful UI assertions where practical.
+
+Progress on 2026-11-19: resizable native layout, disabled actions, practice editing, noneditable empty events, status/availability notes and accessible navigation are implemented. Nine App tests and the local check pass; actual 125% window captures and scripted lifecycle/focus/restore checks are recorded in TESTING.
+
+- [x] Interface implemented without recording or export.
+- [x] Meaningful native tests and local validation recorded.
+- [ ] Owner accepts the interface PR. CI success alone does not accept this stage.
 
 ## Stage 02 — Local event recording
 

@@ -1,12 +1,33 @@
 # Testing strategy and evidence
 
+## Current evidence — Stage 01, 2026-11-19
+
+| Check | Actual result |
+| --- | --- |
+| `./scripts/dev.ps1 test` | Nine native App cases pass; Core has zero cases |
+| Final `./scripts/dev.ps1 check` | Restore, Release build, test invocation and formatting passed; zero build warnings/errors |
+| App.Tests | 9 passed, 0 failed/skipped; no placeholder assertions |
+| Core.Tests | 0 discovered/executed; expected because no domain behavior is implemented |
+| Actual Release EXE | Main title and nonrecording status found; normal close exits 0 |
+| Actual MainForm diagnostic | Scripted focus-away/return, minimize/restore and closing preserve the empty/nonrecording preview |
+| Visual inspection | Actual target-window default/minimum/wide captures inspected at 120 DPI (125%); no clipped instructions or hidden content areas observed |
+| Screenshot | One authentic blank UI capture; [provenance and checksum](screenshots/README.md) |
+| Documentation/exclusions | 24 local targets across 11 Markdown files, image SHA-256, source boundary inspection and generated/export exclusions passed |
+| Hosted checks | Exact final-head hosted results are tracked in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2); owner review remains pending |
+
+App tests initialize the same DPI/visual-style defaults as Program, serialize native work, use STA threads, and dispose Forms. They assert disabled/visible future actions and status, native practice editing without collected events, noneditable empty events, tab traversal, four minimum/resized configurations with text/content bounds, and a blank fresh Form. Tests use only synthetic character messages to their own controls; production has no keyboard handlers.
+
+No equivalent-scale simulation is claimed as a physical display check. Actual 100% and 150% displays, monitor transitions, physical keyboard/assistive-technology acceptance, VS Code F5 and a second computer remain **not performed**. Stage 02 recording/focus-stop behavior and Stage 03 export are not implemented or validated by this UI preview.
+
+The historical Stage 00 record below is retained separately.
+
 ## Stage 00 test scope
 
 Core currently contains no domain behavior and Core.Tests contains no test cases. The test runner must be exercised, but “no tests available” is not a passing behavioral test suite. Do not add empty facts, template assertions, or feature implementations just to report coverage.
 
 Build/restore/format checks, reference/target inspection and actual executable lifecycle checks provide the appropriate initialization evidence. They do not validate future recording behavior.
 
-## Executed evidence — 2026-11-19
+## Stage 00 executed evidence — 2026-11-19
 
 | Check | Actual result |
 | --- | --- |
@@ -66,4 +87,4 @@ Use [SUBMISSION](SUBMISSION.md) to track owner acceptance. No manual checkbox sh
 
 The initialization is published in [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) from `chore/initialize-project` to `main`. Implementation/tooling commit `8beaa58` and documentation commit `955dfcc` were pushed and their remote head verified.
 
-Hosted checks for the final documentation head are pending at this entry's creation. The PR description records the exact final commit, workflow run and confirmed outcome once available. Do not interpret local success or workflow configuration as hosted success. Zero unit-test cases remains the expected Stage 00 discovery result.
+Final Stage 00 head 237faed passed [Windows run 44545069787](https://github.com/alaamadii/KeyEventLogger/actions/runs/44545069787), including restore/build/test-runner/format/TRX upload with zero cases. PR #1 was merged by the owner on 2026-11-19. That zero-case result describes initialization, not current App test coverage.

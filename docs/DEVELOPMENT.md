@@ -34,3 +34,23 @@ Objective: prepare a professional, documented .NET 10 Windows Forms foundation w
 - Pushed implementation/tooling `8beaa58` and documentation/evidence `955dfcc` to `chore/initialize-project`; remote head matched `955dfccb81a7dbbff6ca17137774793ad5af659c`.
 - Opened [PR #1](https://github.com/alaamadii/KeyEventLogger/pull/1) against main. This follow-up records the actual publication rather than predicting a PR number.
 - Final-head hosted results are tracked on the PR. It remains open for owner review; no merge, visibility change, Classroom submission or Stage 01 implementation was performed.
+
+## 2026-11-19 — Stage 01 application interface
+
+Branch: feat/logger-ui.
+
+- Confirmed owner merge of PR #1 at 0d2909d. Fetched and fast-forwarded main to d347fc0, preserving the owner's README title change, then created the dedicated branch from a clean tree.
+- Replaced the placeholder with a title/purpose, explicit nonrecording status, four disabled actions, visible stage availability, ordinary multiline practice TextBox, empty ListBox/count and scope guidance.
+- Added native resizable layout, a sensible minimum, accessibility names/mnemonics and usable tab order. Suspended construction layout before the completed initial DPI pass; disposed Form-owned point-unit fonts.
+- Added net10.0-windows App.Tests and nine passing cases. Core source and domain test count remain unchanged; no lifecycle, input subscription, model, export or statistics implementation.
+- Executed `./scripts/dev.ps1 test`, formatting, then the final `./scripts/dev.ps1 check` after the last code change: restore/build/test/format passed, zero build warnings/errors, nine App passes, zero skips/failures and zero Core cases.
+- The actual Release EXE title/status and normal-close exit 0 passed a native probe. A separate actual-MainForm diagnostic exercised focus-away/return and minimize/restore without leaving the nonrecording/empty state.
+- Inspected actual default, minimum and wide target-window captures at reported 120 DPI. Committed one blank actual interface capture with source/hash provenance; no practice text, fake records or unrelated desktop content is included.
+- Application/test implementation is commit 57d0ecb. Validated 24 local targets across 11 Markdown files, output exclusions, screenshot hash/provenance, production source boundary and final diff; hosted results will be associated with the final PR head.
+- Physical keyboard/accessibility review, actual 100%/150% and cross-monitor transitions, VS Code F5, second-computer work and owner acceptance remain pending. No merge or Stage 02 work was performed.
+
+### Stage 01 publication
+
+- Pushed implementation/tests 57d0ecb and documentation/capture d39cbde to feat/logger-ui. Verified remote head d39cbdedcdf509dd8c15d0c082c84baf619a4142.
+- Opened [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) targeting main. This follow-up records its actual link; exact final-head hosted checks are recorded on the PR.
+- Stage 01 remains awaiting owner review. No automatic merge, Stage 02 implementation, repository visibility change or Classroom submission was performed.

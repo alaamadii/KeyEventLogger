@@ -10,7 +10,8 @@ The PDF recommends YMH219-KeyEventLogger; the owner selected [alaamadii/KeyEvent
 
 ## Implementation and repository
 
-- [x] Initial solution and nonrecording window.
+- [x] Initial solution and nonrecording window; PR #1 merged.
+- [x] Stage 01 UI implemented with nine App tests and one authentic preview; owner acceptance pending.
 - [x] SDK policy, local commands, VS Code configuration and exclusions.
 - [x] Requirements, architecture, decisions and completion plan.
 - [ ] Mandatory local recording/status/start/stop/clear complete.
@@ -31,10 +32,10 @@ The PDF recommends YMH219-KeyEventLogger; the owner selected [alaamadii/KeyEvent
 | Export | Destination, cancel, successful file, representative errors | Not performed |
 | Display/debugging | Physical scaling and VS Code F5 | Not performed |
 | Second computer | Date, Windows/SDK, commit and results | Not performed |
-| Screenshots | Authentic captures and owner approval | Pending |
+| Screenshots | Authentic captures and owner approval | One Stage 01 blank preview included; final functional pair/owner approval pending |
 
 ## Delivery
 
 The course deadline is 2026-11-30 at 23:59; later commits may count as late. Working schedules use Asia/Riyadh; confirm the institution's timezone if different. The owner submits only their GitHub profile link through Classroom. The assistant must not submit or merge without explicit authorization.
 
-Stage 00 is preparation, not a completed assignment. CI success does not replace manual acceptance.
+Stages 00–01 provide the foundation and interface, not a completed assignment. CI success does not replace manual acceptance.
