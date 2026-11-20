@@ -124,3 +124,12 @@ Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f
 - Regression includes capacity/clear/restart, real Space/Back editing with separate Down/Up rows, native layouts, reserved aliases and error-detail redaction. An initial new editing test placed its caret at the beginning; corrected the test setup rather than changing native editing.
 - Executed full check: 30 Core + 61 App = 91 passed, zero failures/skips/build warnings/errors, formatting verified. The vulnerability query found no known vulnerable packages in configured sources; results are time/source dependent.
 - A preliminary actual-MainForm capture probe checked synthetic input, real export bytes, cancel/read-only failure/retry and default/minimum/wide windows with a controlled picker. Final source-linked captures and full documentation reconciliation follow. Human native Save/overwrite, physical display/F5 and a second computer remain pending.
+
+### Current review captures and documentation
+
+- Preliminary source c954743d3dcdd070b698c34c62bc4b9ffddc6c84 produced exploratory target-window images on 2026-11-20, 120 DPI (125%), 1318x947 full window. Native synthetic DEMO input generated 8 actual events; a controlled picker used the real formatter/writer and checked file bytes. Inspected default/minimum/wide and success images; no human native-dialog or monitor-transition result is inferred.
+- Reran doctor and the advisory query with the repository's official source; no known vulnerable packages were reported. The actual production EXE title/Stopped/normal-close exit 0 was checked separately.
+- Added USER_GUIDE and SECURITY with data inventory, retention/focus/export boundaries, plaintext/permissions/sync/erasure/race limits and precise verification steps. Reconciled README, architecture, code guide, setup, export, plan, submission and current/historical evidence. Retained old captures and checksums as history.
+- Publication/current-head CI and new-candidate clean-checkout receipts follow actual execution. No automatic merge, visibility change or Classroom action.
+
+- Final course-sheet reconciliation retained the specified native ListBox family through EventListBox column drawing and complete accessible row text, superseding the preliminary ListView choice. The full 91-case check passed again; an actual-Form probe also passed with the final ListBox. Final screenshots/provenance will identify that source separately.

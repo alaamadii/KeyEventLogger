@@ -143,3 +143,11 @@ Context: raw exception messages could display implementation paths and inconsist
 Decision: map recoverable export errors to stable guidance without raw exception text/stack details. Keep successful user-selected destination feedback. Use a repository NuGet.Config with official NuGet package/audit sources and explicit all-dependency auditing from low severity; keep warnings as errors.
 
 Consequences: error/cancel/success preserve data and stay stopped. Do not record diagnostic logs containing event data or exceptions. Known-advisory checks depend on current source data and are not proof of absence of vulnerabilities. See [NuGet audit behavior](https://learn.microsoft.com/en-us/nuget/concepts/auditing-packages).
+
+## ADR-021 — Retain the assignment's native ListBox — 2026-11-20
+
+Context: the final requirements reconciliation confirmed that the course sheet explicitly names ListBox/RichTextBox for event presentation. ADR-017's initial ListView exploration is superseded on the control choice.
+
+Decision: retain a native ListBox, subclassed as EventListBox with fixed-height column drawing and native header labels. A private immutable presentation row wraps the Core record and supplies a complete timestamp/type/name ToString for native item accessibility.
+
+Consequences: the improved aligned columns, alternating rows and native selection/navigation remain, without changing the required control family. Drawing uses the borrowed paint Graphics/font and disposes its temporary brush; row metrics are refreshed for font/DPI changes. Recording still adds model-derived rows and export still reads only the session snapshot. No table data is manufactured. Final captures must reference this implementation, not the earlier exploration.

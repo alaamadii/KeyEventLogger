@@ -222,10 +222,10 @@ public sealed class ExportUiTests
 
     private static Button Button(MainForm form, string name) => WindowsUi.Find<Button>(form, name);
     private static TextBox Practice(MainForm form) => WindowsUi.Find<TextBox>(form, "practiceText");
-    private static ListView Events(MainForm form) => WindowsUi.Find<ListView>(form, "eventList");
+    private static ListBox Events(MainForm form) => Assert.IsAssignableFrom<ListBox>(Assert.Single(form.Controls.Find("eventList", true)));
     private static Label Feedback(MainForm form) => WindowsUi.Find<Label>(form, "exportFeedback");
     private static string Status(MainForm form) => WindowsUi.Find<Label>(form, "recordingStatus").Text;
-    private static string[] Rows(MainForm form) => Events(form).Items.Cast<ListViewItem>().Select(item => string.Join("  |  ", item.SubItems.Cast<ListViewItem.ListViewSubItem>().Select(cell => cell.Text))).ToArray();
+    private static string[] Rows(MainForm form) => Events(form).Items.Cast<object>().Select(item => item.ToString()!).ToArray();
 
     private static void SendKey(Control control, Keys key, bool up) =>
         SendMessage(control.Handle, up ? 0x0101u : 0x0100u, (IntPtr)key, (IntPtr)(up ? -1073741823L : 1L));

@@ -152,13 +152,14 @@ public sealed partial class MainForm
         return card;
     }
 
-    private Panel CreateEventArea(out ListView events, out Label count, out Label empty)
+    private Panel CreateEventArea(out EventListBox events, out Label count, out Label empty)
     {
         var card = CreateCard("eventsGroup", "Recorded events");
         var content = CreateStack("eventsLayout");
         content.AutoSize = false;
-        content.RowCount = 3;
+        content.RowCount = 4;
         content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         content.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -173,29 +174,34 @@ public sealed partial class MainForm
         empty.Margin = new Padding(0, 0, 0, 12);
         content.Controls.Add(empty, 0, 1);
 
-        events = new ListView
+        var columns = new TableLayoutPanel
+        {
+            Name = "eventColumns",
+            Dock = DockStyle.Fill,
+            AutoSize = true,
+            ColumnCount = 3,
+            RowCount = 1,
+            Margin = Padding.Empty,
+            TabStop = false
+        };
+        columns.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, EventListBox.TimestampWidth));
+        columns.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, EventListBox.EventWidth));
+        columns.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        columns.Controls.Add(CreateLabel("timestampColumn", "Timestamp (local / UTC offset)"), 0, 0);
+        columns.Controls.Add(CreateLabel("typeColumn", "Event"), 1, 0);
+        columns.Controls.Add(CreateLabel("keyColumn", "Key"), 2, 0);
+        content.Controls.Add(columns, 0, 2);
+
+        events = new EventListBox
         {
             Name = "eventList",
             AccessibleName = "Recorded events",
             AccessibleDescription = "Read-only columns: local timestamp and UTC offset, KeyDown or KeyUp, and virtual-key name. A press normally has both events.",
-            View = View.Details,
-            FullRowSelect = true,
-            MultiSelect = false,
-            HideSelection = false,
-            HeaderStyle = ColumnHeaderStyle.Nonclickable,
-            ShowItemToolTips = true,
-            LabelEdit = false,
-            BorderStyle = BorderStyle.None,
-            BackColor = UiTheme.Surface,
-            ForeColor = UiTheme.Text,
             Dock = DockStyle.Fill,
             Margin = Padding.Empty,
             TabIndex = 0
         };
-        events.Columns.Add("Timestamp (local / UTC offset)", LogicalToDeviceUnits(232));
-        events.Columns.Add("Event", LogicalToDeviceUnits(88));
-        events.Columns.Add("Key", LogicalToDeviceUnits(120));
-        content.Controls.Add(events, 0, 2);
+        content.Controls.Add(events, 0, 3);
         card.Controls.Add(content);
         return card;
     }

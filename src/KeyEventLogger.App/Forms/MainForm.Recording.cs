@@ -8,7 +8,7 @@ public sealed partial class MainForm
     private readonly RecordingSession session;
     private readonly TimeProvider clock;
     private readonly TextBox practiceText;
-    private readonly ListView eventList;
+    private readonly EventListBox eventList;
     private readonly Label recordingStatus;
     private readonly Label eventCount;
     private readonly Label emptyState;
@@ -80,18 +80,7 @@ public sealed partial class MainForm
         var record = new KeyEventRecord(e.KeyCode.ToString(), eventType, clock.GetLocalNow());
         if (session.TryRecord(record))
         {
-            var row = new ListViewItem(record.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff zzz", CultureInfo.InvariantCulture))
-            {
-                Tag = record,
-                BackColor = session.Count % 2 == 0 ? UiTheme.AlternateRow : UiTheme.Surface,
-                ToolTipText = eventType == KeyEventType.KeyDown
-                    ? "KeyDown: the key was pressed; held keys can repeat."
-                    : "KeyUp: the key was released."
-            };
-            row.SubItems.Add(record.EventType.ToString());
-            row.SubItems.Add(record.KeyName);
-            eventList.Items.Add(row);
-            row.EnsureVisible();
+            eventList.AddRecord(record);
             if (session.IsAtCapacity)
             {
                 stoppedReason = string.Create(CultureInfo.InvariantCulture,

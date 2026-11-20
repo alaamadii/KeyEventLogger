@@ -392,11 +392,11 @@ public sealed class MainFormTests
     }
 
     private static TextBox Practice(MainForm form) => WindowsUi.Find<TextBox>(form, "practiceText");
-    private static ListView Events(MainForm form) => WindowsUi.Find<ListView>(form, "eventList");
+    private static ListBox Events(MainForm form) => Assert.IsAssignableFrom<ListBox>(Assert.Single(form.Controls.Find("eventList", true)));
     private static Button Button(MainForm form, string name) => WindowsUi.Find<Button>(form, name);
     private static string Status(MainForm form) => WindowsUi.Find<Label>(form, "recordingStatus").Text;
     private static string Count(MainForm form) => WindowsUi.Find<Label>(form, "eventCount").Text;
-    private static string[] Rows(MainForm form) => Events(form).Items.Cast<ListViewItem>().Select(item => string.Join("  |  ", item.SubItems.Cast<ListViewItem.ListViewSubItem>().Select(cell => cell.Text))).ToArray();
+    private static string[] Rows(MainForm form) => Events(form).Items.Cast<object>().Select(item => item.ToString()!).ToArray();
 
     private static void SendPair(Control control, Keys key)
     {
@@ -452,14 +452,9 @@ public sealed class MainFormTests
 
             Assert.Equal(expectedText, Practice(form).Text);
             Assert.Equal("2 events", Count(form));
-            var down = Events(form).Items[0];
-            var up = Events(form).Items[1];
-            Assert.Equal("KeyDown", down.SubItems[1].Text);
-            Assert.Equal("KeyUp", up.SubItems[1].Text);
-            Assert.Equal(key.ToString(), down.SubItems[2].Text);
-            Assert.Equal(key.ToString(), up.SubItems[2].Text);
-            Assert.Equal(View.Details, Events(form).View);
-            Assert.False(Events(form).LabelEdit);
+            Assert.EndsWith("KeyDown  |  " + key, Rows(form)[0]);
+            Assert.EndsWith("KeyUp  |  " + key, Rows(form)[1]);
+            Assert.Equal(DrawMode.OwnerDrawFixed, Events(form).DrawMode);
             Assert.Contains("One press", WindowsUi.Find<Label>(form, "featureAvailability").Text);
         });
     }
