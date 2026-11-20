@@ -1,6 +1,40 @@
 # Testing strategy and evidence
 
-## Current Stage 04 review — 2026-11-19
+## Current interface/security review — 2026-11-20
+
+Branch: feat/usability-security-review. Based on owner-merged PR #5, main 06045f3. Runtime/test source: c39337871269eb391c394db3ee39f71f4aaeb35f.
+
+Environment: Windows 10.0.22631 x64, SDK 10.0.402, WindowsDesktop 10.0.13, Git 2.53.0.windows.1.
+
+| Check | Executed result |
+| --- | --- |
+| ./scripts/dev.ps1 doctor | SDK/runtime/Git available |
+| ./scripts/dev.ps1 check | Restore/Release build/test/format pass; 30 Core + 61 App = 91; 0 failures/skips/build warnings/errors |
+| Capacity regression | Final event stops without eviction; full Start rejected; Clear releases capacity and requires explicit restart |
+| Native Space / Back | One native edit, separate Down/Up rows, correct count; caret explicitly positioned for the test |
+| Existing lifecycle/layout regression | Local focus/start/stop/clear/cancel-close gates, table presentation and minimum/resized bounds pass |
+| File policy and errors | Reserved superscript/whitespace aliases rejected before metadata access; controlled errors retain data and omit raw details |
+| Dependency query | dotnet list KeyEventLogger.slnx package --vulnerable --include-transitive: no known vulnerable packages in official configured source on this date |
+| Actual production EXE | Correct title/Stopped state; normal close exit 0 |
+| Actual-MainForm probe | Synthetic DEMO creates 8 real records; real export bytes/header/count/no BOM checked; controlled picker success/cancel/read-only failure/retry pass |
+| Visual/scripted review | Actual target-window captures inspected at 120 DPI (125%), default/minimum/wide; new README recording/export captures from c393378 |
+| Final repository/publication | Link/hash/exclusion receipts and exact hosted result are recorded below or on the quality-review PR after execution |
+
+The package query is an advisory snapshot, not a vulnerability-free guarantee. Restore uses the repository's official package/audit source and explicit all-dependency audit policy. No runtime dependency was added.
+
+The new editing tests initially assumed an end-positioned caret after setting text; the native control actually placed it at the start. Corrected that test setup and reran the complete check. This was not an application double-edit defect.
+
+The owner reported seeing one Down and one Up for Space/Back in the list. That confirms the described observation only; it is not a complete physical test register. Current automated tests independently verify editing once.
+
+The capture helper uses an actual Form, native synthetic input and a substituted destination picker with the real formatter/writer. It does not prove native Save/overwrite or physical keyboard/focus acceptance. Previous native automation limitations remain historical; no repeated hanging Save attempt was made in this review.
+
+Human native Save/overwrite/error review, physical keyboard/external-app switching, display transitions/F5/high contrast/assistive technology, a second Windows computer and new-image approval remain pending unless supplied with actual evidence. The current quality review does not turn previous merges into those results.
+
+See [security boundary](SECURITY.md), [user guide](USER_GUIDE.md), [capture provenance](screenshots/README.md) and [owner procedure](SUBMISSION.md).
+
+
+
+## Historical Stage 04 review — 2026-11-19
 
 | Check | Executed result |
 | --- | --- |

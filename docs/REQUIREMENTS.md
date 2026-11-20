@@ -64,3 +64,17 @@ Key-count/frequency statistics and date/time filtering are optional in the PDF. 
 | SUB-005 / SUB-006 | Explicit [submission procedure](SUBMISSION.md) | Second computer, final owner acceptance and Classroom action |
 
 All required application features are implemented. This audit does not waive the owner-directed student-number omission or mark missing manual evidence complete.
+
+## Owner-requested quality review — 2026-11-20
+
+The merged PR #5 is the historical preparation baseline. The owner then requested a more polished interface, stronger local safeguards, better code organization and precise documentation.
+
+| Change | Actual evidence | Acceptance boundary |
+| --- | --- | --- |
+| Three-column read-only event table and Down/Up guidance | Native layout/edit/count tests and genuine source-c393378 captures | New owner visual/image approval pending |
+| Bounded retention | Core/UI capacity, no-eviction and Clear/restart regression | Default 10,000 events; no silent rolling history |
+| Export path/error safeguards | Superscript/whitespace aliases and raw-error redaction cases | Still ordinary plaintext and not a filesystem sandbox |
+| Dependency policy | Official NuGet sources, restore audit, dated advisory query | Known-source snapshot, no blanket security claim |
+| Precise explanation | [User guide](USER_GUIDE.md), [security boundary](SECURITY.md), source-linked CODE_GUIDE | Human native/focus/display/F5 and second-computer results remain separately pending |
+
+No statistics, filtering, global input capture, network delivery or automatic saving is added. Current full check: 91 cases (30 Core + 61 App), zero failures/skips/build warnings/errors.

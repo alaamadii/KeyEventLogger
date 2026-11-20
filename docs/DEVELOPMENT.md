@@ -133,3 +133,7 @@ Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f
 - Publication/current-head CI and new-candidate clean-checkout receipts follow actual execution. No automatic merge, visibility change or Classroom action.
 
 - Final course-sheet reconciliation retained the specified native ListBox family through EventListBox column drawing and complete accessible row text, superseding the preliminary ListView choice. The full 91-case check passed again; an actual-Form probe also passed with the final ListBox. Final screenshots/provenance will identify that source separately.
+
+- Final capture source c39337871269eb391c394db3ee39f71f4aaeb35f: reran the actual-Form controlled-picker probe after committing the final ListBox implementation, then replaced only the new review images. The earlier c954743 exploration is not the published screenshot source. Provenance/hashes identify the final images exactly.
+
+- Static repository review passed: 123 local Markdown targets across 15 files, all seven screenshot hashes, narrow output exclusions, production API/Core boundaries and whitespace. Historical images remain unchanged. No generated output or event exports are included.

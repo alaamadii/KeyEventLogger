@@ -114,6 +114,8 @@ Consequences: cancel/error/success retain records and remain stopped; Start is a
 
 ## ADR-017 — Readable native event table and explicit actions — 2026-11-20
 
+Control selection superseded by ADR-021; layout/style decisions retained.
+
 Context: the owner found the presentation too basic and interpreted Space/Back Down/Up rows as duplicated input.
 
 Decision: use a read-only Details ListView with separate timestamp, event and key columns, alternating rows, explanatory tooltips and a visible one-press/two-events hint. Use Segoe UI, separated surfaces, a primary Start action, a distinct disabled style and text-backed state colors. Split layout construction into MainForm.Layout; keep recording logic separate.

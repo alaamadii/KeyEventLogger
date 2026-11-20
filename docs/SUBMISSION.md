@@ -2,11 +2,13 @@
 
 ## Current status
 
-**Application implementation is complete; final submission acceptance is pending.** Stages 00–03 are merged through [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4). Stage 04 prepares technical evidence and a draft final PR; missing human evidence is not inferred from merge/CI results.
+**Required application features are implemented; final submission acceptance remains pending.** The owner merged [PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5), then requested further interface/security/code/documentation work. The current quality review on feat/usability-security-review needs fresh owner review; merges and CI do not supply missing human evidence.
 
-Source reviewed again on 2026-11-19: course PDF pages 1, 2–3 and 5. [REQUIREMENTS](REQUIREMENTS.md) maps implementation/evidence to the instructor's criteria.
+Assignment source reviewed on 2026-11-19; the current implementation/security review is dated 2026-11-20: course PDF pages 1, 2–3 and 5. [REQUIREMENTS](REQUIREMENTS.md) maps implementation/evidence to the instructor's criteria.
 
 Author: **Alaa Madi**, as supplied. The owner directs omission of the student number; do not request/publish it. The PDF's original name/number requirement remains recorded; this is not an instructor waiver.
+
+See [USER_GUIDE](USER_GUIDE.md) for everyday use and [SECURITY](SECURITY.md) for data handling and limits.
 
 The selected public repository is [alaamadii/KeyEventLogger](https://github.com/alaamadii/KeyEventLogger); the instructor recommends YMH219-KeyEventLogger. Do not change visibility.
 
@@ -15,11 +17,11 @@ The selected public repository is [alaamadii/KeyEventLogger](https://github.com/
 - [x] Independent Core and programmatic Windows Forms App.
 - [x] Local explicit recording, timestamps, status, Stop/Clear and count.
 - [x] Local TXT snapshot export, cancellation/error retention and retry.
-- [x] Regression baseline: 72 cases, zero build warnings/errors/failures/skips.
-- [x] Two authentic current screenshots; controlled picker explicitly disclosed.
+- [x] Current regression: 91 cases (30 Core + 61 App), zero build warnings/errors/failures/skips.
+- [x] Two authentic redesigned-interface screenshots from c393378; controlled picker explicitly disclosed; new owner approval pending.
 - [x] Source-linked [code walkthrough](CODE_GUIDE.md).
-- [x] Published candidate 9254884 clean-checkout, actual launch/normal close and anonymous public artifact evidence recorded in [TESTING](TESTING.md).
-- [x] Exact final-head hosted CI evidence tracked on [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5), separately from the tested clean-checkout candidate.
+- [ ] New-quality-candidate published clean-checkout and public artifact receipt recorded in [TESTING](TESTING.md). Earlier 9254884 evidence is historical.
+- [ ] Current quality-review exact final-head hosted CI recorded. PR #5 results are historical.
 - [ ] Owner manual results, image approval and second-computer evidence.
 - [ ] Owner approves final PR and course submission readiness.
 
@@ -38,7 +40,8 @@ For each group below, report PASS with actual observations, FAIL with reproducib
 5. **Recoverable file error.** Use an owned locked/read-only test target or unsupported destination. Depending on Windows, the native dialog may reject it before App writing; record which layer reports the error. Confirm no crash/data loss and retry a valid local target. Do not change system permissions or touch personal files.
 6. **Display/debugging.** Inspect default/minimum/resized layouts and long result text. Test available physical 100%/125%/150% settings and monitor transitions, recording which were actually used. Press F5 in VS Code from the root. Command-line launch alone is not F5 evidence.
 7. **Normal close and second computer.** Close normally with/without records; no automatic save. On a different Windows computer, clone the tested branch/commit, run doctor/check/run and repeat representative recording/focus/export steps. A fresh clone on this computer is not a second-computer check.
-8. **Screenshots and explanation.** Review both README images and capture disclosures; approve them explicitly or request replacements. Use CODE_GUIDE to explain state, scope, snapshot ownership, file staging and limitations.
+8. **Capacity.** The normal limit is 10,000 events, not 10,000 presses. A held key or enough synthetic practice events eventually stops the session without evicting earlier rows; Export remains available and Start is disabled. Export if needed, Clear events and confirm recording remains stopped until Start. The small-capacity automated tests cover this boundary without requiring a long physical run. Do not mark a physical capacity run performed unless actually done.
+9. **Screenshots and explanation.** Review both README images and capture disclosures; approve them explicitly or request replacements. Use CODE_GUIDE to explain state, scope, snapshot ownership, file staging and limitations.
 
 ## Owner evidence register
 
@@ -50,9 +53,9 @@ For each group below, report PASS with actual observations, FAIL with reproducib
 | Display/F5/accessibility | Actual scales, transitions, debugger and available assistive checks | NOT PERFORMED |
 | Second Windows computer | Date, Windows/SDK, tested commit, commands and outcomes | NOT PERFORMED |
 | Screenshot approval | Explicit acceptance of current images/disclosures | NOT PROVIDED |
-| Final PR approval | Owner decision after evidence review | PENDING |
+| Current quality-review PR approval | Owner decision after current evidence review | PENDING |
 
-Do not replace this register with assumed results. Keep the final PR draft until its required acceptance evidence is complete.
+Do not replace this register with assumed results. Keep the current quality/final acceptance PR draft until its required evidence is complete. The reported Space/Back Down/Up observation confirms those row types only, with no supplied exact environment/commit; it is not blanket manual acceptance.
 
 ## Course delivery
 
