@@ -149,3 +149,8 @@ Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f
 - Kept the full-session stop explanation derived from current model state so an export/cancel or focus event cannot hide why Start remains disabled. Added an export-at-capacity regression and min-size full-state layout coverage. Current full check passes 30 Core + 62 App = 92, zero failures/skips/build warnings/errors and clean formatting.
 - An intermediate native export fixture lacked a stable active/focused Start setup in one run; it now explicitly activates/focuses the owned Form and asserts native active-window identity before Start. Production capture gates remain unchanged. The full suite passed after this fixture correction.
 - The existing c393378 images are retained because the depicted non-full recording/export states and layout are unchanged. Updated clean-checkout/final-head receipts follow actual execution.
+
+### Final quality-candidate verification
+
+- Published 72bc356dec053d4a1d9407a164ee582aba365cf6 and tested another fresh isolated checkout on the same Windows/SDK: doctor/check pass, 30 Core + 62 App = 92, no failures/skips/build warnings/errors and clean formatting. Actual cloned EXE title/Stopped/normal close exit 0 passed; tree clean.
+- Anonymous candidate README/USER_GUIDE/SECURITY/new-image URLs returned 200. Candidate hosted run 44684347808 passed. Final documentation-only receipt SHA and exact hosted run/results are tracked on PR #6. No second-computer or human/native acceptance is inferred.

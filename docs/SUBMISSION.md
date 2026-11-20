@@ -20,7 +20,7 @@ The selected public repository is [alaamadii/KeyEventLogger](https://github.com/
 - [x] Current regression: 92 cases (30 Core + 62 App), zero build warnings/errors/failures/skips.
 - [x] Two authentic redesigned-interface screenshots from c393378; controlled picker explicitly disclosed; new owner approval pending.
 - [x] Source-linked [code walkthrough](CODE_GUIDE.md).
-- [ ] Updated quality-candidate clean-checkout receipt after the capacity-message fix; d3bdfe5 / 9254884 evidence is historical.
+- [x] Current candidate 72bc356 clean-checkout/92-test/actual EXE/public artifact receipt recorded in [TESTING](TESTING.md); d3bdfe5 / 9254884 evidence is historical.
 - [x] Current quality-review hosted evidence tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6), including the exact final-head SHA/run/result. PR #5 results are historical.
 - [ ] Owner manual results, image approval and second-computer evidence.
 - [ ] Owner approves final PR and course submission readiness.

@@ -36,6 +36,19 @@ See [security boundary](SECURITY.md), [user guide](USER_GUIDE.md), [capture prov
 
 The final capacity-message regression raised the current count to 92 (30 Core, 62 App). One intermediate export test failed its Start setup when native activation/focus was not established; the fixture now explicitly activates/focuses its owned Form and asserts native active-window identity before Start. The complete check passed afterward; production focus gates were not loosened. The min-size full-session layout is covered too. Existing source-c393378 screenshots still match their depicted non-full states.
 
+## Final quality-candidate receipt — 2026-11-20
+
+- Published candidate after the capacity-message fix: 72bc356dec053d4a1d9407a164ee582aba365cf6.
+- Fresh isolated checkout on Windows 10.0.22631, SDK 10.0.402 / WindowsDesktop 10.0.13: doctor/check pass, **30 Core + 62 App = 92**, zero failures/skips/build warnings/errors, formatting clean.
+- Actual cloned EXE title/Stopped/normal close exit 0 passed; tree clean and no untracked local build/run configuration required.
+- Anonymous candidate README/USER_GUIDE/SECURITY/new-image URLs returned 200. Public repository metadata was already verified; visibility was not changed.
+- Candidate hosted run 44684347808 succeeded. The exact final documentation-receipt SHA/run/confirmed result is recorded on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
+- Final delivery compares runtime/tests/configuration with 72bc356. Later receipt edits are documentation only.
+- Existing source-c393378 screenshots still match the non-full states shown; their actual source/hashes are unchanged. The newer full-capacity explanation has separate regression evidence.
+
+This is the same development computer, not another Windows computer. Human/native/physical acceptance remains pending.
+
+
 ## Earlier candidate publication receipt — 2026-11-20
 
 [Draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targets main from feat/usability-security-review.
@@ -46,7 +59,7 @@ The final capacity-message regression raised the current count to 92 (30 Core, 6
 - Anonymous HTTP 200 confirmed public repository metadata, candidate README/USER_GUIDE/SECURITY and both new README images.
 - Static review: 123 local Markdown targets across 15 files, seven capture hashes, narrow exclusions, App/Core boundaries, whitespace and a limited tracked-file credential-pattern scan with no matches.
 - Candidate hosted run 44683520537 succeeded. The exact final evidence-commit SHA/run/results are recorded on PR #6 separately, avoiding a self-referential receipt commit.
-- Later receipt changes are documentation only; the final head's code/configuration is compared with the clean-checkout candidate before delivery.
+- Earlier receipt d2046d4 changed documentation only relative to d3bdfe5. The later capacity-message fix supersedes that candidate; use the final receipt above.
 
 This is same-computer validation, not the required second Windows computer or physical/native acceptance. PR #6 stays draft for owner evidence.
 
