@@ -88,13 +88,17 @@ Each PR must include its purpose, scope, exact validation, documentation updates
 
 After PR #5, the owner requested further interface, code-quality, security and documentation work. This is a review of the same application, without adding optional statistics/filtering or broader input collection.
 
-- [x] Separate timestamp/event/key table, readable native layout, accessible actions and explicit Down/Up explanation.
+- [x] Separate timestamp/event/key table, readable native layout, accessible actions and current single-press/repeat explanation.
 - [x] 10,000-event stop boundary with no eviction; Clear/restart/exports remain explicit.
 - [x] Native 4,096-character entry limit; reserved filename hardening and controlled export errors.
 - [x] Official package/audit sources and explicit all-dependency advisory checking.
-- [x] 92 local tests (30 Core, 62 App), actual EXE close, controlled-picker real-I/O probe and genuine new captures.
+- [x] 94 local tests (30 Core, 64 App), actual EXE close, controlled-picker real-I/O probe and genuine new captures.
 - [x] User/security/code/architecture guides reconciled; historical evidence retained separately.
 - [x] Clean-checkout/publication receipt recorded; exact final-head hosted results tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
 - [ ] Owner approves the new interface/images and supplies remaining manual/second-computer evidence.
 
 Use a draft review PR while mandatory final acceptance evidence remains missing. No automatic merge or course submission.
+
+### Single-press follow-up — 2026-11-20
+
+The owner requests one row for a short press. App now records only KeyDown; release is ignored. Intentional consecutive presses, modifier presses and native held-key repeats remain. This supersedes the original paired-event App capture policy, with unchanged focus/retention/export boundaries. Current local check: 94 cases (30 Core, 64 App). User/new-image approval remains pending on PR #6.

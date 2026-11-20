@@ -24,15 +24,15 @@ MainForm is one object split across:
 - [MainForm.Export.cs](../src/KeyEventLogger.App/Forms/MainForm.Export.cs): explicit stop/snapshot/picker/write flow.
 - [UiTheme](../src/KeyEventLogger.App/Forms/UiTheme.cs): presentation colors with high-contrast system-color fallback.
 
-The root TableLayoutPanel has automatic header/status/action/instruction/footer rows and a proportional workspace. Flat native panels divide practice (38%) from records (62%). An [EventListBox](../src/KeyEventLogger.App/Forms/EventListBox.cs), derived from the required native ListBox, draws local timestamp/offset, raw KeyDown/KeyUp and virtual-key columns. Each private immutable display row wraps its model record and supplies complete text through ToString for native accessibility. Export never reads those rows.
+The root TableLayoutPanel has automatic header/status/action/instruction/footer rows and a proportional workspace. Flat native panels divide practice (38%) from records (62%). An [EventListBox](../src/KeyEventLogger.App/Forms/EventListBox.cs), derived from the required native ListBox, draws local timestamp/offset, captured KeyDown and virtual-key columns. Each private immutable display row wraps its model record and supplies complete text through ToString for native accessibility. Export never reads those rows.
 
 One accepted event adds one table item and scrolls into view. It does not rebuild or snapshot the complete session per key. Alternating row colors and separate header labels aid reading; state is also explicit text, never color alone.
 
 ## Input and lifecycle
 
-Only practiceText.KeyDown/KeyUp are subscribed. RecordEvent requires a recording session, native activation state, Form focus, practice focus and a live nonminimized/nonclosing window. App maps e.KeyCode.ToString() and supplies TimeProvider.GetLocalNow(). The default provider is System; test providers fix timestamps.
+Only practiceText.KeyDown is subscribed; release is not a recording source. RecordEvent requires a recording session, native activation state, Form focus, practice focus and a live nonminimized/nonclosing window. App maps e.KeyCode.ToString() and supplies TimeProvider.GetLocalNow(). The default provider is System; test providers fix timestamps.
 
-Recording/export never reads practiceText.Text. Native editing remains native; MaxLength bounds ordinary user entry/paste to 4,096 characters. Every delivered Down/Up/repeat is separate. Tab stays navigation and no missing partner is synthesized. Count means events, not edits.
+Recording/export never reads practiceText.Text. Native editing remains native; MaxLength bounds ordinary user entry/paste to 4,096 characters. Each delivered KeyDown is retained, including intentional consecutive presses and native held-key repeats; KeyUp is ignored. Tab stays navigation and no key/time deduplication is applied. Count means events, not edits.
 
 Start retains history and focuses practice. Stop retains records. Clear clears model/rows/count while preserving practice text/state. At capacity, UI derives a specific stopped reason from the model, disables Start and keeps Clear/Export available. Export/cancellation/deactivation do not hide the full-session explanation.
 
@@ -62,6 +62,6 @@ I/O remains synchronous, guarded against reentry. A 10,000-event limit bounds or
 
 ## Evidence boundary
 
-92 current cases (30 Core, 62 App) cover model/session, native input/layout and export/file behavior. UI probes/captures use synthetic local messages and a controlled picker with the real formatter/writer. They do not establish human native Save/desktop focus/display/F5 or second-computer acceptance.
+94 current cases (30 Core, 64 App) cover model/session, native input/layout and export/file behavior. UI probes/captures use synthetic local messages and a controlled picker with the real formatter/writer. They do not establish human native Save/desktop focus/display/F5 or second-computer acceptance.
 
 See [security boundary](SECURITY.md), [code walkthrough](CODE_GUIDE.md), [testing](TESTING.md) and [owner acceptance](SUBMISSION.md).

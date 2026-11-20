@@ -1,6 +1,23 @@
 # Testing strategy and evidence
 
-## Current interface/security review — 2026-11-20
+## Current single-press follow-up — 2026-11-20
+
+Runtime/test/capture source: 4725220f1cca5a8a8873985eb1308fd3b1d0c344. Continues [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
+
+- ./scripts/dev.ps1 check: **30 Core + 64 App = 94 passed**, zero failures/skips/build warnings/errors, formatting clean.
+- Native short G/Space/Back presses edit once and append one KeyDown; release alone adds nothing.
+- Two intentional G presses at identical test timestamps remain two records. Native repeats/modifiers remain separate delivered presses.
+- Lifecycle, capacity, Clear/restart, local scope, staged export/error and minimum/resized layout regressions pass with the new policy.
+- Actual production EXE startup/Stopped/normal-close exit 0 passed.
+- Actual-Form synthetic DEMO probe produces four KeyDown records and real exported count/bytes, with controlled picker success/cancel/read-only failure/retry.
+- Current captures show four presses/four records. Source/date/method/DPI/hashes are in screenshot provenance; the picker substitution remains explicit.
+- Exact current published checkout/hosted SHA/run/results are recorded on PR #6 after execution.
+
+The prior 91/92-case paired-event/capacity receipts below are historical. App now ignores KeyUp; Core's type/formatter can still represent it for compatibility and pure tests. No focus, retention or file boundary was broadened. Physical native Save/keyboard/focus/DPI/F5, image approval and another computer remain pending.
+
+
+
+## Historical paired-event interface/security review — 2026-11-20
 
 Branch: feat/usability-security-review. Based on owner-merged PR #5, main 06045f3. Capture source: c39337871269eb391c394db3ee39f71f4aaeb35f. Current runtime/test SHA and hosted results are recorded on PR #6.
 
@@ -36,7 +53,7 @@ See [security boundary](SECURITY.md), [user guide](USER_GUIDE.md), [capture prov
 
 The final capacity-message regression raised the current count to 92 (30 Core, 62 App). One intermediate export test failed its Start setup when native activation/focus was not established; the fixture now explicitly activates/focuses its owned Form and asserts native active-window identity before Start. The complete check passed afterward; production focus gates were not loosened. The min-size full-session layout is covered too. Existing source-c393378 screenshots still match their depicted non-full states.
 
-## Final quality-candidate receipt — 2026-11-20
+## Historical pre-single-press candidate receipt — 2026-11-20
 
 - Published candidate after the capacity-message fix: 72bc356dec053d4a1d9407a164ee582aba365cf6.
 - Fresh isolated checkout on Windows 10.0.22631, SDK 10.0.402 / WindowsDesktop 10.0.13: doctor/check pass, **30 Core + 62 App = 92**, zero failures/skips/build warnings/errors, formatting clean.

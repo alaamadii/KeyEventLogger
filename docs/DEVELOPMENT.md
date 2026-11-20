@@ -164,3 +164,6 @@ The owner reports G appearing twice for a short press and requests one recorded 
 - Updated native input/lifecycle/export assertions for the new policy. Added G alongside Space/Back editing checks and two intentional G presses at identical test timestamps. Export fixtures now create two distinct presses rather than relying on a release.
 - ./scripts/dev.ps1 check passes: 30 Core + 64 App = 94, zero failures/skips/build warnings/errors and formatting clean. No focus, retention or file-security boundary was broadened.
 - Current user-facing documentation/captures and exact-head hosted evidence are updated separately after execution. No automatic merge.
+
+- Source 4725220f1cca5a8a8873985eb1308fd3b1d0c344 produced the new single-press recording/export images: synthetic DEMO yields 4 real KeyDown records; the controlled picker uses the real writer, checked bytes and success/cancel/read-only failure/retry. Actual production EXE normal close exited 0. Previous paired-event captures remain historical with unchanged hashes.
+- Reconciled current user/security/architecture/code/requirements/submission guides with press-only capture, while preserving Core KeyUp compatibility and historical receipts. Local links (125 across 15 Markdown files) and all 9 capture hashes pass. Current publication/clean-checkout/hosted evidence is recorded on PR #6; no automatic merge.

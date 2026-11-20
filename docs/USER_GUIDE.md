@@ -12,21 +12,23 @@ Only the focused practice area in the active application is a recording source. 
 
 Use sample content. Key-event names can reveal what was typed; do not enter private data. See [data handling](SECURITY.md).
 
-## Why a key appears twice
+## One row per short press
 
-A short press normally delivers KeyDown when pressed and KeyUp when released. Space therefore normally has two rows, as does Back (Windows Forms' name for Backspace). The native text editor still inserts one space or removes one character for a short press.
+Pressing G once adds one KeyDown row. Releasing it adds nothing. Pressing G twice adds two rows; the application does not merge deliberate consecutive presses.
 
-Held keys may generate multiple KeyDown repeats before one KeyUp. Count means delivered events, not characters, unique keys or paired presses. A stop, clear, focus change or capacity boundary can leave an unmatched event; no artificial partner is added.
+Space and Back (Windows Forms' name for Backspace) follow the same policy. The native text editor still inserts one space or removes one character for a short press.
+
+Holding a key may generate multiple KeyDown repeats. Modifier keys have their own delivered presses. Count is captured press events, not unique keys or reconstructed characters.
 
 The table separates:
 
 - Timestamp: local system date/time, milliseconds and UTC offset.
-- Event: KeyDown or KeyUp.
+- Event: KeyDown, meaning the captured press.
 - Key: Windows virtual-key name, not translated text.
 
-The order is arrival order, even if the system clock changes. Navigation, modifiers, shortcuts, layouts and input methods affect event delivery. Tab/Shift+Tab remain navigation; not every input method maps to a simple character press.
+Arrival order is preserved even if the clock changes. Tab/Shift+Tab remain navigation. Shortcuts, layouts and input methods affect delivery.
 
-Pasting may deliver shortcut key events, but the pasted content is not inspected or backfilled. Text entered before Start is not reconstructed.
+Pasting may deliver shortcut presses, but pasted content is never inspected or backfilled. Text entered before Start is not reconstructed. The earlier version recorded both press and release; that behavior is historical and is superseded by this single-press policy.
 
 ## Clear events and session capacity
 
@@ -55,7 +57,7 @@ Network/device/linked destinations and invalid/reserved filenames are unsupporte
 
 | Observation | Meaning / next step |
 | --- | --- |
-| Two rows for Space or Back | Check Event: one Down and one Up is normal |
+| One short press | One KeyDown row; release is ignored |
 | Multiple KeyDown rows while held | Native key repeat; expected |
 | Start unavailable with full session | Export/clear records, then Start |
 | Typing outside Practice adds no rows | Recording boundary is working |

@@ -17,10 +17,10 @@ The selected public repository is [alaamadii/KeyEventLogger](https://github.com/
 - [x] Independent Core and programmatic Windows Forms App.
 - [x] Local explicit recording, timestamps, status, Stop/Clear and count.
 - [x] Local TXT snapshot export, cancellation/error retention and retry.
-- [x] Current regression: 92 cases (30 Core + 62 App), zero build warnings/errors/failures/skips.
-- [x] Two authentic redesigned-interface screenshots from c393378; controlled picker explicitly disclosed; new owner approval pending.
+- [x] Current regression: 94 cases (30 Core + 64 App), zero build warnings/errors/failures/skips.
+- [x] Two authentic redesigned-interface screenshots from 4725220; controlled picker explicitly disclosed; new owner approval pending.
 - [x] Source-linked [code walkthrough](CODE_GUIDE.md).
-- [x] Current candidate 72bc356 clean-checkout/92-test/actual EXE/public artifact receipt recorded in [TESTING](TESTING.md); d3bdfe5 / 9254884 evidence is historical.
+- [x] Current single-press local/hosted/checkout evidence is tracked in [TESTING](TESTING.md) and PR #6; earlier 72bc356 / d3bdfe5 / 9254884 evidence is historical.
 - [x] Current quality-review hosted evidence tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6), including the exact final-head SHA/run/result. PR #5 results are historical.
 - [ ] Owner manual results, image approval and second-computer evidence.
 - [ ] Owner approves final PR and course submission readiness.
@@ -33,7 +33,7 @@ For each group below, report PASS with actual observations, FAIL with reproducib
 
 ## Owner manual procedure
 
-1. **Startup and recording.** Launch using SETUP. Confirm Stopped/0 events before Start. Type synthetic text while stopped and confirm no rows. Start, type demo, then hold an ordinary key and use a modifier. Count delivered Down/Up/repeat rows, not characters. Stop and type again: rows must stay fixed. Start again: old text must not be backfilled.
+1. **Startup and recording.** Launch using SETUP. Confirm Stopped/0 events before Start. Type synthetic text while stopped and confirm no rows. Start, type demo, then hold an ordinary key and use a modifier. One short press must add one KeyDown record; release must add none. Two intentional G presses must produce two records. Count delivered Down/repeat/modifier events, not characters. Stop and type again: rows must stay fixed. Start again: old text must not be backfilled.
 2. **Clear and navigation.** Clear while stopped and while recording. Events/count clear; practice text remains and state is unchanged. Check Tab/Shift+Tab, button keyboard activation and mnemonics. Shortcut/navigation delivery must match the documented policy.
 3. **Focus boundary.** While recording, switch physically to another application and type only harmless outside-demo text there. Return: no outside events, Stopped status, explicit Start required. Repeat with minimize/restore. Never use passwords or real private input.
 4. **Native Save flow.** Create a disposable normal local folder first. Record events and choose Export TXT. Confirm Stopped before selection; save an owned .keyevents.txt file, inspect format/count, and verify records/practice text stay. Cancel a second export and confirm no changes. Use only that owned file to check overwrite No/Cancel and Yes. After every outcome, recording must remain stopped until Start.

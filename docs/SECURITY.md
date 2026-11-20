@@ -6,7 +6,7 @@ This is an educational recorder of events delivered to its own focused practice 
 
 | Data | Source | Lifetime / destination |
 | --- | --- | --- |
-| Key name, Down/Up type, timestamp/offset | Local WinForms events after Start and App TimeProvider | In-memory session and read-only event table; explicit TXT snapshot only |
+| Key name, KeyDown type, timestamp/offset | Local WinForms events after Start and App TimeProvider | In-memory session and read-only event table; explicit TXT snapshot only |
 | Practice text | Native TextBox editing | Native control memory; never read by recording/export logic or included in exported data |
 | Export path | Explicit owned SaveFileDialog | Used for a local write; success feedback shows the selected destination |
 | Export errors | Recoverable exceptions | Mapped to fixed guidance; no raw exception message, stack trace or diagnostic log |
@@ -17,13 +17,13 @@ Key names are not anonymized. A sequence of names/times can reveal sensitive inp
 ## Recording controls
 
 - Startup is stopped. Start is an explicit action and retains earlier records.
-- Only practice KeyDown/KeyUp subscriptions exist. Collection also requires active Form state, focus inside that Form and practice focus.
+- Only the practice KeyDown recording subscription exists; KeyUp is ignored. Collection also requires active Form state, focus inside that Form and practice focus.
 - Deactivation, minimize and closing stop recording. Return/restore does not resume it.
 - Other controls, other applications, existing practice text, paste contents and password controls are not inspected as data sources. Local shortcut key events may still be delivered.
 - No global hook, polling, autostart, hidden monitor, application clipboard-reader code, file import, event transmission, network client or automatic saving is implemented.
 - The application is a normal user process; it does not request administrator privileges or alter firewall/system settings.
 
-Native Down repeats are real independent events; a press and release normally create two rows. This is not two edits. Start/Stop/Clear/focus/capacity boundaries can leave unmatched events.
+A short press creates one recorded KeyDown. Release creates no record. Native held-key Down repeats, modifiers and separate intentional presses remain independent; no key/time deduplication hides valid input.
 
 ## Retention and resource limits
 
@@ -63,6 +63,6 @@ Keep development exports under ignored exports/ or use *.keyevents.txt. Arbitrar
 
 [Session tests](../tests/KeyEventLogger.Core.Tests/RecordingSessionTests.cs) cover retention/state/snapshot ownership. [Native UI tests](../tests/KeyEventLogger.App.Tests/MainFormTests.cs) cover local focus gates, explicit resume, count consistency and capacity. [File tests](../tests/KeyEventLogger.App.Tests/TextLogExporterTests.cs) cover real bytes/overwrite/failure preservation and path policy. [Export UI tests](../tests/KeyEventLogger.App.Tests/ExportUiTests.cs) cover stopping, snapshots, cancellation, retry, disposal and error redaction with controlled pickers.
 
-Physical external-application switching, native Save/overwrite/error review, physical display/F5, high contrast/assistive technology and another Windows computer remain separately tracked in [SUBMISSION](SUBMISSION.md). The owner's reported Space/Back Down/Up observation is not blanket acceptance of those checks.
+Physical external-application switching, native Save/overwrite/error review, physical display/F5, high contrast/assistive technology and another Windows computer remain separately tracked in [SUBMISSION](SUBMISSION.md). The earlier paired-event policy was superseded by the owner's single-press request; it does not establish blanket acceptance of those checks.
 
 For a reproducible issue, report the tested commit, Windows/SDK, synthetic steps and observed result. Do not attach real event exports or credentials. No external security reporting service or contact has been configured.

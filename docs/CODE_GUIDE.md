@@ -22,7 +22,7 @@ GetSnapshot uses ToArray plus a read-only wrapper. A read-only interface alone w
 
 ## Trace a delivered key
 
-1. Only practiceText.KeyDown/KeyUp subscriptions enter the record path.
+1. Only the practiceText.KeyDown subscription enters the record path. Release never appends a record.
 2. RecordEvent requires recording, activation, Form/practice focus and a live nonminimized/nonclosing window.
 3. App maps e.KeyCode.ToString() and supplies TimeProvider.GetLocalNow(); the default is System and tests can supply a fixed provider.
 4. Session accepts an immutable record; the Form adds one immutable display row to [EventListBox](../src/KeyEventLogger.App/Forms/EventListBox.cs), a native ListBox that draws aligned timestamp/type/name columns. Its complete ToString preserves native item accessibility.
@@ -30,7 +30,7 @@ GetSnapshot uses ToArray plus a read-only wrapper. A read-only interface alone w
 
 No snapshot/rebind occurs per key and no table string becomes a domain input. Recording/export never reads practiceText.Text. Native editing remains native; user entry/paste has a 4,096-character MaxLength.
 
-Down, Up and repeated Down are independent. Space/Back tests deliver one native edit plus Down/Up and assert the text changes once. Tab remains navigation. Boundaries can leave unmatched events; no invented pairing or character reconstruction occurs.
+A short G/Space/Back press delivers one native edit and one captured KeyDown. KeyUp does not append. Two intentional G presses remain two records even at identical test timestamps, so key/time deduplication would be incorrect. Native held-key repeats and modifier presses are retained. Tab remains navigation; no character reconstruction occurs. Core still represents KeyUp values for compatibility and formatter tests, but App does not capture them.
 
 ## Stop, Clear and lifecycle
 
@@ -62,6 +62,6 @@ Closing stops before native shutdown. Canceled closing leaves recording stopped 
 - Form inheritance supplies Windows lifecycle overrides; partial files only organize the same class.
 - Explicit disposal and temporary ownership make resource cleanup explainable.
 
-Be ready to trace Down followed by Stop before Up, a session filling on Down, Clear after capacity, an export failure and a canceled close. Explain why Count is not edits and why Clear does not alter an old snapshot.
+Be ready to trace one G press, two intentional G presses, a session filling on Down, Clear after capacity, an export failure and a canceled close. Explain why Count is not edits and why Clear does not alter an old snapshot.
 
 Staging is not universal crash durability or a malicious-filesystem sandbox. Export is synchronous/plaintext, key names can be sensitive and Clear is not secure erasure. Physical/native/second-computer acceptance remains in [SUBMISSION](SUBMISSION.md).

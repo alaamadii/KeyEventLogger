@@ -1,6 +1,25 @@
 # Application captures
 
-## Current interface/security review — 2026-11-20
+## Current single-press behavior — 2026-11-20
+
+Unedited target-window PrintWindow captures from actual source **4725220f1cca5a8a8873985eb1308fd3b1d0c344**, 120 DPI (125%), 1300x900 client / 1318x947 full window.
+
+| Image | Actual state |
+| --- | --- |
+| [single-press-recording.png](single-press-recording.png) | Four synthetic DEMO presses create four real KeyDown records; release adds none |
+| [single-press-export.png](single-press-export.png) | Real exported file contains those four records; records retained and recording stopped |
+
+The ignored STA helper dispatches native Down/character/Up messages only to its own Form. The destination picker is controlled; recording/session/snapshot/formatter/writer are real. Actual output count/bytes/no-BOM and cancel/read-only failure/retry are checked. These are not human/native Save/desktop-focus evidence. Only synthetic own-window content appears.
+
+SHA-256:
+```text
+6F621A375F5C8CE14F52DD2A025AF3C90218D4EBFEDF216714F29C87F51A6E20  single-press-recording.png
+C0303CCE4BC1282B4F7403F42B402A3994E35B73B1FE1C3489410DF5F24A4D52  single-press-export.png
+```
+
+
+
+## Historical paired-event review — 2026-11-20
 
 These unedited target-window PrintWindow images show the actual MainForm from source **c39337871269eb391c394db3ee39f71f4aaeb35f** at 120 DPI (125%). Default client: 1300x900; full window: 1318x947.
 

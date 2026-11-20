@@ -18,7 +18,7 @@ Key Event Logger
 Events: 2
 Timestamp	EventType	KeyName
 2026-11-19 12:34:56.789 +03:00	KeyDown	A
-2026-11-19 12:34:56.790 +03:00	KeyUp	A
+2026-11-19 12:34:56.790 +03:00	KeyDown	B
 ```
 
 The Markdown example does not establish file bytes/line endings; exact-byte tests do. Key-name validation excludes tabs/newlines/control characters. Empty formatting produces headers with count zero, but the UI does not offer empty export. No practice text, machine/user metadata, author/student fields or export-time clock value is added.
@@ -43,7 +43,7 @@ I/O is synchronous for this student application. Long logs/slow drives can brief
 
 ## Validation and remaining acceptance
 
-The current local check passes 91 cases (30 Core, 61 App). Tests inspect real UTF-8 bytes, overwrite/failure retention and temporary cleanup, as well as UI cancellation, retry, snapshots and layout with picker substitutes.
+The current local check passes 94 cases (30 Core, 64 App). Tests inspect real UTF-8 bytes, overwrite/failure retention and temporary cleanup, as well as UI cancellation, retry, snapshots and layout with picker substitutes.
 
 The real native SaveFileDialog was opened/canceled. Native Save/overwrite automation was attempted but was unreliable and is not claimed as passing. Physical save/overwrite/error checks and owner acceptance remain pending. See [testing](TESTING.md).
 
@@ -58,3 +58,7 @@ Baseline regression still passes all 72 cases with unchanged writer/format. A bo
 A production session stops at 10,000 events without discarding them. Export remains available at capacity; successful export does not clear capacity or restart recording. Clear events releases capacity and preserves the stopped state. Practice editing has a 4,096-character native entry limit, and practice text is never serialized.
 
 Names are validated before drive/file metadata lookup, including reserved superscript aliases and whitespace variants. The drive root is also checked for reparse redirection. Controlled error wording preserves data and state without exposing raw exception details. Success still reports the chosen destination. The formatter/staging contract is unchanged. See [security and residual limits](SECURITY.md).
+
+## Current single-press capture policy — 2026-11-20
+
+App sessions now contain one KeyDown per delivered press; KeyUp is not captured. The file format and Core enum/formatter remain compatible with explicit KeyUp records, but current UI exports do not create release records. Four synthetic DEMO presses produce four export rows. Current full local check is 94 cases (30 Core, 64 App); paired-event evidence above is historical where labeled.

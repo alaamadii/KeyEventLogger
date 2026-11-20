@@ -8,15 +8,15 @@ Record key names, event types and timestamps inside the application's active pra
 
 ## Application screenshots
 
-![Recording synthetic demonstration input in the redesigned timestamp, event and key table](docs/screenshots/quality-recording.png)
+![Recording synthetic demonstration input in the redesigned timestamp, event and key table](docs/screenshots/single-press-recording.png)
 
-*Recording: four demonstration keys produce eight delivered Down/Up events.*
+*Recording: four demonstration key presses produce four KeyDown records.*
 
-![Successful local export with eight records retained and recording stopped](docs/screenshots/quality-export.png)
+![Successful local export with four records retained and recording stopped](docs/screenshots/single-press-export.png)
 
 *Export complete: the real file was written, records remain and Start is required to resume.*
 
-These unedited captures show actual source c393378 at 125% DPI on November 20, 2026. Synthetic native input produced the records. A controlled destination picker selected an isolated local file; the formatter/exporter and checked output were real. They do not prove native Save dialog or human keyboard/desktop-focus acceptance. See [provenance and SHA-256 values](docs/screenshots/README.md).
+These unedited captures show actual source 4725220 at 125% DPI on November 20, 2026. Synthetic native input produced the records. A controlled destination picker selected an isolated local file; the formatter/exporter and checked output were real. They do not prove native Save dialog or human keyboard/desktop-focus acceptance. See [provenance and SHA-256 values](docs/screenshots/README.md).
 
 ## Controls
 
@@ -25,12 +25,12 @@ These unedited captures show actual source c393378 at 125% DPI on November 20, 2
 | Start recording / Alt+S | Start explicitly and focus Practice text; retain earlier records |
 | Stop / Alt+T | Stop immediately and retain records |
 | Clear events / Alt+C | Remove event rows/count; preserve practice text and recording state |
-| Practice text / Alt+I | Ordinary native editing; only delivered Down/Up events after Start are recorded |
+| Practice text / Alt+I | Ordinary native editing; only delivered KeyDown events after Start are recorded |
 | Event table | Read-only timestamp, event type and virtual-key columns in arrival order |
 | Export TXT / Alt+X | Stop, snapshot, choose a local .txt file and report the write result |
 | Leave/minimize | Stop recording; return/restore requires Start |
 
-A normal press usually creates **KeyDown + KeyUp**, so Space or Back can appear twice while editing text once. Held keys can repeat KeyDown. Count means events, not characters or paired presses. Navigation, shortcuts, modifiers and input methods affect delivery; Tab remains navigation.
+A short press creates **one KeyDown record**; release does not add a row. Pressing G twice intentionally creates two records. Held keys can repeat KeyDown. Count means delivered press events, not unique keys or reconstructed characters. Navigation, shortcuts, modifiers and input methods affect delivery; Tab remains navigation.
 
 Old practice text and paste content are never inspected or backfilled. The application does not reconstruct typed text.
 
@@ -87,7 +87,7 @@ KeyEventLogger.slnx           Solution
 
 ## Validation
 
-On 2026-11-20, the full local check passed: **92 tests — 30 Core + 62 App**, zero failures/skips/build warnings/errors, formatting clean. Coverage includes focus/stop gates, native Space/Back editing, capacity, snapshots, file bytes, failure retention, reserved filenames, controlled error text and layouts.
+On 2026-11-20, the full local check passed: **94 tests — 30 Core + 64 App**, zero failures/skips/build warnings/errors, formatting clean. Coverage includes focus/stop gates, native G/Space/Back single-press editing, capacity, snapshots, file bytes, failure retention, reserved filenames, controlled error text and layouts.
 
 The dependency query reported no known vulnerable packages in configured sources at that time; this is not a security guarantee. Actual EXE startup/normal close exited 0. Synthetic actual-Form probes checked real export bytes, cancel/read-only failure/retry and window layouts with a controlled picker.
 

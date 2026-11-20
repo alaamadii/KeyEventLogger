@@ -71,10 +71,12 @@ The merged PR #5 is the historical preparation baseline. The owner then requeste
 
 | Change | Actual evidence | Acceptance boundary |
 | --- | --- | --- |
-| Three-column read-only event table and Down/Up guidance | Native layout/edit/count tests and genuine source-c393378 captures | New owner visual/image approval pending |
+| Three-column read-only event table and single-press guidance | Native layout/edit/count tests and genuine current source-4725220 captures | New owner visual/image approval pending |
 | Bounded retention | Core/UI capacity, no-eviction and Clear/restart regression | Default 10,000 events; no silent rolling history |
 | Export path/error safeguards | Superscript/whitespace aliases and raw-error redaction cases | Still ordinary plaintext and not a filesystem sandbox |
 | Dependency policy | Official NuGet sources, restore audit, dated advisory query | Known-source snapshot, no blanket security claim |
 | Precise explanation | [User guide](USER_GUIDE.md), [security boundary](SECURITY.md), source-linked CODE_GUIDE | Human native/focus/display/F5 and second-computer results remain separately pending |
 
-No statistics, filtering, global input capture, network delivery or automatic saving is added. Current full check: 92 cases (30 Core + 62 App), zero failures/skips/build warnings/errors.
+No statistics, filtering, global input capture, network delivery or automatic saving is added. Current full check: 94 cases (30 Core + 64 App), zero failures/skips/build warnings/errors.
+
+The owner-requested single-press policy records local KeyDown only. The assignment permits KeyDown, KeyUp and/or KeyPress and does not require separate release rows. Core's broader type support remains; no global input source or character reconstruction is introduced.
