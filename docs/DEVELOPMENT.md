@@ -137,3 +137,9 @@ Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f
 - Final capture source c39337871269eb391c394db3ee39f71f4aaeb35f: reran the actual-Form controlled-picker probe after committing the final ListBox implementation, then replaced only the new review images. The earlier c954743 exploration is not the published screenshot source. Provenance/hashes identify the final images exactly.
 
 - Static repository review passed: 123 local Markdown targets across 15 files, all seven screenshot hashes, narrow output exclusions, production API/Core boundaries and whitespace. Historical images remain unchanged. No generated output or event exports are included.
+
+### Quality-review publication
+
+- Published code c954743, ListBox compliance c393378 and documentation/captures d3bdfe5 on feat/usability-security-review. Opened [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targeting main; no automatic merge.
+- Fresh isolated checkout of d3bdfe56748115a8880089be7224084fc2253a5b passed doctor/check: 91 cases, zero failures/skips/build warnings/errors, formatting clean. Its actual EXE title/Stopped/normal close exit 0 passed and the tree stayed clean. Same computer only; no local helper/configuration required to build/run.
+- Anonymous public metadata and README/USER_GUIDE/SECURITY/new-image URLs returned 200. Candidate Windows CI run 44683520537 passed. Exact final-head CI SHA/run/results are in PR #6; the later receipt commits change documentation only.

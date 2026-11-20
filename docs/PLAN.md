@@ -94,7 +94,7 @@ After PR #5, the owner requested further interface, code-quality, security and d
 - [x] Official package/audit sources and explicit all-dependency advisory checking.
 - [x] 91 local tests (30 Core, 61 App), actual EXE close, controlled-picker real-I/O probe and genuine new captures.
 - [x] User/security/code/architecture guides reconciled; historical evidence retained separately.
-- [ ] Current-head hosted CI and publication receipt recorded.
+- [x] Clean-checkout/publication receipt recorded; exact final-head hosted results tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
 - [ ] Owner approves the new interface/images and supplies remaining manual/second-computer evidence.
 
 Use a draft review PR while mandatory final acceptance evidence remains missing. No automatic merge or course submission.

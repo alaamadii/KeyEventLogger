@@ -18,7 +18,7 @@ Environment: Windows 10.0.22631 x64, SDK 10.0.402, WindowsDesktop 10.0.13, Git 2
 | Actual production EXE | Correct title/Stopped state; normal close exit 0 |
 | Actual-MainForm probe | Synthetic DEMO creates 8 real records; real export bytes/header/count/no BOM checked; controlled picker success/cancel/read-only failure/retry pass |
 | Visual/scripted review | Actual target-window captures inspected at 120 DPI (125%), default/minimum/wide; new README recording/export captures from c393378 |
-| Final repository/publication | Link/hash/exclusion receipts and exact hosted result are recorded below or on the quality-review PR after execution |
+| Repository/publication | 123 local targets / 15 Markdown files, 7 capture hashes, exclusions/Core boundary and public checks pass; current receipt and exact hosted evidence below / on PR #6 |
 
 The package query is an advisory snapshot, not a vulnerability-free guarantee. Restore uses the repository's official package/audit source and explicit all-dependency audit policy. No runtime dependency was added.
 
@@ -32,6 +32,21 @@ Human native Save/overwrite/error review, physical keyboard/external-app switchi
 
 See [security boundary](SECURITY.md), [user guide](USER_GUIDE.md), [capture provenance](screenshots/README.md) and [owner procedure](SUBMISSION.md).
 
+
+
+## Current publication receipt — 2026-11-20
+
+[Draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targets main from feat/usability-security-review.
+
+- Published clean-checkout candidate: d3bdfe56748115a8880089be7224084fc2253a5b; runtime/test/capture source c39337871269eb391c394db3ee39f71f4aaeb35f.
+- Fresh isolated clone on the same Windows 10.0.22631 development computer, SDK 10.0.402 / WindowsDesktop 10.0.13: doctor/check pass, 30 Core + 61 App = 91, no failures/skips/build warnings/errors, formatting clean.
+- The actual cloned EXE title/Stopped/normal-close exit 0 passed. The clone stayed clean and required no untracked local configuration or diagnostic helper to build/run. A separate observer performed the lifecycle check.
+- Anonymous HTTP 200 confirmed public repository metadata, candidate README/USER_GUIDE/SECURITY and both new README images.
+- Static review: 123 local Markdown targets across 15 files, seven capture hashes, narrow exclusions, App/Core boundaries, whitespace and a limited tracked-file credential-pattern scan with no matches.
+- Candidate hosted run 44683520537 succeeded. The exact final evidence-commit SHA/run/results are recorded on PR #6 separately, avoiding a self-referential receipt commit.
+- Later receipt changes are documentation only; the final head's code/configuration is compared with the clean-checkout candidate before delivery.
+
+This is same-computer validation, not the required second Windows computer or physical/native acceptance. PR #6 stays draft for owner evidence.
 
 
 ## Historical Stage 04 review — 2026-11-19

@@ -4,7 +4,7 @@ An educational Windows Forms application for **Nesne Tabanlı Programlama (YMH21
 
 Record key names, event types and timestamps inside the application's active practice area, then explicitly export a local TXT snapshot. The redesigned workspace separates practice text from a readable three-column event table, using the native ListBox required by the assignment.
 
-**Current status:** required application features are implemented. The owner-requested interface/security review is awaiting review; final course acceptance still requires the remaining manual evidence.
+**Current status:** required application features are implemented. The owner-requested [interface/security review, PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6), is draft for owner review; final course acceptance still requires the remaining manual evidence.
 
 ## Application screenshots
 
@@ -111,7 +111,7 @@ The dependency query reported no known vulnerable packages in configured sources
 | [Submission](docs/SUBMISSION.md) | Owner procedures and remaining acceptance |
 | [Working agreement](AGENTS.md) | Repository rules |
 
-PR #5 was owner-merged. This additional review is independent of that merge; it does not infer missing physical test results. The owner approves merging.
+[PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5) was owner-merged. This additional review is independent of that merge; it does not infer missing physical test results. The owner approves merging.
 
 ## Limitations and course submission
 
