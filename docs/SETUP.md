@@ -40,7 +40,7 @@ The command-line lifecycle probe does not prove that an owner pressed F5; actual
 | NuGet restore fails | Check connectivity and NuGet sources; do not add credentials to Git |
 | WindowsDesktop unavailable | Use supported Windows with the matching SDK/runtime |
 | PowerShell policy blocks scripts | Follow the machine's script-signing/execution policy; do not weaken system-wide policy |
-| Missing test discovery | Stage 03 now has 26 Core and 46 App cases; check restore, test SDK/adapters and project targets |
+| Missing test discovery | Current review has 30 Core and 61 App cases; check restore, test SDK/adapters and project targets |
 | Export accidentally appears in Git | Unstage it without deleting user data; place future development exports under exports/ or *.keyevents.txt |
 
 The application starts Stopped. Press Start, then use synthetic non-sensitive practice input to inspect Down/Up events. Stop retains records. Clear removes events while preserving practice text/state. Leaving/minimizing stops recording; return requires Start. Tab navigates normally. Export becomes available when events exist. It stops recording, requests a local .txt destination, and reports a separate result. Cancel/failure keep records; Start is required again. Use ignored exports/ or *.keyevents.txt for development exports. See [export behavior](EXPORT.md).
@@ -50,3 +50,9 @@ The application starts Stopped. Press Start, then use synthetic non-sensitive pr
 Use the exact candidate commit when reproducing final checks. A fresh clone's doctor/check and actual executable launch verify the documented dependencies; the ignored development probes are not required to build or run.
 
 Record the commit, Windows and SDK with results. Physical F5/display checks and a second Windows computer remain separate from command-line or same-computer clean-clone success. See [owner procedure](SUBMISSION.md) and [code walkthrough](CODE_GUIDE.md).
+
+## Interface/security review — 2026-11-20
+
+While this PR is unmerged, switch to feat/usability-security-review after cloning to inspect the redesigned table and retention boundary. NuGet.Config selects official package/audit sources. Restore audits all dependencies from low severity and treats warnings as errors; failed audit retrieval is a check failure, not a clean security result. Keep source availability current; do not suppress advisories merely to make CI green.
+
+Run dotnet list KeyEventLogger.slnx package --vulnerable --include-transitive for an explicit advisory query. No known advisories were reported on 2026-11-20; this is time/source dependent. See [security](SECURITY.md) and [user guide](USER_GUIDE.md). The new default window is 1040x720 client at 96 DPI, with a 900x680 minimum window. High-contrast colors and physical DPI/F5 still require owner review.

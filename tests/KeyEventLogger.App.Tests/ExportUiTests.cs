@@ -95,7 +95,8 @@ public sealed class ExportUiTests
             Assert.Equal(2, records.Count);
             Assert.Equal("A", records[0].KeyName);
             Assert.Equal(KeyEventType.KeyDown, records[0].EventType);
-            Assert.Equal(KeyEventType.KeyUp, records[1].EventType);
+            Assert.Equal(KeyEventType.KeyDown, records[1].EventType);
+            Assert.Equal("B", records[1].KeyName);
             var list = Assert.IsAssignableFrom<IList<KeyEventRecord>>(records);
             Assert.Throws<NotSupportedException>(() => list.Clear());
             return path;
@@ -147,7 +148,8 @@ public sealed class ExportUiTests
             Seed(form);
             Button(form, "exportButton").PerformClick();
             Assert.Contains("Export failed", Feedback(form).Text);
-            Assert.Contains("Synthetic dialog failure", Feedback(form).Text);
+            Assert.DoesNotContain("Synthetic dialog failure", Feedback(form).Text);
+            Assert.Contains("Records were kept", Feedback(form).Text);
             Assert.Equal(2, Events(form).Items.Count);
             Assert.Equal(0, exporter.Calls);
             Assert.False(Button(form, "stopButton").Enabled);
@@ -189,7 +191,15 @@ public sealed class ExportUiTests
             Application.DoEvents();
             var label = Feedback(form);
             Assert.True(label.AutoEllipsis);
-            Assert.Contains(longPath, label.AccessibleDescription);
+            if (error)
+            {
+                Assert.DoesNotContain(longPath, label.AccessibleDescription);
+                Assert.DoesNotContain("Synthetic failure", label.Text);
+            }
+            else
+            {
+                Assert.Contains(longPath, label.AccessibleDescription);
+            }
             foreach (var name in new[] { "exportFeedback", "recordingStatus", "practiceText", "eventList", "scopeNotice" })
             {
                 var control = Assert.Single(form.Controls.Find(name, true));
@@ -203,20 +213,25 @@ public sealed class ExportUiTests
     private static void Seed(MainForm form)
     {
         Practice(form).Text = "demo";
+        WindowsUi.Activate(form);
+        Assert.True(Practice(form).Focus());
+        Assert.Equal(form.Handle, WindowsUi.ActiveWindow);
         Button(form, "startButton").PerformClick();
         Assert.True(Button(form, "stopButton").Enabled);
         SendKey(Practice(form), Keys.A, false);
         SendKey(Practice(form), Keys.A, true);
+        SendKey(Practice(form), Keys.B, false);
+        SendKey(Practice(form), Keys.B, true);
         Assert.Equal(2, Events(form).Items.Count);
         Assert.True(Button(form, "exportButton").Enabled);
     }
 
     private static Button Button(MainForm form, string name) => WindowsUi.Find<Button>(form, name);
     private static TextBox Practice(MainForm form) => WindowsUi.Find<TextBox>(form, "practiceText");
-    private static ListBox Events(MainForm form) => WindowsUi.Find<ListBox>(form, "eventList");
+    private static ListBox Events(MainForm form) => Assert.IsAssignableFrom<ListBox>(Assert.Single(form.Controls.Find("eventList", true)));
     private static Label Feedback(MainForm form) => WindowsUi.Find<Label>(form, "exportFeedback");
     private static string Status(MainForm form) => WindowsUi.Find<Label>(form, "recordingStatus").Text;
-    private static string[] Rows(MainForm form) => Events(form).Items.Cast<string>().ToArray();
+    private static string[] Rows(MainForm form) => Events(form).Items.Cast<object>().Select(item => item.ToString()!).ToArray();
 
     private static void SendKey(Control control, Keys key, bool up) =>
         SendMessage(control.Handle, up ? 0x0101u : 0x0100u, (IntPtr)key, (IntPtr)(up ? -1073741823L : 1L));
@@ -243,4 +258,59 @@ public sealed class ExportUiTests
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     private static extern IntPtr SendMessage(IntPtr handle, uint message, IntPtr wParam, IntPtr lParam);
+
+    [Theory]
+    [InlineData("access")]
+    [InlineData("argument")]
+    [InlineData("security")]
+    [InlineData("dialog")]
+    public void RecoverableErrorsNeverExposeRawExceptionDetails(string category)
+    {
+        const string privateDetail = @"private-demo-C:\owner-data\not-for-feedback";
+        Exception error = category switch
+        {
+            "access" => new UnauthorizedAccessException(privateDetail),
+            "argument" => new ArgumentException(privateDetail),
+            "security" => new System.Security.SecurityException(privateDetail),
+            _ => new ExternalException(privateDetail)
+        };
+        var picker = new Picker(_ => throw error);
+        WindowsUi.Run(form =>
+        {
+            Seed(form);
+            var before = Rows(form);
+            Button(form, "exportButton").PerformClick();
+            Assert.Contains("Export failed:", Feedback(form).Text);
+            Assert.Contains("Records were kept", Feedback(form).Text);
+            Assert.DoesNotContain(privateDetail, Feedback(form).Text);
+            Assert.DoesNotContain(privateDetail, Feedback(form).AccessibleDescription);
+            Assert.Equal(before, Rows(form));
+            Assert.Equal("demo", Practice(form).Text);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
+        }, picker: picker);
+    }
+
+    [Fact]
+    public void ExportAtCapacityKeepsTheLimitExplanationAndStartDisabled()
+    {
+        var picker = new Picker(_ => null);
+        WindowsUi.Run(form =>
+        {
+            Seed(form);
+            Assert.Contains("limit reached (2 events)", Status(form));
+            var before = Rows(form);
+            Button(form, "exportButton").PerformClick();
+            Assert.Contains("canceled", Feedback(form).Text);
+            Assert.Contains("limit reached (2 events)", Status(form));
+            Assert.Equal(before, Rows(form));
+            Assert.Equal("demo", Practice(form).Text);
+            Assert.False(Button(form, "startButton").Enabled);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
+            Button(form, "clearButton").PerformClick();
+            Assert.True(Button(form, "startButton").Enabled);
+            Assert.DoesNotContain("limit reached", Status(form));
+        }, picker: picker, capacity: 2);
+    }
 }

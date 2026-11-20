@@ -5,10 +5,10 @@ namespace KeyEventLogger.App.Forms;
 
 public sealed partial class MainForm
 {
-    private readonly RecordingSession session = new();
+    private readonly RecordingSession session;
     private readonly TimeProvider clock;
     private readonly TextBox practiceText;
-    private readonly ListBox eventList;
+    private readonly EventListBox eventList;
     private readonly Label recordingStatus;
     private readonly Label eventCount;
     private readonly Label emptyState;
@@ -24,7 +24,6 @@ public sealed partial class MainForm
     private void BindRecording()
     {
         practiceText.KeyDown += PracticeKeyDown;
-        practiceText.KeyUp += PracticeKeyUp;
         startButton.Click += StartClicked;
         stopButton.Click += StopClicked;
         clearButton.Click += ClearClicked;
@@ -51,7 +50,12 @@ public sealed partial class MainForm
     private void ClearClicked(object? sender, EventArgs e)
     {
         if (exportInProgress || closing) { return; }
+        var wasAtCapacity = session.IsAtCapacity;
         session.Clear();
+        if (wasAtCapacity)
+        {
+            stoppedReason = "Stopped — events cleared. Press Start to record again.";
+        }
         eventList.Items.Clear();
         RefreshPresentation();
         if (session.IsRecording)
@@ -60,11 +64,9 @@ public sealed partial class MainForm
         }
     }
 
-    private void PracticeKeyDown(object? sender, KeyEventArgs e) => RecordEvent(e, KeyEventType.KeyDown);
+    private void PracticeKeyDown(object? sender, KeyEventArgs e) => RecordEvent(e);
 
-    private void PracticeKeyUp(object? sender, KeyEventArgs e) => RecordEvent(e, KeyEventType.KeyUp);
-
-    private void RecordEvent(KeyEventArgs e, KeyEventType eventType)
+    private void RecordEvent(KeyEventArgs e)
     {
         if (!recordingReady || closing || IsDisposed || Disposing || !session.IsRecording ||
             !windowActive || !ContainsFocus || WindowState == FormWindowState.Minimized || !practiceText.Focused)
@@ -72,12 +74,10 @@ public sealed partial class MainForm
             return;
         }
 
-        var record = new KeyEventRecord(e.KeyCode.ToString(), eventType, clock.GetLocalNow());
+        var record = new KeyEventRecord(e.KeyCode.ToString(), KeyEventType.KeyDown, clock.GetLocalNow());
         if (session.TryRecord(record))
         {
-            eventList.Items.Add(string.Create(CultureInfo.InvariantCulture,
-                $"{record.Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}  |  {record.EventType}  |  {record.KeyName}"));
-            eventList.TopIndex = eventList.Items.Count - 1;
+            eventList.AddRecord(record);
             RefreshPresentation();
         }
     }
@@ -94,11 +94,18 @@ public sealed partial class MainForm
 
     private void RefreshPresentation()
     {
-        recordingStatus.Text = session.IsRecording
+        recordingStatus.Text = session.IsAtCapacity
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"Stopped — session limit reached ({session.Capacity:N0} events). Export or clear events before starting again.")
+            : session.IsRecording
             ? "Recording — practice area only."
             : stoppedReason;
         recordingStatus.AccessibleDescription = recordingStatus.Text;
-        startButton.Enabled = !session.IsRecording && !closing && !exportInProgress;
+        recordingStatus.BackColor = session.IsRecording ? UiTheme.RecordingSurface : UiTheme.Surface;
+        recordingStatus.ForeColor = session.IsRecording ? UiTheme.Recording : UiTheme.Text;
+        startButton.Enabled = !session.IsRecording && !session.IsAtCapacity && !closing && !exportInProgress;
+        startButton.BackColor = startButton.Enabled ? UiTheme.Accent : SystemColors.Control;
+        startButton.ForeColor = startButton.Enabled ? UiTheme.OnAccent : SystemColors.GrayText;
         stopButton.Enabled = session.IsRecording && !closing && !exportInProgress;
         clearButton.Enabled = session.Count > 0 && !closing && !exportInProgress;
         exportButton.Enabled = session.Count > 0 && !closing && !exportInProgress;
@@ -161,7 +168,6 @@ public sealed partial class MainForm
 
         recordingReady = false;
         practiceText.KeyDown -= PracticeKeyDown;
-        practiceText.KeyUp -= PracticeKeyUp;
         startButton.Click -= StartClicked;
         stopButton.Click -= StopClicked;
         clearButton.Click -= ClearClicked;

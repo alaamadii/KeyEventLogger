@@ -130,4 +130,51 @@ public sealed class RecordingSessionTests
     }
 
     private static KeyEventRecord Record(string key) => new(key, KeyEventType.KeyDown, Timestamp);
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void InvalidCapacityCannotCreateASession(int capacity)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new RecordingSession(capacity));
+    }
+
+    [Fact]
+    public void CapacityStopsAtTheBoundaryWithoutDiscardingOrResuming()
+    {
+        var session = new RecordingSession(2);
+        session.Start();
+        var first = Record("Space");
+        var last = new KeyEventRecord("Space", KeyEventType.KeyUp, Timestamp);
+        Assert.True(session.TryRecord(first));
+        Assert.True(session.IsRecording);
+        Assert.True(session.TryRecord(last));
+        Assert.True(session.IsAtCapacity);
+        Assert.False(session.IsRecording);
+        Assert.Equal(2, session.Capacity);
+
+        var snapshot = session.GetSnapshot();
+        session.Start();
+        Assert.False(session.IsRecording);
+        Assert.False(session.TryRecord(Record("Back")));
+        Assert.Equal(new[] { first, last }, session.GetSnapshot());
+        session.Clear();
+        Assert.Equal(new[] { first, last }, snapshot);
+    }
+
+    [Fact]
+    public void ClearAfterCapacityRequiresExplicitStartAndReleasesTheLimit()
+    {
+        var session = new RecordingSession(1);
+        session.Start();
+        session.TryRecord(Record("A"));
+        session.Clear();
+        Assert.False(session.IsAtCapacity);
+        Assert.False(session.IsRecording);
+        Assert.False(session.TryRecord(Record("B")));
+        session.Start();
+        Assert.True(session.TryRecord(Record("C")));
+        Assert.Equal("C", Assert.Single(session.GetSnapshot()).KeyName);
+        Assert.False(session.IsRecording);
+    }
 }

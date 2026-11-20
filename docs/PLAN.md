@@ -12,7 +12,8 @@ The target deadline from the supplied course brief is 2026-11-30 at 23:59. This 
 | 01 | feat/logger-ui | Event-list layout, practice area, disabled controls and nonrecording status | Merged in [PR #2](https://github.com/alaamadii/KeyEventLogger/pull/2) on 2026-11-19 |
 | 02 | feat/local-key-events | Application-local key events, timestamps and recording lifecycle | Merged in [PR #3](https://github.com/alaamadii/KeyEventLogger/pull/3) on 2026-11-19 |
 | 03 | feat/text-export | User-selected local TXT export, formatting and file errors | Merged in [PR #4](https://github.com/alaamadii/KeyEventLogger/pull/4) on 2026-11-19 |
-| 04 | docs/final-submission | Final regression/evidence audit, code guide and submission checklist | Technical preparation in progress; owner/manual acceptance pending |
+| 04 | docs/final-submission | Final regression/evidence audit, code guide and submission checklist | Owner merged [PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5); missing human evidence remains pending |
+| Quality review | feat/usability-security-review | Redesigned native table, bounded recording, export hardening and precise documentation | Implemented/locally checked; owner review pending |
 
 ## Stage 00 — Initialization
 
@@ -73,12 +74,31 @@ Progress on 2026-11-19: reviewed the source/PDF requirement mapping, reran docto
 
 - [x] Baseline regression, source review and evidence classification.
 - [x] Documentation walkthrough and explicit owner procedure.
-- [x] Published-candidate clean-checkout and public artifact receipts recorded; exact final-head hosted evidence tracked on [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5).
+- [x] Published-candidate clean-checkout and public artifact receipts recorded; exact final-head hosted evidence tracked on [PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5).
 - [ ] Owner manual results, screenshot approval and second-computer evidence.
-- [ ] Owner accepts the final PR. Draft status is required while acceptance evidence is missing.
+- [x] Owner merged PR #5; this does not complete missing manual/course evidence.
 
 ## Explicitly deferred
 
 Statistics, date/time filtering, packaging and additional visual themes are not authorized feature stages. Do not implement them automatically.
 
 Each PR must include its purpose, scope, exact validation, documentation updates and limitations. Do not mark a stage accepted merely because CI passes.
+
+## Owner-requested interface/security review — 2026-11-20
+
+After PR #5, the owner requested further interface, code-quality, security and documentation work. This is a review of the same application, without adding optional statistics/filtering or broader input collection.
+
+- [x] Separate timestamp/event/key table, readable native layout, accessible actions and current single-press/repeat explanation.
+- [x] 10,000-event stop boundary with no eviction; Clear/restart/exports remain explicit.
+- [x] Native 4,096-character entry limit; reserved filename hardening and controlled export errors.
+- [x] Official package/audit sources and explicit all-dependency advisory checking.
+- [x] 94 local tests (30 Core, 64 App), actual EXE close, controlled-picker real-I/O probe and genuine new captures.
+- [x] User/security/code/architecture guides reconciled; historical evidence retained separately.
+- [x] Clean-checkout/publication receipt recorded; exact final-head hosted results tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
+- [ ] Owner approves the new interface/images and supplies remaining manual/second-computer evidence.
+
+Use a draft review PR while mandatory final acceptance evidence remains missing. No automatic merge or course submission.
+
+### Single-press follow-up — 2026-11-20
+
+The owner requests one row for a short press. App now records only KeyDown; release is ignored. Intentional consecutive presses, modifier presses and native held-key repeats remain. This supersedes the original paired-event App capture policy, with unchanged focus/retention/export boundaries. Current local check: 94 cases (30 Core, 64 App). User/new-image approval remains pending on PR #6.

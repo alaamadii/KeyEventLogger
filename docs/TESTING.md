@@ -1,6 +1,87 @@
 # Testing strategy and evidence
 
-## Current Stage 04 review — 2026-11-19
+## Current single-press follow-up — 2026-11-20
+
+Runtime/test/capture source: 4725220f1cca5a8a8873985eb1308fd3b1d0c344. Continues [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
+
+- ./scripts/dev.ps1 check: **30 Core + 64 App = 94 passed**, zero failures/skips/build warnings/errors, formatting clean.
+- Native short G/Space/Back presses edit once and append one KeyDown; release alone adds nothing.
+- Two intentional G presses at identical test timestamps remain two records. Native repeats/modifiers remain separate delivered presses.
+- Lifecycle, capacity, Clear/restart, local scope, staged export/error and minimum/resized layout regressions pass with the new policy.
+- Actual production EXE startup/Stopped/normal-close exit 0 passed.
+- Actual-Form synthetic DEMO probe produces four KeyDown records and real exported count/bytes, with controlled picker success/cancel/read-only failure/retry.
+- Current captures show four presses/four records. Source/date/method/DPI/hashes are in screenshot provenance; the picker substitution remains explicit.
+- Exact current published checkout/hosted SHA/run/results are recorded on PR #6 after execution.
+
+The prior 91/92-case paired-event/capacity receipts below are historical. App now ignores KeyUp; Core's type/formatter can still represent it for compatibility and pure tests. No focus, retention or file boundary was broadened. Physical native Save/keyboard/focus/DPI/F5, image approval and another computer remain pending.
+
+
+
+## Historical paired-event interface/security review — 2026-11-20
+
+Branch: feat/usability-security-review. Based on owner-merged PR #5, main 06045f3. Capture source: c39337871269eb391c394db3ee39f71f4aaeb35f. Current runtime/test SHA and hosted results are recorded on PR #6.
+
+Environment: Windows 10.0.22631 x64, SDK 10.0.402, WindowsDesktop 10.0.13, Git 2.53.0.windows.1.
+
+| Check | Executed result |
+| --- | --- |
+| ./scripts/dev.ps1 doctor | SDK/runtime/Git available |
+| ./scripts/dev.ps1 check | Restore/Release build/test/format pass; 30 Core + 62 App = 92; 0 failures/skips/build warnings/errors |
+| Capacity regression | Final event stops without eviction; full Start rejected; Clear releases capacity and requires explicit restart; the full-session explanation survives export cancellation |
+| Native Space / Back | One native edit, separate Down/Up rows, correct count; caret explicitly positioned for the test |
+| Existing lifecycle/layout regression | Local focus/start/stop/clear/cancel-close gates, table presentation and minimum/resized bounds pass |
+| File policy and errors | Reserved superscript/whitespace aliases rejected before metadata access; controlled errors retain data and omit raw details |
+| Dependency query | dotnet list KeyEventLogger.slnx package --vulnerable --include-transitive: no known vulnerable packages in official configured source on this date |
+| Actual production EXE | Correct title/Stopped state; normal close exit 0 |
+| Actual-MainForm probe | Synthetic DEMO creates 8 real records; real export bytes/header/count/no BOM checked; controlled picker success/cancel/read-only failure/retry pass |
+| Visual/scripted review | Actual target-window captures inspected at 120 DPI (125%), default/minimum/wide; new README recording/export captures from c393378 |
+| Repository/publication | 123 local targets / 15 Markdown files, 7 capture hashes, exclusions/Core boundary and public checks pass; current receipt and exact hosted evidence below / on PR #6 |
+
+The package query is an advisory snapshot, not a vulnerability-free guarantee. Restore uses the repository's official package/audit source and explicit all-dependency audit policy. No runtime dependency was added.
+
+The new editing tests initially assumed an end-positioned caret after setting text; the native control actually placed it at the start. Corrected that test setup and reran the complete check. This was not an application double-edit defect.
+
+The owner reported seeing one Down and one Up for Space/Back in the list. That confirms the described observation only; it is not a complete physical test register. Current automated tests independently verify editing once.
+
+The capture helper uses an actual Form, native synthetic input and a substituted destination picker with the real formatter/writer. It does not prove native Save/overwrite or physical keyboard/focus acceptance. Previous native automation limitations remain historical; no repeated hanging Save attempt was made in this review.
+
+Human native Save/overwrite/error review, physical keyboard/external-app switching, display transitions/F5/high contrast/assistive technology, a second Windows computer and new-image approval remain pending unless supplied with actual evidence. The current quality review does not turn previous merges into those results.
+
+See [security boundary](SECURITY.md), [user guide](USER_GUIDE.md), [capture provenance](screenshots/README.md) and [owner procedure](SUBMISSION.md).
+
+
+
+The final capacity-message regression raised the current count to 92 (30 Core, 62 App). One intermediate export test failed its Start setup when native activation/focus was not established; the fixture now explicitly activates/focuses its owned Form and asserts native active-window identity before Start. The complete check passed afterward; production focus gates were not loosened. The min-size full-session layout is covered too. Existing source-c393378 screenshots still match their depicted non-full states.
+
+## Historical pre-single-press candidate receipt — 2026-11-20
+
+- Published candidate after the capacity-message fix: 72bc356dec053d4a1d9407a164ee582aba365cf6.
+- Fresh isolated checkout on Windows 10.0.22631, SDK 10.0.402 / WindowsDesktop 10.0.13: doctor/check pass, **30 Core + 62 App = 92**, zero failures/skips/build warnings/errors, formatting clean.
+- Actual cloned EXE title/Stopped/normal close exit 0 passed; tree clean and no untracked local build/run configuration required.
+- Anonymous candidate README/USER_GUIDE/SECURITY/new-image URLs returned 200. Public repository metadata was already verified; visibility was not changed.
+- Candidate hosted run 44684347808 succeeded. The exact final documentation-receipt SHA/run/confirmed result is recorded on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
+- Final delivery compares runtime/tests/configuration with 72bc356. Later receipt edits are documentation only.
+- Existing source-c393378 screenshots still match the non-full states shown; their actual source/hashes are unchanged. The newer full-capacity explanation has separate regression evidence.
+
+This is the same development computer, not another Windows computer. Human/native/physical acceptance remains pending.
+
+
+## Earlier candidate publication receipt — 2026-11-20
+
+[Draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targets main from feat/usability-security-review.
+
+- Published clean-checkout candidate: d3bdfe56748115a8880089be7224084fc2253a5b; runtime/test/capture source c39337871269eb391c394db3ee39f71f4aaeb35f.
+- Fresh isolated clone on the same Windows 10.0.22631 development computer, SDK 10.0.402 / WindowsDesktop 10.0.13: doctor/check pass, 30 Core + 61 App = 91, no failures/skips/build warnings/errors, formatting clean.
+- The actual cloned EXE title/Stopped/normal-close exit 0 passed. The clone stayed clean and required no untracked local configuration or diagnostic helper to build/run. A separate observer performed the lifecycle check.
+- Anonymous HTTP 200 confirmed public repository metadata, candidate README/USER_GUIDE/SECURITY and both new README images.
+- Static review: 123 local Markdown targets across 15 files, seven capture hashes, narrow exclusions, App/Core boundaries, whitespace and a limited tracked-file credential-pattern scan with no matches.
+- Candidate hosted run 44683520537 succeeded. The exact final evidence-commit SHA/run/results are recorded on PR #6 separately, avoiding a self-referential receipt commit.
+- Earlier receipt d2046d4 changed documentation only relative to d3bdfe5. The later capacity-message fix supersedes that candidate; use the final receipt above.
+
+This is same-computer validation, not the required second Windows computer or physical/native acceptance. PR #6 stays draft for owner evidence.
+
+
+## Historical Stage 04 review — 2026-11-19
 
 | Check | Executed result |
 | --- | --- |

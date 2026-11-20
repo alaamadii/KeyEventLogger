@@ -1,62 +1,67 @@
 # Source-linked code walkthrough
 
-This guide explains the implemented application for review and the course's oral check. It does not describe optional statistics/filtering or claim missing manual acceptance.
+Use this guide to explain the implemented behavior during review. [USER_GUIDE](USER_GUIDE.md) describes user actions; [SECURITY](SECURITY.md) states the data boundary and limits.
 
-## Project direction
+## Dependency direction and composition
 
-[App.csproj](../src/KeyEventLogger.App/KeyEventLogger.App.csproj) references [Core.csproj](../src/KeyEventLogger.Core/KeyEventLogger.Core.csproj). Core never references App, WinForms, drawing, timers or file dialogs. [Core tests](../tests/KeyEventLogger.Core.Tests/KeyEventLogger.Core.Tests.csproj) reference Core; [App tests](../tests/KeyEventLogger.App.Tests/KeyEventLogger.App.Tests.csproj) reference App.
+[App.csproj](../src/KeyEventLogger.App/KeyEventLogger.App.csproj) references [Core.csproj](../src/KeyEventLogger.Core/KeyEventLogger.Core.csproj). Core does not know WinForms, sockets, drawing, timers, a clock or file dialogs. [Core tests](../tests/KeyEventLogger.Core.Tests/KeyEventLogger.Core.Tests.csproj) reference Core; [App tests](../tests/KeyEventLogger.App.Tests/KeyEventLogger.App.Tests.csproj) reference App.
 
-[Program.Main](../src/KeyEventLogger.App/Program.cs) establishes an STA UI thread, PerMonitorV2 DPI and visual styles, then runs MainForm in the Windows message loop.
+[Program.Main](../src/KeyEventLogger.App/Program.cs) configures an STA thread, PerMonitorV2 DPI and visual styles before the standard Windows message loop.
 
-MainForm is one object split across [layout](../src/KeyEventLogger.App/Forms/MainForm.cs), [recording](../src/KeyEventLogger.App/Forms/MainForm.Recording.cs) and [export](../src/KeyEventLogger.App/Forms/MainForm.Export.cs) partial files. Partial files are not separate instances. The Form owns native controls, fonts and tooltip disposal.
+MainForm is one object across [composition/disposal](../src/KeyEventLogger.App/Forms/MainForm.cs), [layout](../src/KeyEventLogger.App/Forms/MainForm.Layout.cs), [recording](../src/KeyEventLogger.App/Forms/MainForm.Recording.cs) and [export](../src/KeyEventLogger.App/Forms/MainForm.Export.cs). Partial files organize responsibilities; they are not separate instances. [UiTheme](../src/KeyEventLogger.App/Forms/UiTheme.cs) holds presentation colors. The Form owns native controls, three fonts and its feedback tooltip.
 
-## Values and encapsulation
+## Validated values and bounded ownership
 
-[KeyEventRecord](../src/KeyEventLogger.Core/KeyEventRecord.cs) is a sealed immutable value record: key name, event type and supplied DateTimeOffset are get-only. Constructor validation rejects blank/untrimmed/control-character names and undefined [event types](../src/KeyEventLogger.Core/KeyEventType.cs). It stores the supplied offset; it does not consult a clock or Windows Keys.
+[KeyEventRecord](../src/KeyEventLogger.Core/KeyEventRecord.cs) is a sealed immutable value record with get-only name, [event type](../src/KeyEventLogger.Core/KeyEventType.cs) and supplied DateTimeOffset. Constructor validation rejects blank/untrimmed/control-character names and undefined types; no clock or Windows Keys lives here.
 
-[RecordingSession](../src/KeyEventLogger.Core/RecordingSession.cs) owns its private list. IsRecording has a private setter; Count is derived. Start/Stop are idempotent. TryRecord validates then rejects a stopped append. Clear empties records without changing state.
+[RecordingSession](../src/KeyEventLogger.Core/RecordingSession.cs) encapsulates its private list. Capacity must be positive; production defaults to 10,000. Count is derived, IsRecording has a private setter and IsAtCapacity compares the count/limit.
 
-GetSnapshot calls ToArray and wraps the copy read-only. A read-only interface alone would not provide a stable copy; this implementation protects ownership, and immutable record elements remain safe to share. Later appends/clear do not alter a prior snapshot. See [session assertions](../tests/KeyEventLogger.Core.Tests/RecordingSessionTests.cs) and [value assertions](../tests/KeyEventLogger.Core.Tests/KeyEventRecordTests.cs).
+Start accepts a recording state only while room exists. TryRecord rejects stopped appends, accepts the final available record, then stops. Subsequent Start/appends cannot exceed the boundary. Clear removes records without changing state; after capacity that means remaining stopped until an explicit Start.
+
+GetSnapshot uses ToArray plus a read-only wrapper. A read-only interface alone would not copy mutable storage; this separate array and immutable elements preserve earlier snapshots after append/clear. [Session tests](../tests/KeyEventLogger.Core.Tests/RecordingSessionTests.cs) cover ownership, ordering, boundary/restart and invalid capacities.
 
 ## Trace a delivered key
 
-1. Only the practice TextBox's KeyDown/KeyUp subscriptions enter PracticeKeyDown/PracticeKeyUp.
-2. RecordEvent requires recording, native activation state, Form/practice focus, and a live nonminimized/nonclosing window.
-3. App maps e.KeyCode.ToString() and reads TimeProvider.GetLocalNow(). Production uses System; tests can supply a fixed provider.
-4. Session.TryRecord appends the immutable value. The Form adds one formatted row, scrolls and refreshes count/status/button/empty-state presentation.
+1. Only the practiceText.KeyDown subscription enters the record path. Release never appends a record.
+2. RecordEvent requires recording, activation, Form/practice focus and a live nonminimized/nonclosing window.
+3. App maps e.KeyCode.ToString() and supplies TimeProvider.GetLocalNow(); the default is System and tests can supply a fixed provider.
+4. Session accepts an immutable record; the Form adds one immutable display row to [EventListBox](../src/KeyEventLogger.App/Forms/EventListBox.cs), a native ListBox that draws aligned timestamp/type/name columns. Its complete ToString preserves native item accessibility.
+5. Presentation updates count/actions/state. At capacity it derives the full-session explanation from the model and disables Start while preserving Export/Clear. Export/cancel/focus changes cannot replace that reason with a less useful stopped message.
 
-The application never reads practiceText.Text to reconstruct or backfill typed content. Each delivered Down/Up/repeat is independent, so one press can create two rows. Modifier events are retained when delivered. Native shortcuts/navigation/input methods affect delivery; Tab remains navigation. A boundary can leave an unmatched event; the code does not invent its missing partner.
+No snapshot/rebind occurs per key and no table string becomes a domain input. Recording/export never reads practiceText.Text. Native editing remains native; user entry/paste has a 4,096-character MaxLength.
 
-## Trace Stop, Clear and focus
+A short G/Space/Back press delivers one native edit and one captured KeyDown. KeyUp does not append. Two intentional G presses remain two records even at identical test timestamps, so key/time deduplication would be incorrect. Native held-key repeats and modifier presses are retained. Tab remains navigation; no character reconstruction occurs. Core still represents KeyUp values for compatibility and formatter tests, but App does not capture them.
 
-StopRecording stops the model, retains rows and records a readable reason. Deactivate marks the window inactive and stops; minimizing also stops. Activated changes only activity state, so returning never resumes capture.
+## Stop, Clear and lifecycle
 
-Clear removes model/display records while preserving state and practice text. When still recording it focuses practice again. Export/closing busy guards prevent conflicting actions.
+Stop preserves records. Deactivate marks the Form inactive and stops; minimize also stops. Activated/restore never calls Start. Moving focus to the event table prevents practice events but does not silently change session state.
 
-OnFormClosing stops before shutdown; a canceled close leaves recording stopped and permits a later explicit Start. Dispose removes subscriptions and disposes native/UI resources. [Native UI cases](../tests/KeyEventLogger.App.Tests/MainFormTests.cs) exercise synthetic messages, state/focus transitions and layouts; they are not a human desktop-focus check.
+Clear removes model/table records while preserving practice text/state; it restores a useful stopped reason after capacity and focuses practice only if still recording.
 
-## Trace an explicit export
+Closing stops before native shutdown. Canceled closing leaves recording stopped and permits explicit Start. Dispose detaches local/button handlers, disposes controls and releases owned resources. [Native UI cases](../tests/KeyEventLogger.App.Tests/MainFormTests.cs) use test-owned STA windows; they are not physical external-app evidence.
 
-1. ExportClicked rejects empty/busy/closing calls, sets the busy guard and stops recording before any dialog.
-2. GetSnapshot captures stable model records; ListBox strings and practice text are not serialization inputs.
-3. [IExportDestinationPicker](../src/KeyEventLogger.App/Export/IExportDestinationPicker.cs) selects a path. [SaveFileDestinationPicker](../src/KeyEventLogger.App/Export/SaveFileDestinationPicker.cs) owns/disposes the real SaveFileDialog, configured for TXT and overwrite confirmation. Null means cancellation.
-4. A closed/disposed owner cannot begin writing after selection. Otherwise [ITextLogExporter](../src/KeyEventLogger.App/Export/ITextLogExporter.cs) receives that snapshot.
-5. [LocalExportPath](../src/KeyEventLogger.App/Export/LocalExportPath.cs) validates supported local paths and metadata without creating missing folders.
-6. [TextLogFormatter](../src/KeyEventLogger.Core/TextLogFormatter.cs) creates invariant text with header/count/tabs/CRLF/final newline; it has no I/O or clock.
-7. [TextLogExporter](../src/KeyEventLogger.App/Export/TextLogExporter.cs) creates an owned same-folder temporary, uses strict UTF-8 without BOM, flushes/closes, then moves it over the approved destination. The finally block cleans only its own temporary after failure.
-8. MainForm reports success only after return, or readable cancel/error feedback. The finally block restores available controls but never starts recording.
+## Trace an export
 
-[Formatter tests](../tests/KeyEventLogger.Core.Tests/TextLogFormatterTests.cs), [real file tests](../tests/KeyEventLogger.App.Tests/TextLogExporterTests.cs) and [export UI tests](../tests/KeyEventLogger.App.Tests/ExportUiTests.cs) keep pure formatting, physical file behavior and dialog substitutes distinct. See [EXPORT](EXPORT.md) for the contract and limits.
+1. ExportClicked guards empty/busy/closing calls, sets busy and stops before selection.
+2. A stable model snapshot is captured; displayed rows and practice text are not serialization sources.
+3. [IExportDestinationPicker](../src/KeyEventLogger.App/Export/IExportDestinationPicker.cs) separates selection for tests. [SaveFileDestinationPicker](../src/KeyEventLogger.App/Export/SaveFileDestinationPicker.cs) owns the real TXT SaveFileDialog with overwrite confirmation.
+4. Cancel returns without writing. A closed/disposed owner after selection cannot begin writing.
+5. [ITextLogExporter](../src/KeyEventLogger.App/Export/ITextLogExporter.cs) receives the path/snapshot. [LocalExportPath](../src/KeyEventLogger.App/Export/LocalExportPath.cs) checks names, local drive policy and reparse metadata without creating folders.
+6. [TextLogFormatter](../src/KeyEventLogger.Core/TextLogFormatter.cs) produces invariant header/count/TSV rows, CRLF and final newline without I/O/clock.
+7. [TextLogExporter](../src/KeyEventLogger.App/Export/TextLogExporter.cs) stages an owned same-folder file using strict UTF-8 without BOM, flushes/closes and commits through File.Move(overwrite: true). Finally cleans only its own temporary if needed.
+8. [ExportFailure](../src/KeyEventLogger.App/Export/ExportFailure.cs) maps recoverable exceptions to controlled guidance without raw details. The Form restores available actions in finally but never starts recording.
 
-## OOP and review points
+[Formatter assertions](../tests/KeyEventLogger.Core.Tests/TextLogFormatterTests.cs), [real file tests](../tests/KeyEventLogger.App.Tests/TextLogExporterTests.cs) and [export UI tests](../tests/KeyEventLogger.App.Tests/ExportUiTests.cs) keep pure format, physical file behavior and controlled pickers distinct.
 
-- Encapsulation keeps list/state mutation behind a small session API.
-- Immutable records provide validated value equality and stable elements.
-- Composition keeps the Form responsible for presentation while delegating domain rules and writing.
-- Interface polymorphism supplies production pickers/exporters or focused test substitutes; no generic filesystem framework is needed.
-- Form inheritance provides Windows lifecycle overrides. Partial source organization does not change that inheritance.
-- Resource ownership is explicit through using/disposal and named temporary ownership.
+## OOP points and limits to explain
 
-Be ready to trace an A Down followed by Stop before Up, explain why Count is not characters, show why Clear cannot mutate an old snapshot, and distinguish write completion from overwrite confirmation.
+- Encapsulation protects state/list mutation behind a small API.
+- Immutable records provide validated values and stable snapshot elements.
+- Composition delegates domain and file responsibilities from the Form.
+- Interface polymorphism substitutes focused pickers/exporters without a generic filesystem framework.
+- Form inheritance supplies Windows lifecycle overrides; partial files only organize the same class.
+- Explicit disposal and temporary ownership make resource cleanup explainable.
 
-Known limits: synchronous export may pause UI, linked/network destinations are unsupported, and staging is not a universal power-loss/concurrent-writer guarantee. No global input capture or automatic saving exists. Physical Save/desktop focus/display/F5, second-computer evidence and owner approval remain in [SUBMISSION](SUBMISSION.md).
+Be ready to trace one G press, two intentional G presses, a session filling on Down, Clear after capacity, an export failure and a canceled close. Explain why Count is not edits and why Clear does not alter an old snapshot.
+
+Staging is not universal crash durability or a malicious-filesystem sandbox. Export is synchronous/plaintext, key names can be sensitive and Clear is not secure erasure. Physical/native/second-computer acceptance remains in [SUBMISSION](SUBMISSION.md).

@@ -1,69 +1,67 @@
 # Architecture
 
-## Implemented through Stage 03
+## Projects and responsibility
 
-App targets net10.0-windows and owns the STA entry point, PerMonitorV2 DPI, controls, local keyboard events and lifecycle. Core targets net10.0 and owns immutable event values and recording state. Core.Tests and App.Tests cover their respective behavior.
+App targets net10.0-windows and owns the STA entry point, PerMonitorV2 DPI, controls, local input, clock and file selection/I/O. Core targets net10.0 and owns immutable event values, bounded recording state and pure TXT formatting.
 
-Dependencies remain App → Core, Core.Tests → Core and App.Tests → App. Core has no WinForms, drawing, timer, Windows API, file-dialog or third-party dependency.
+References: App -> Core, Core.Tests -> Core, App.Tests -> App. Core has no WinForms, drawing, Windows API, timer, clock, file-dialog or third-party dependency. App/Core have no third-party packages.
 
-## Core values and collection ownership
+## Values, retention and snapshots
 
-KeyEventType has KeyDown and KeyUp. KeyEventRecord is a sealed immutable record containing a trimmed key name without control characters, a defined event type and DateTimeOffset. Validation precedes assignment. The type does not know Windows Keys or a clock.
+[KeyEventRecord](../src/KeyEventLogger.Core/KeyEventRecord.cs) validates key name/type and stores get-only values with the supplied DateTimeOffset. It does not know Windows Keys or a clock.
 
-RecordingSession owns a private List. Start/Stop are idempotent; TryRecord validates its argument and appends only while recording. Count derives from the list. Clear removes records without changing state. GetSnapshot returns a read-only copy: callers cannot mutate the session or observe later changes through an earlier snapshot.
+[RecordingSession](../src/KeyEventLogger.Core/RecordingSession.cs) owns a private list and positive capacity, default 10,000. Count derives from the list. Start is idempotent while room exists; it refuses a full session. TryRecord validates, rejects stopped appends, accepts the last available event and stops exactly at capacity. No eviction, sorting or pairing occurs.
 
-Arrival order is retained, including repeated identical records and backward clock changes. No Down/Up pairing, sorting or unique-key counting is performed. This small session is UI-thread-owned, not a concurrent collection.
+Clear removes records and preserves state. A full stopped session stays stopped after Clear until Start. GetSnapshot copies to an array and wraps it read-only; immutable elements and the separate array keep earlier snapshots stable. This is a UI-thread-owned model, not a concurrent collection.
 
-## App event path
+## Form organization and native presentation
 
-MainForm.cs constructs the native layout. MainForm.Recording.cs is another part of the same Form, grouping control references, event wiring and lifecycle. No separate presenter is introduced; export ownership is described below.
+MainForm is one object split across:
 
-Only practiceText.KeyDown/KeyUp are subscribed. A delivered event is accepted when the session is recording, WinForms has activated this Form, the Form contains focus, Practice text is focused, and the window is neither minimized nor closing/disposed. Other controls have no recording subscriptions.
+- [MainForm.cs](../src/KeyEventLogger.App/Forms/MainForm.cs): constructor/composition and resource disposal.
+- [MainForm.Layout.cs](../src/KeyEventLogger.App/Forms/MainForm.Layout.cs): control construction, cards, actions and event columns.
+- [MainForm.Recording.cs](../src/KeyEventLogger.App/Forms/MainForm.Recording.cs): local event subscriptions, focus/state gates and presentation updates.
+- [MainForm.Export.cs](../src/KeyEventLogger.App/Forms/MainForm.Export.cs): explicit stop/snapshot/picker/write flow.
+- [UiTheme](../src/KeyEventLogger.App/Forms/UiTheme.cs): presentation colors with high-contrast system-color fallback.
 
-App maps KeyEventArgs.KeyCode.ToString() into a Core name and supplies TimeProvider.GetLocalNow(). Production uses TimeProvider.System; the constructor also accepts a TimeProvider for deterministic timestamp tests. Application logic never reads the practice TextBox.Text value.
+The root TableLayoutPanel has automatic header/status/action/instruction/footer rows and a proportional workspace. Flat native panels divide practice (38%) from records (62%). An [EventListBox](../src/KeyEventLogger.App/Forms/EventListBox.cs), derived from the required native ListBox, draws local timestamp/offset, captured KeyDown and virtual-key columns. Each private immutable display row wraps its model record and supplies complete text through ToString for native accessibility. Export never reads those rows.
 
-Each accepted event appends one ListBox row, scrolls to the newest row and updates count/empty-state/button presentation. It does not rebind the full collection or copy snapshots on each key. The invariant-culture display is time with milliseconds/offset, type and key name; it is not yet an export format.
+One accepted event adds one table item and scrolls into view. It does not rebuild or snapshot the complete session per key. Alternating row colors and separate header labels aid reading; state is also explicit text, never color alone.
 
-## Recording and focus lifecycle
+## Input and lifecycle
 
-Start is explicit and focuses practice without clearing history. Stop keeps records. Clear removes model/display records but preserves recording state and practice text; while recording it returns focus to practice.
+Only practiceText.KeyDown is subscribed; release is not a recording source. RecordEvent requires a recording session, native activation state, Form focus, practice focus and a live nonminimized/nonclosing window. App maps e.KeyCode.ToString() and supplies TimeProvider.GetLocalNow(). The default provider is System; test providers fix timestamps.
 
-Activated/Deactivate track window activity. Deactivation stops the session; resize-to-minimized also stops it. Activation/restore never calls Start. Moving focus within the same Form does not stop the session, but the practice-focus gate prevents input elsewhere from being recorded.
+Recording/export never reads practiceText.Text. Native editing remains native; MaxLength bounds ordinary user entry/paste to 4,096 characters. Each delivered KeyDown is retained, including intentional consecutive presses and native held-key repeats; KeyUp is ignored. Tab stays navigation and no key/time deduplication is applied. Count means events, not edits.
 
-Closing stops collection before native shutdown. A canceled close leaves recording stopped and permits an explicit new Start. Disposal stops the session and removes local input/button subscriptions before disposing controls and owned fonts.
+Start retains history and focuses practice. Stop retains records. Clear clears model/rows/count while preserving practice text/state. At capacity, UI derives a specific stopped reason from the model, disables Start and keeps Clear/Export available. Export/cancellation/deactivation do not hide the full-session explanation.
 
-Start is enabled while stopped, Stop while recording, Clear when records exist; all are disabled while closing. Export is enabled when records exist and no close/export is in progress. Export feedback is separate from recording status.
+Deactivate/minimize stop; Activated/restore never start. Within-Form focus moves do not stop the session, but only focused-practice events are accepted. Closing stops before shutdown; canceled close permits an explicit new Start. Disposal stops and detaches subscriptions before disposing native controls, tooltip and all three owned fonts.
 
-## Delivery semantics
+## Layout, DPI and accessibility
 
-Every delivered Down/Up, including native Down repeats and modifier events, is independent. Native editing/shortcuts are not suppressed; Tab remains navigation. Some navigation, shortcut, layout and input-method behavior is handled by Windows before local key events. Names identify virtual keys, not reconstructed text.
+Design client: 1040x720 at 96 DPI; minimum window: 900x680. At the captured 120 DPI, the default client is 1300x900 and full window 1318x947. The layout is suspended during construction before the completed initial DPI/layout pass.
 
-A boundary may leave unmatched events. No missing Down/Up is fabricated, and practice text typed before Start is not backfilled.
+Segoe UI body/title/emphasis fonts use point units. Header labels use DPI-scaled layout widths; native ListBox drawing updates row height/horizontal extent on font/DPI changes. Selection and scrolling stay native; columns are fixed logical widths, not draggable headers. Button text/mnemonics, accessible names, ordinary Tab navigation and label-backed status remain. Start has a primary enabled style and a separate disabled appearance. High-contrast colors are selected from system colors; live OS theme-transition acceptance remains pending.
 
-## Layout, DPI and resources
+Practice uses Alt+I; Start Alt+S, Stop Alt+T, Clear events Alt+C and Export Alt+X. The former GroupBox-specific Alt+P/Alt+E shortcuts are removed with those controls.
 
-The resizable root TableLayoutPanel retains automatic instruction/status rows and a proportional two-column workspace. FlowLayoutPanel holds actions; native GroupBoxes contain multiline practice and noneditable events. Layout is suspended during construction before the initial DPI pass.
+## Explicit TXT export
 
-The 96-DPI design client remains 960 × 720, minimum design window 820 × 680. Actual 120-DPI captures have a 1200 × 900 client and 1218 × 947 window. Minimum/wide state layouts are checked; physical 100%/150% transitions remain pending.
+[TextLogFormatter](../src/KeyEventLogger.Core/TextLogFormatter.cs) defines invariant header/count/TSV rows with CRLF/final newline, no I/O/encoding/clock. App supplies strict UTF-8 without BOM.
 
-Form-owned point-unit fonts are disposed; system colors, native focus, accessible names and distinct mnemonics remain. Practice label uses Alt+I, group Alt+P, event group Alt+E, Start Alt+S, Stop Alt+T, Clear Alt+C; Export uses Alt+X when records are available.
+Export sets a busy guard and stops before taking a stable snapshot or opening [the owned picker](../src/KeyEventLogger.App/Export/SaveFileDestinationPicker.cs). The dialog supplies TXT/default extension, overwrite confirmation and path checks. Cancel skips the writer. A closed/disposed owner after selection cannot begin writing.
 
-## TXT export ownership — Stage 03
+[LocalExportPath](../src/KeyEventLogger.App/Export/LocalExportPath.cs) validates normal local-drive .txt paths, invalid/reserved/device names and reparse points including the root. It rejects unsupported/network drives and creates no folders. Production uses DriveInfo; tests may substitute only drive classification.
 
-TextLogFormatter in Core creates a deterministic header/count and tab-separated rows with CRLF and a final newline. It has no encoding, clock, file or dialog dependency. App supplies strict UTF-8 without BOM.
+[TextLogExporter](../src/KeyEventLogger.App/Export/TextLogExporter.cs) formats before staging, creates an exclusive same-folder GUID temporary, writes/flushes/closes and commits with File.Move(overwrite: true). It never deletes the destination as preparation. Finally cleans only a temporary created by that operation; cleanup failure may leave it.
 
-MainForm.Export groups the explicit export action. It sets a busy guard, stops recording before selection and obtains RecordingSession.GetSnapshot. IExportDestinationPicker separates modal selection from UI tests; its production implementation owns/disposes SaveFileDialog with TXT/default extension, overwrite confirmation and path validation. ITextLogExporter separates file writing from dialog/lifetime tests; production is TextLogExporter.
+[ExportFailure](../src/KeyEventLogger.App/Export/ExportFailure.cs) maps recoverable errors to fixed guidance without raw exception details. Success includes the user-selected path. Bounded feedback, accessible description and tooltip are separate from recording status. All outcomes preserve data and remain stopped.
 
-LocalExportPath accepts normal fully qualified local-drive .txt paths. It rejects UNC/device paths, mapped network/unsupported drives, invalid/reserved names, and reparse-point directories/files to avoid redirection. It creates no destination folders. DriveInfo is real in production; a small optional drive-type delegate allows network-drive policy tests without network connections.
+I/O remains synchronous, guarded against reentry. A 10,000-event limit bounds ordinary session data but not drive latency. Staging/path validation are not universal crash durability or a filesystem sandbox.
 
-TextLogExporter formats the supplied snapshot before staging. A CreateNew, same-folder GUID temporary is written with strict UTF-8, flushed and closed, then File.Move(overwrite: true) commits it. No delete-before-replace occurs. The finally block deletes only a temporary successfully created by that operation. Cleanup failures propagate as errors; cleanup is best effort, not a power-loss guarantee.
+## Evidence boundary
 
-MainForm displays success only after Export returns. Cancellation skips writing. Recoverable path/I/O/access/encoding/native-dialog errors produce separate nonmodal feedback, preserving records/count/practice text. All outcomes remain stopped. Long feedback is bounded with ellipsis, full accessible description and a Form-owned/disposed tooltip.
+94 current cases (30 Core, 64 App) cover model/session, native input/layout and export/file behavior. UI probes/captures use synthetic local messages and a controlled picker with the real formatter/writer. They do not establish human native Save/desktop focus/display/F5 or second-computer acceptance.
 
-Export is synchronous, with actions disabled while selection/write is active. Start/Clear/reentrant Export are guarded; a closed/disposed owner after selection cannot start a write or receive feedback updates. No asynchronous work outlives the window. Large logs/slow local drives can pause the UI.
-
-No persistent sessions, autosave, import, statistics/filtering or network delivery are added. See [export contract](EXPORT.md), [decisions](DECISIONS.md) and [testing](TESTING.md).
-
-## Final audit boundary — Stage 04
-
-The final preparation reviews the existing design without adding runtime layers. CODE_GUIDE links the actual class/method paths, and REQUIREMENTS maps code/tests to criteria. Native dialog substitutes and script-owned windows do not establish physical desktop or owner acceptance. A fresh checkout on this machine does not satisfy another-computer testing. [Submission](SUBMISSION.md) remains the acceptance register.
+See [security boundary](SECURITY.md), [code walkthrough](CODE_GUIDE.md), [testing](TESTING.md) and [owner acceptance](SUBMISSION.md).

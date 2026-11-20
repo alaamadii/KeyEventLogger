@@ -57,7 +57,7 @@ public sealed class MainFormTests
     }
 
     [Fact]
-    public void NativeDownUpUsesKeyNamesAndTimestampOffsetWithoutChangingEditing()
+    public void NativePressRecordsOnceWithKeyNameAndTimestampWithoutChangingEditing()
     {
         var clock = new FixedClock();
         WindowsUi.Run(form =>
@@ -74,11 +74,10 @@ public sealed class MainFormTests
             var expectedTime = clock.GetLocalNow().ToString("yyyy-MM-dd HH:mm:ss.fff zzz", CultureInfo.InvariantCulture);
             Assert.Equal(new[]
             {
-                expectedTime + "  |  KeyDown  |  A",
-                expectedTime + "  |  KeyUp  |  A"
+                expectedTime + "  |  KeyDown  |  A"
             }, Rows(form));
             Assert.Equal("a", practice.Text);
-            Assert.Equal("2 events", Count(form));
+            Assert.Equal("1 event", Count(form));
             Assert.True(Button(form, "exportButton").Enabled);
         }, clock);
     }
@@ -98,10 +97,9 @@ public sealed class MainFormTests
 
             Assert.Equal(new[]
             {
-                "KeyDown  |  ControlKey", "KeyDown  |  A", "KeyDown  |  A",
-                "KeyUp  |  A", "KeyUp  |  ControlKey"
+                "KeyDown  |  ControlKey", "KeyDown  |  A", "KeyDown  |  A"
             }, Rows(form).Select(row => row[(row.IndexOf("  |  ", StringComparison.Ordinal) + 5)..]));
-            Assert.Equal("5 events", Count(form));
+            Assert.Equal("3 events", Count(form));
         });
     }
 
@@ -123,9 +121,9 @@ public sealed class MainFormTests
 
             Start(form);
             SendPair(Practice(form), Keys.C);
-            Assert.Equal(4, Events(form).Items.Count);
-            Assert.Equal(first, Rows(form).Take(2));
-            Assert.EndsWith("KeyUp  |  C", Rows(form)[3]);
+            Assert.Equal(2, Events(form).Items.Count);
+            Assert.Equal(first, Rows(form).Take(1));
+            Assert.EndsWith("KeyDown  |  C", Rows(form)[1]);
         });
     }
 
@@ -154,6 +152,8 @@ public sealed class MainFormTests
             Assert.Equal(!recording, Button(form, "startButton").Enabled);
             Practice(form).Focus();
             SendKey(Practice(form), Keys.B, true);
+            Assert.Empty(Events(form).Items);
+            SendKey(Practice(form), Keys.B, false);
             Assert.Equal(recording ? 1 : 0, Events(form).Items.Count);
         });
     }
@@ -173,7 +173,7 @@ public sealed class MainFormTests
             Assert.Contains("Recording", Status(form));
             Practice(form).Focus();
             SendPair(Practice(form), Keys.D);
-            Assert.Equal(2, Events(form).Items.Count);
+            Assert.Single(Events(form).Items);
         });
     }
 
@@ -211,7 +211,7 @@ public sealed class MainFormTests
             Assert.Equal(before, Rows(form));
             Start(form);
             SendPair(Practice(form), Keys.D);
-            Assert.Equal(4, Events(form).Items.Count);
+            Assert.Equal(2, Events(form).Items.Count);
         });
     }
 
@@ -227,18 +227,18 @@ public sealed class MainFormTests
             SendPair(Practice(form), Keys.B);
             Assert.Contains("Stopped", Status(form));
             Assert.False(Button(form, "stopButton").Enabled);
-            Assert.Equal(2, Events(form).Items.Count);
+            Assert.Single(Events(form).Items);
 
             form.WindowState = FormWindowState.Normal;
             WindowsUi.Activate(form);
             Practice(form).Focus();
             Application.DoEvents();
             SendPair(Practice(form), Keys.C);
-            Assert.Equal(2, Events(form).Items.Count);
+            Assert.Single(Events(form).Items);
             Assert.True(Button(form, "startButton").Enabled);
             Start(form);
             SendPair(Practice(form), Keys.D);
-            Assert.Equal(4, Events(form).Items.Count);
+            Assert.Equal(2, Events(form).Items.Count);
         });
     }
 
@@ -294,8 +294,8 @@ public sealed class MainFormTests
                 Start(form);
                 SendPair(Practice(form), Keys.A);
                 Button(form, "stopButton").PerformClick();
-                Assert.Equal(2 * (cycle + 1), Events(form).Items.Count);
-                Assert.Equal($"{2 * (cycle + 1)} events", Count(form));
+                Assert.Equal(cycle + 1, Events(form).Items.Count);
+                Assert.Equal($"{cycle + 1} {(cycle == 0 ? "event" : "events")}", Count(form));
             }
             Button(form, "clearButton").PerformClick();
             Assert.Empty(Events(form).Items);
@@ -317,7 +317,7 @@ public sealed class MainFormTests
             Assert.True(Button(form, "startButton").Enabled);
             Start(form);
             Assert.Contains("Recording", Status(form));
-            Assert.Equal(2, Events(form).Items.Count);
+            Assert.Single(Events(form).Items);
         });
     }
 
@@ -376,8 +376,8 @@ public sealed class MainFormTests
         }
         Assert.True(Practice(form).ClientSize.Height >= 120);
         Assert.True(Events(form).ClientSize.Height >= 120);
-        Assert.False(WindowsUi.Find<GroupBox>(form, "practiceGroup").Bounds
-            .IntersectsWith(WindowsUi.Find<GroupBox>(form, "eventsGroup").Bounds));
+        Assert.False(WindowsUi.Find<Panel>(form, "practiceGroup").Bounds
+            .IntersectsWith(WindowsUi.Find<Panel>(form, "eventsGroup").Bounds));
     }
 
     private static void Start(MainForm form)
@@ -392,11 +392,11 @@ public sealed class MainFormTests
     }
 
     private static TextBox Practice(MainForm form) => WindowsUi.Find<TextBox>(form, "practiceText");
-    private static ListBox Events(MainForm form) => WindowsUi.Find<ListBox>(form, "eventList");
+    private static ListBox Events(MainForm form) => Assert.IsAssignableFrom<ListBox>(Assert.Single(form.Controls.Find("eventList", true)));
     private static Button Button(MainForm form, string name) => WindowsUi.Find<Button>(form, name);
     private static string Status(MainForm form) => WindowsUi.Find<Label>(form, "recordingStatus").Text;
     private static string Count(MainForm form) => WindowsUi.Find<Label>(form, "eventCount").Text;
-    private static string[] Rows(MainForm form) => Events(form).Items.Cast<string>().ToArray();
+    private static string[] Rows(MainForm form) => Events(form).Items.Cast<object>().Select(item => item.ToString()!).ToArray();
 
     private static void SendPair(Control control, Keys key)
     {
@@ -435,4 +435,84 @@ public sealed class MainFormTests
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool PostMessage(IntPtr handle, uint message, IntPtr wParam, IntPtr lParam);
+
+    [Theory]
+    [InlineData(Keys.G, 'g', "xg")]
+    [InlineData(Keys.Space, ' ', "x ")]
+    [InlineData(Keys.Back, '\b', "")]
+    public void ShortPressEditsOnceAndCreatesOneRecordedRow(Keys key, char character, string expectedText)
+    {
+        WindowsUi.Run(form =>
+        {
+            Practice(form).Text = "x";
+            Start(form);
+            Practice(form).SelectionStart = Practice(form).TextLength;
+            SendKey(Practice(form), key, false);
+            SendCharacter(Practice(form), character);
+            SendKey(Practice(form), key, true);
+
+            Assert.Equal(expectedText, Practice(form).Text);
+            Assert.Equal("1 event", Count(form));
+            Assert.Single(Events(form).Items);
+            Assert.EndsWith("KeyDown  |  " + key, Rows(form)[0]);
+            Assert.Equal(DrawMode.OwnerDrawFixed, Events(form).DrawMode);
+            Assert.Contains("One press", WindowsUi.Find<Label>(form, "featureAvailability").Text);
+        });
+    }
+
+    [Fact]
+    public void FullSessionStopsWithoutLosingRowsAndClearAllowsExplicitRestart()
+    {
+        WindowsUi.Run(form =>
+        {
+            form.Size = form.MinimumSize;
+            Practice(form).Text = "sample";
+            Start(form);
+            SendPair(Practice(form), Keys.A);
+            SendPair(Practice(form), Keys.B);
+            SendPair(Practice(form), Keys.C);
+            Assert.Equal(3, Events(form).Items.Count);
+            Assert.Equal("3 events", Count(form));
+            Assert.Contains("limit reached (3 events)", Status(form));
+            AssertLayout(form);
+            Assert.False(Button(form, "startButton").Enabled);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
+            Button(form, "startButton").PerformClick();
+            SendPair(Practice(form), Keys.E);
+            Assert.Equal(3, Events(form).Items.Count);
+
+            Button(form, "clearButton").PerformClick();
+            Assert.Empty(Events(form).Items);
+            Assert.Equal("sample", Practice(form).Text);
+            Assert.True(Button(form, "startButton").Enabled);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.DoesNotContain("limit reached", Status(form));
+            Start(form);
+            SendPair(Practice(form), Keys.D);
+            Assert.Single(Events(form).Items);
+        }, capacity: 3);
+    }
+
+    [Fact]
+    public void ReleaseIsIgnoredButTwoIntentionalGPressesAreBothRetained()
+    {
+        WindowsUi.Run(form =>
+        {
+            Start(form);
+            SendKey(Practice(form), Keys.G, true);
+            Assert.Empty(Events(form).Items);
+            for (var press = 0; press < 2; press++)
+            {
+                SendKey(Practice(form), Keys.G, false);
+                SendCharacter(Practice(form), 'g');
+                SendKey(Practice(form), Keys.G, true);
+            }
+            Assert.Equal("gg", Practice(form).Text);
+            Assert.Equal("2 events", Count(form));
+            Assert.Equal(2, Rows(form).Length);
+            Assert.All(Rows(form), row => Assert.EndsWith("KeyDown  |  G", row));
+            Assert.Equal(Rows(form)[0], Rows(form)[1]);
+        }, new FixedClock());
+    }
 }

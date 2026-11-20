@@ -111,3 +111,59 @@ Branch: docs/final-submission.
 - Validated 80 local targets across 13 Markdown files, five unchanged capture hashes, Core/API boundaries, narrow exclusions and a limited tracked-file credential-pattern scan with no matches. Public metadata remains public.
 - Published candidate 9254884ce285517ade1ea947af1defc3ae12c4bf was cloned into a fresh isolated directory: documented doctor/check passed with the same 72 cases, no failures/skips/build warnings/errors and clean formatting. The actual cloned EXE started Stopped and closed normally with exit 0; the clone stayed clean, without needing local configuration or build/run diagnostic helpers. This was the same computer, not a second Windows computer.
 - Anonymous HTTP 200 confirmed public metadata (private=false), candidate README/CODE_GUIDE and both current README images. Opened [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5); exact final-head hosted SHA/run/results are recorded in its description separately from the clean-checkout candidate. No automatic merge, visibility/license change or Classroom submission.
+
+## 2026-11-20 — Owner-requested interface and security review
+
+Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f3). Existing local changes were absent; fetched and fast-forwarded main before branching.
+
+- Returned to Key Event Logger at the owner's request; Chat work is not being continued in this review.
+- Replaced the long-string ListBox with a timestamp/event/key table and separated layout helpers. Added native accessible controls, readable Segoe UI typography, calmer surfaces and explicit press/release guidance.
+- Added a 10,000-event retained-session boundary that stops without evicting records; native practice input is limited to 4,096 characters. Clear remains explicit and does not erase practice text.
+- Hardened Windows device-name validation, including superscript aliases/space variants and the drive root. Replaced raw export exception details with actionable stable messages.
+- Added explicit official NuGet sources and all-dependency advisory audit policy; no new runtime package or external UI framework.
+- Regression includes capacity/clear/restart, real Space/Back editing with separate Down/Up rows, native layouts, reserved aliases and error-detail redaction. An initial new editing test placed its caret at the beginning; corrected the test setup rather than changing native editing.
+- Executed full check: 30 Core + 61 App = 91 passed, zero failures/skips/build warnings/errors, formatting verified. The vulnerability query found no known vulnerable packages in configured sources; results are time/source dependent.
+- A preliminary actual-MainForm capture probe checked synthetic input, real export bytes, cancel/read-only failure/retry and default/minimum/wide windows with a controlled picker. Final source-linked captures and full documentation reconciliation follow. Human native Save/overwrite, physical display/F5 and a second computer remain pending.
+
+### Current review captures and documentation
+
+- Preliminary source c954743d3dcdd070b698c34c62bc4b9ffddc6c84 produced exploratory target-window images on 2026-11-20, 120 DPI (125%), 1318x947 full window. Native synthetic DEMO input generated 8 actual events; a controlled picker used the real formatter/writer and checked file bytes. Inspected default/minimum/wide and success images; no human native-dialog or monitor-transition result is inferred.
+- Reran doctor and the advisory query with the repository's official source; no known vulnerable packages were reported. The actual production EXE title/Stopped/normal-close exit 0 was checked separately.
+- Added USER_GUIDE and SECURITY with data inventory, retention/focus/export boundaries, plaintext/permissions/sync/erasure/race limits and precise verification steps. Reconciled README, architecture, code guide, setup, export, plan, submission and current/historical evidence. Retained old captures and checksums as history.
+- Publication/current-head CI and new-candidate clean-checkout receipts follow actual execution. No automatic merge, visibility change or Classroom action.
+
+- Final course-sheet reconciliation retained the specified native ListBox family through EventListBox column drawing and complete accessible row text, superseding the preliminary ListView choice. The full 91-case check passed again; an actual-Form probe also passed with the final ListBox. Final screenshots/provenance will identify that source separately.
+
+- Final capture source c39337871269eb391c394db3ee39f71f4aaeb35f: reran the actual-Form controlled-picker probe after committing the final ListBox implementation, then replaced only the new review images. The earlier c954743 exploration is not the published screenshot source. Provenance/hashes identify the final images exactly.
+
+- Static repository review passed: 123 local Markdown targets across 15 files, all seven screenshot hashes, narrow output exclusions, production API/Core boundaries and whitespace. Historical images remain unchanged. No generated output or event exports are included.
+
+### Quality-review publication
+
+- Published code c954743, ListBox compliance c393378 and documentation/captures d3bdfe5 on feat/usability-security-review. Opened [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targeting main; no automatic merge.
+- Fresh isolated checkout of d3bdfe56748115a8880089be7224084fc2253a5b passed doctor/check: 91 cases, zero failures/skips/build warnings/errors, formatting clean. Its actual EXE title/Stopped/normal close exit 0 passed and the tree stayed clean. Same computer only; no local helper/configuration required to build/run.
+- Anonymous public metadata and README/USER_GUIDE/SECURITY/new-image URLs returned 200. Candidate Windows CI run 44683520537 passed. Exact final-head CI SHA/run/results are in PR #6; the later receipt commits change documentation only.
+
+### Final capacity-message regression
+
+- Kept the full-session stop explanation derived from current model state so an export/cancel or focus event cannot hide why Start remains disabled. Added an export-at-capacity regression and min-size full-state layout coverage. Current full check passes 30 Core + 62 App = 92, zero failures/skips/build warnings/errors and clean formatting.
+- An intermediate native export fixture lacked a stable active/focused Start setup in one run; it now explicitly activates/focuses the owned Form and asserts native active-window identity before Start. Production capture gates remain unchanged. The full suite passed after this fixture correction.
+- The existing c393378 images are retained because the depicted non-full recording/export states and layout are unchanged. Updated clean-checkout/final-head receipts follow actual execution.
+
+### Final quality-candidate verification
+
+- Published 72bc356dec053d4a1d9407a164ee582aba365cf6 and tested another fresh isolated checkout on the same Windows/SDK: doctor/check pass, 30 Core + 62 App = 92, no failures/skips/build warnings/errors and clean formatting. Actual cloned EXE title/Stopped/normal close exit 0 passed; tree clean.
+- Anonymous candidate README/USER_GUIDE/SECURITY/new-image URLs returned 200. Candidate hosted run 44684347808 passed. Final documentation-only receipt SHA and exact hosted run/results are tracked on PR #6. No second-computer or human/native acceptance is inferred.
+
+## 2026-11-20 — Single-press recording follow-up
+
+The owner reports G appearing twice for a short press and requests one recorded row. PR #6 is still open, so this follow-up continues feat/usability-security-review.
+
+- Identified separate KeyDown/KeyUp capture as the cause; removed App's KeyUp subscription/handler. The underlying Core value/formatter can still represent both event types; no persisted import is added.
+- One short delivered press now adds one KeyDown row. Release alone adds none. Intentional repeated presses and native held-key repeats are retained, without key/time deduplication.
+- Updated native input/lifecycle/export assertions for the new policy. Added G alongside Space/Back editing checks and two intentional G presses at identical test timestamps. Export fixtures now create two distinct presses rather than relying on a release.
+- ./scripts/dev.ps1 check passes: 30 Core + 64 App = 94, zero failures/skips/build warnings/errors and formatting clean. No focus, retention or file-security boundary was broadened.
+- Current user-facing documentation/captures and exact-head hosted evidence are updated separately after execution. No automatic merge.
+
+- Source 4725220f1cca5a8a8873985eb1308fd3b1d0c344 produced the new single-press recording/export images: synthetic DEMO yields 4 real KeyDown records; the controlled picker uses the real writer, checked bytes and success/cancel/read-only failure/retry. Actual production EXE normal close exited 0. Previous paired-event captures remain historical with unchanged hashes.
+- Reconciled current user/security/architecture/code/requirements/submission guides with press-only capture, while preserving Core KeyUp compatibility and historical receipts. Local links (125 across 15 Markdown files) and all 9 capture hashes pass. Current publication/clean-checkout/hosted evidence is recorded on PR #6; no automatic merge.
