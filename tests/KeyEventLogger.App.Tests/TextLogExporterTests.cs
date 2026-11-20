@@ -136,4 +136,21 @@ public sealed class TextLogExporterTests
         Assert.Throws<ArgumentException>(() => new TextLogExporter().Export(directory.FilePath(name), Records()));
         Assert.Empty(Directory.GetFiles(directory.Root));
     }
+
+    [Theory]
+    [InlineData("COM¹.txt")]
+    [InlineData("COM².txt")]
+    [InlineData("COM³.txt")]
+    [InlineData("LPT¹.txt")]
+    [InlineData("LPT².txt")]
+    [InlineData("LPT³.txt")]
+    [InlineData("CON .txt")]
+    [InlineData("LPT1 .txt")]
+    public void ReservedDeviceAliasesAreRejectedBeforeDriveOrFileAccess(string name)
+    {
+        var queriedDrive = false;
+        var exporter = new TextLogExporter(_ => { queriedDrive = true; return DriveType.Fixed; });
+        Assert.Throws<ArgumentException>(() => exporter.Export(Path.Combine(@"C:\owned-demo", name), Records()));
+        Assert.False(queriedDrive);
+    }
 }

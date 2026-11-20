@@ -17,14 +17,14 @@ internal static class WindowsUi
         Application.SetCompatibleTextRenderingDefault(false);
     }
 
-    public static void Run(Action<MainForm> assertion, TimeProvider? clock = null, IExportDestinationPicker? picker = null, ITextLogExporter? exporter = null)
+    public static void Run(Action<MainForm> assertion, TimeProvider? clock = null, IExportDestinationPicker? picker = null, ITextLogExporter? exporter = null, int capacity = KeyEventLogger.Core.RecordingSession.DefaultCapacity)
     {
         Exception? failure = null;
         var thread = new Thread(() =>
         {
             try
             {
-                using var form = new MainForm(clock ?? TimeProvider.System, picker ?? new SaveFileDestinationPicker(), exporter ?? new TextLogExporter())
+                using var form = new MainForm(clock ?? TimeProvider.System, picker ?? new SaveFileDestinationPicker(), exporter ?? new TextLogExporter(), capacity)
                 {
                     ShowInTaskbar = false,
                     Opacity = 0,

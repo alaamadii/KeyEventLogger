@@ -16,10 +16,7 @@ internal static class LocalExportPath
         {
             throw new ArgumentException("Choose a normal local drive path.");
         }
-        if (driveType(root) is not (DriveType.Fixed or DriveType.Removable or DriveType.Ram))
-        {
-            throw new ArgumentException("Choose an available writable local drive. Network drives are not supported.");
-        }
+
         if (!string.Equals(Path.GetExtension(fullPath), ".txt", StringComparison.OrdinalIgnoreCase))
         {
             throw new ArgumentException("Choose a destination ending in .txt.");
@@ -28,17 +25,22 @@ internal static class LocalExportPath
         var parts = fullPath[root.Length..].Split(Path.DirectorySeparatorChar);
         foreach (var part in parts)
         {
-            var device = part.Split('.')[0].ToUpperInvariant();
+            var device = part.Split('.')[0].TrimEnd(' ').ToUpperInvariant();
             if (part.Length == 0 || part.EndsWith(' ') || part.EndsWith('.') ||
                 part.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 ||
                 device is "CON" or "PRN" or "AUX" or "NUL" ||
                 (device.Length == 4 && (device.StartsWith("COM", StringComparison.Ordinal) ||
-                device.StartsWith("LPT", StringComparison.Ordinal)) && device[3] is >= '1' and <= '9'))
+                device.StartsWith("LPT", StringComparison.Ordinal)) && (device[3] is >= '1' and <= '9' or '¹' or '²' or '³')))
             {
                 throw new ArgumentException("The destination contains an unsupported file or folder name.");
             }
         }
 
+        if (driveType(root) is not (DriveType.Fixed or DriveType.Removable or DriveType.Ram))
+        {
+            throw new ArgumentException("Choose an available writable local drive. Network drives are not supported.");
+        }
+        RejectLink(File.GetAttributes(root));
         var directory = root;
         foreach (var part in parts[..^1])
         {

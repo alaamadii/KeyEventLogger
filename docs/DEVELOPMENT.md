@@ -111,3 +111,16 @@ Branch: docs/final-submission.
 - Validated 80 local targets across 13 Markdown files, five unchanged capture hashes, Core/API boundaries, narrow exclusions and a limited tracked-file credential-pattern scan with no matches. Public metadata remains public.
 - Published candidate 9254884ce285517ade1ea947af1defc3ae12c4bf was cloned into a fresh isolated directory: documented doctor/check passed with the same 72 cases, no failures/skips/build warnings/errors and clean formatting. The actual cloned EXE started Stopped and closed normally with exit 0; the clone stayed clean, without needing local configuration or build/run diagnostic helpers. This was the same computer, not a second Windows computer.
 - Anonymous HTTP 200 confirmed public metadata (private=false), candidate README/CODE_GUIDE and both current README images. Opened [draft PR #5](https://github.com/alaamadii/KeyEventLogger/pull/5); exact final-head hosted SHA/run/results are recorded in its description separately from the clean-checkout candidate. No automatic merge, visibility/license change or Classroom submission.
+
+## 2026-11-20 — Owner-requested interface and security review
+
+Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f3). Existing local changes were absent; fetched and fast-forwarded main before branching.
+
+- Returned to Key Event Logger at the owner's request; Chat work is not being continued in this review.
+- Replaced the long-string ListBox with a timestamp/event/key table and separated layout helpers. Added native accessible controls, readable Segoe UI typography, calmer surfaces and explicit press/release guidance.
+- Added a 10,000-event retained-session boundary that stops without evicting records; native practice input is limited to 4,096 characters. Clear remains explicit and does not erase practice text.
+- Hardened Windows device-name validation, including superscript aliases/space variants and the drive root. Replaced raw export exception details with actionable stable messages.
+- Added explicit official NuGet sources and all-dependency advisory audit policy; no new runtime package or external UI framework.
+- Regression includes capacity/clear/restart, real Space/Back editing with separate Down/Up rows, native layouts, reserved aliases and error-detail redaction. An initial new editing test placed its caret at the beginning; corrected the test setup rather than changing native editing.
+- Executed full check: 30 Core + 61 App = 91 passed, zero failures/skips/build warnings/errors, formatting verified. The vulnerability query found no known vulnerable packages in configured sources; results are time/source dependent.
+- A preliminary actual-MainForm capture probe checked synthetic input, real export bytes, cancel/read-only failure/retry and default/minimum/wide windows with a controlled picker. Final source-linked captures and full documentation reconciliation follow. Human native Save/overwrite, physical display/F5 and a second computer remain pending.

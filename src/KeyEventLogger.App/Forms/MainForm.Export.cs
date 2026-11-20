@@ -45,7 +45,7 @@ public sealed partial class MainForm
         {
             if (!closing && !IsDisposed && !Disposing)
             {
-                ShowExportFeedback($"Export failed: {error.Message} Records were kept. Choose another destination and retry.");
+                ShowExportFeedback(ExportFailure.Describe(error));
             }
         }
         finally

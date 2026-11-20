@@ -376,8 +376,8 @@ public sealed class MainFormTests
         }
         Assert.True(Practice(form).ClientSize.Height >= 120);
         Assert.True(Events(form).ClientSize.Height >= 120);
-        Assert.False(WindowsUi.Find<GroupBox>(form, "practiceGroup").Bounds
-            .IntersectsWith(WindowsUi.Find<GroupBox>(form, "eventsGroup").Bounds));
+        Assert.False(WindowsUi.Find<Panel>(form, "practiceGroup").Bounds
+            .IntersectsWith(WindowsUi.Find<Panel>(form, "eventsGroup").Bounds));
     }
 
     private static void Start(MainForm form)
@@ -392,11 +392,11 @@ public sealed class MainFormTests
     }
 
     private static TextBox Practice(MainForm form) => WindowsUi.Find<TextBox>(form, "practiceText");
-    private static ListBox Events(MainForm form) => WindowsUi.Find<ListBox>(form, "eventList");
+    private static ListView Events(MainForm form) => WindowsUi.Find<ListView>(form, "eventList");
     private static Button Button(MainForm form, string name) => WindowsUi.Find<Button>(form, name);
     private static string Status(MainForm form) => WindowsUi.Find<Label>(form, "recordingStatus").Text;
     private static string Count(MainForm form) => WindowsUi.Find<Label>(form, "eventCount").Text;
-    private static string[] Rows(MainForm form) => Events(form).Items.Cast<string>().ToArray();
+    private static string[] Rows(MainForm form) => Events(form).Items.Cast<ListViewItem>().Select(item => string.Join("  |  ", item.SubItems.Cast<ListViewItem.ListViewSubItem>().Select(cell => cell.Text))).ToArray();
 
     private static void SendPair(Control control, Keys key)
     {
@@ -435,4 +435,63 @@ public sealed class MainFormTests
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool PostMessage(IntPtr handle, uint message, IntPtr wParam, IntPtr lParam);
+
+    [Theory]
+    [InlineData(Keys.Space, ' ', "x ")]
+    [InlineData(Keys.Back, '\b', "")]
+    public void SpaceAndBackspaceEditOnceAndDisplayDownAndUpSeparately(Keys key, char character, string expectedText)
+    {
+        WindowsUi.Run(form =>
+        {
+            Practice(form).Text = "x";
+            Start(form);
+            Practice(form).SelectionStart = Practice(form).TextLength;
+            SendKey(Practice(form), key, false);
+            SendCharacter(Practice(form), character);
+            SendKey(Practice(form), key, true);
+
+            Assert.Equal(expectedText, Practice(form).Text);
+            Assert.Equal("2 events", Count(form));
+            var down = Events(form).Items[0];
+            var up = Events(form).Items[1];
+            Assert.Equal("KeyDown", down.SubItems[1].Text);
+            Assert.Equal("KeyUp", up.SubItems[1].Text);
+            Assert.Equal(key.ToString(), down.SubItems[2].Text);
+            Assert.Equal(key.ToString(), up.SubItems[2].Text);
+            Assert.Equal(View.Details, Events(form).View);
+            Assert.False(Events(form).LabelEdit);
+            Assert.Contains("One press", WindowsUi.Find<Label>(form, "featureAvailability").Text);
+        });
+    }
+
+    [Fact]
+    public void FullSessionStopsWithoutLosingRowsAndClearAllowsExplicitRestart()
+    {
+        WindowsUi.Run(form =>
+        {
+            Practice(form).Text = "sample";
+            Start(form);
+            SendPair(Practice(form), Keys.A);
+            SendPair(Practice(form), Keys.B);
+            Assert.Equal(3, Events(form).Items.Count);
+            Assert.Equal("3 events", Count(form));
+            Assert.Contains("limit reached (3 events)", Status(form));
+            Assert.False(Button(form, "startButton").Enabled);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
+            Button(form, "startButton").PerformClick();
+            SendPair(Practice(form), Keys.C);
+            Assert.Equal(3, Events(form).Items.Count);
+
+            Button(form, "clearButton").PerformClick();
+            Assert.Empty(Events(form).Items);
+            Assert.Equal("sample", Practice(form).Text);
+            Assert.True(Button(form, "startButton").Enabled);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.DoesNotContain("limit reached", Status(form));
+            Start(form);
+            SendPair(Practice(form), Keys.D);
+            Assert.Equal(2, Events(form).Items.Count);
+        }, capacity: 3);
+    }
 }

@@ -147,7 +147,8 @@ public sealed class ExportUiTests
             Seed(form);
             Button(form, "exportButton").PerformClick();
             Assert.Contains("Export failed", Feedback(form).Text);
-            Assert.Contains("Synthetic dialog failure", Feedback(form).Text);
+            Assert.DoesNotContain("Synthetic dialog failure", Feedback(form).Text);
+            Assert.Contains("Records were kept", Feedback(form).Text);
             Assert.Equal(2, Events(form).Items.Count);
             Assert.Equal(0, exporter.Calls);
             Assert.False(Button(form, "stopButton").Enabled);
@@ -189,7 +190,15 @@ public sealed class ExportUiTests
             Application.DoEvents();
             var label = Feedback(form);
             Assert.True(label.AutoEllipsis);
-            Assert.Contains(longPath, label.AccessibleDescription);
+            if (error)
+            {
+                Assert.DoesNotContain(longPath, label.AccessibleDescription);
+                Assert.DoesNotContain("Synthetic failure", label.Text);
+            }
+            else
+            {
+                Assert.Contains(longPath, label.AccessibleDescription);
+            }
             foreach (var name in new[] { "exportFeedback", "recordingStatus", "practiceText", "eventList", "scopeNotice" })
             {
                 var control = Assert.Single(form.Controls.Find(name, true));
@@ -213,10 +222,10 @@ public sealed class ExportUiTests
 
     private static Button Button(MainForm form, string name) => WindowsUi.Find<Button>(form, name);
     private static TextBox Practice(MainForm form) => WindowsUi.Find<TextBox>(form, "practiceText");
-    private static ListBox Events(MainForm form) => WindowsUi.Find<ListBox>(form, "eventList");
+    private static ListView Events(MainForm form) => WindowsUi.Find<ListView>(form, "eventList");
     private static Label Feedback(MainForm form) => WindowsUi.Find<Label>(form, "exportFeedback");
     private static string Status(MainForm form) => WindowsUi.Find<Label>(form, "recordingStatus").Text;
-    private static string[] Rows(MainForm form) => Events(form).Items.Cast<string>().ToArray();
+    private static string[] Rows(MainForm form) => Events(form).Items.Cast<ListViewItem>().Select(item => string.Join("  |  ", item.SubItems.Cast<ListViewItem.ListViewSubItem>().Select(cell => cell.Text))).ToArray();
 
     private static void SendKey(Control control, Keys key, bool up) =>
         SendMessage(control.Handle, up ? 0x0101u : 0x0100u, (IntPtr)key, (IntPtr)(up ? -1073741823L : 1L));
@@ -243,4 +252,36 @@ public sealed class ExportUiTests
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     private static extern IntPtr SendMessage(IntPtr handle, uint message, IntPtr wParam, IntPtr lParam);
+
+    [Theory]
+    [InlineData("access")]
+    [InlineData("argument")]
+    [InlineData("security")]
+    [InlineData("dialog")]
+    public void RecoverableErrorsNeverExposeRawExceptionDetails(string category)
+    {
+        const string privateDetail = @"private-demo-C:\owner-data\not-for-feedback";
+        Exception error = category switch
+        {
+            "access" => new UnauthorizedAccessException(privateDetail),
+            "argument" => new ArgumentException(privateDetail),
+            "security" => new System.Security.SecurityException(privateDetail),
+            _ => new ExternalException(privateDetail)
+        };
+        var picker = new Picker(_ => throw error);
+        WindowsUi.Run(form =>
+        {
+            Seed(form);
+            var before = Rows(form);
+            Button(form, "exportButton").PerformClick();
+            Assert.Contains("Export failed:", Feedback(form).Text);
+            Assert.Contains("Records were kept", Feedback(form).Text);
+            Assert.DoesNotContain(privateDetail, Feedback(form).Text);
+            Assert.DoesNotContain(privateDetail, Feedback(form).AccessibleDescription);
+            Assert.Equal(before, Rows(form));
+            Assert.Equal("demo", Practice(form).Text);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
+        }, picker: picker);
+    }
 }

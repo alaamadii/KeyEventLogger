@@ -5,10 +5,10 @@ namespace KeyEventLogger.App.Forms;
 
 public sealed partial class MainForm
 {
-    private readonly RecordingSession session = new();
+    private readonly RecordingSession session;
     private readonly TimeProvider clock;
     private readonly TextBox practiceText;
-    private readonly ListBox eventList;
+    private readonly ListView eventList;
     private readonly Label recordingStatus;
     private readonly Label eventCount;
     private readonly Label emptyState;
@@ -51,7 +51,12 @@ public sealed partial class MainForm
     private void ClearClicked(object? sender, EventArgs e)
     {
         if (exportInProgress || closing) { return; }
+        var wasAtCapacity = session.IsAtCapacity;
         session.Clear();
+        if (wasAtCapacity)
+        {
+            stoppedReason = "Stopped — events cleared. Press Start to record again.";
+        }
         eventList.Items.Clear();
         RefreshPresentation();
         if (session.IsRecording)
@@ -75,9 +80,23 @@ public sealed partial class MainForm
         var record = new KeyEventRecord(e.KeyCode.ToString(), eventType, clock.GetLocalNow());
         if (session.TryRecord(record))
         {
-            eventList.Items.Add(string.Create(CultureInfo.InvariantCulture,
-                $"{record.Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}  |  {record.EventType}  |  {record.KeyName}"));
-            eventList.TopIndex = eventList.Items.Count - 1;
+            var row = new ListViewItem(record.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff zzz", CultureInfo.InvariantCulture))
+            {
+                Tag = record,
+                BackColor = session.Count % 2 == 0 ? UiTheme.AlternateRow : UiTheme.Surface,
+                ToolTipText = eventType == KeyEventType.KeyDown
+                    ? "KeyDown: the key was pressed; held keys can repeat."
+                    : "KeyUp: the key was released."
+            };
+            row.SubItems.Add(record.EventType.ToString());
+            row.SubItems.Add(record.KeyName);
+            eventList.Items.Add(row);
+            row.EnsureVisible();
+            if (session.IsAtCapacity)
+            {
+                stoppedReason = string.Create(CultureInfo.InvariantCulture,
+                    $"Stopped — session limit reached ({session.Capacity:N0} events). Export or clear events before starting again.");
+            }
             RefreshPresentation();
         }
     }
@@ -98,7 +117,11 @@ public sealed partial class MainForm
             ? "Recording — practice area only."
             : stoppedReason;
         recordingStatus.AccessibleDescription = recordingStatus.Text;
-        startButton.Enabled = !session.IsRecording && !closing && !exportInProgress;
+        recordingStatus.BackColor = session.IsRecording ? UiTheme.RecordingSurface : UiTheme.Surface;
+        recordingStatus.ForeColor = session.IsRecording ? UiTheme.Recording : UiTheme.Text;
+        startButton.Enabled = !session.IsRecording && !session.IsAtCapacity && !closing && !exportInProgress;
+        startButton.BackColor = startButton.Enabled ? UiTheme.Accent : SystemColors.Control;
+        startButton.ForeColor = startButton.Enabled ? UiTheme.OnAccent : SystemColors.GrayText;
         stopButton.Enabled = session.IsRecording && !closing && !exportInProgress;
         clearButton.Enabled = session.Count > 0 && !closing && !exportInProgress;
         exportButton.Enabled = session.Count > 0 && !closing && !exportInProgress;

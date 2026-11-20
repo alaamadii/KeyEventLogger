@@ -111,3 +111,35 @@ Context: owned modal dialogs must not depend on deactivation timing, and tests s
 Decision: stop explicitly, take a stable snapshot and disable actions before calling an owned/disposed picker. Use two small App interfaces for selection/write tests. Keep short local I/O synchronous with a busy guard and bounded separate feedback.
 Rationale: preserve simple lifetime/state behavior and avoid background writes after closing. [OverwritePrompt](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog.overwriteprompt?view=windowsdesktop-10.0) provides normal user confirmation.
 Consequences: cancel/error/success retain records and remain stopped; Start is always explicit. A closed owner after selection cannot write. Large exports may briefly pause UI. Native save/overwrite manual acceptance remains pending; substituted-dialog tests are labeled separately.
+
+## ADR-017 — Readable native event table and explicit actions — 2026-11-20
+
+Context: the owner found the presentation too basic and interpreted Space/Back Down/Up rows as duplicated input.
+
+Decision: use a read-only Details ListView with separate timestamp, event and key columns, alternating rows, explanatory tooltips and a visible one-press/two-events hint. Use Segoe UI, separated surfaces, a primary Start action, a distinct disabled style and text-backed state colors. Split layout construction into MainForm.Layout; keep recording logic separate.
+
+Consequences: the view is still derived from immutable model records; it is never the export source. Default client is 1040x720 and minimum window 900x680 at 96 DPI. High-contrast system colors are selected when constructing the window; live theme transition acceptance remains manual. All three owned fonts are disposed. No filtering, statistics or event pairing is added.
+
+## ADR-018 — Bound retained events and stop visibly — 2026-11-20
+
+Context: a held key or long session could grow the original in-memory collection indefinitely.
+
+Decision: RecordingSession has a positive capacity, default 10,000. Accept the final event, stop at the boundary and refuse Start until Clear releases capacity. Never evict old records. Keep export available and explain the stopped reason. Limit native practice editing to 4,096 characters.
+
+Consequences: Clear still preserves practice text and state; after a full session it leaves recording stopped. A boundary may split a Down/Up pair. Capacity belongs in Core; clock, focus and UI remain in App. Small test capacities verify the real boundary without thousands of UI messages. MaxLength is an editing limit, not secure memory erasure or a general memory quota.
+
+## ADR-019 — Conservative Windows destination names — 2026-11-20
+
+Context: existing validation covered ASCII device names but omitted superscript-digit COM/LPT aliases and base-name whitespace variants.
+
+Decision: validate names before querying drive/filesystem metadata; reject the additional reserved variants and inspect the drive root for reparse redirection too. Microsoft documents superscript device aliases in [Windows naming rules](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file).
+
+Consequences: malformed/device paths fail without staging. Existing local staging/cleanup remains unchanged. This is conservative input validation, not protection against a malicious concurrent filesystem actor.
+
+## ADR-020 — Controlled errors and explicit dependency audit — 2026-11-20
+
+Context: raw exception messages could display implementation paths and inconsistent technical wording.
+
+Decision: map recoverable export errors to stable guidance without raw exception text/stack details. Keep successful user-selected destination feedback. Use a repository NuGet.Config with official NuGet package/audit sources and explicit all-dependency auditing from low severity; keep warnings as errors.
+
+Consequences: error/cancel/success preserve data and stay stopped. Do not record diagnostic logs containing event data or exceptions. Known-advisory checks depend on current source data and are not proof of absence of vulnerabilities. See [NuGet audit behavior](https://learn.microsoft.com/en-us/nuget/concepts/auditing-packages).
