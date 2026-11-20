@@ -143,3 +143,9 @@ Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f
 - Published code c954743, ListBox compliance c393378 and documentation/captures d3bdfe5 on feat/usability-security-review. Opened [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targeting main; no automatic merge.
 - Fresh isolated checkout of d3bdfe56748115a8880089be7224084fc2253a5b passed doctor/check: 91 cases, zero failures/skips/build warnings/errors, formatting clean. Its actual EXE title/Stopped/normal close exit 0 passed and the tree stayed clean. Same computer only; no local helper/configuration required to build/run.
 - Anonymous public metadata and README/USER_GUIDE/SECURITY/new-image URLs returned 200. Candidate Windows CI run 44683520537 passed. Exact final-head CI SHA/run/results are in PR #6; the later receipt commits change documentation only.
+
+### Final capacity-message regression
+
+- Kept the full-session stop explanation derived from current model state so an export/cancel or focus event cannot hide why Start remains disabled. Added an export-at-capacity regression and min-size full-state layout coverage. Current full check passes 30 Core + 62 App = 92, zero failures/skips/build warnings/errors and clean formatting.
+- An intermediate native export fixture lacked a stable active/focused Start setup in one run; it now explicitly activates/focuses the owned Form and asserts native active-window identity before Start. Production capture gates remain unchanged. The full suite passed after this fixture correction.
+- The existing c393378 images are retained because the depicted non-full recording/export states and layout are unchanged. Updated clean-checkout/final-head receipts follow actual execution.

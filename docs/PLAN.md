@@ -92,7 +92,7 @@ After PR #5, the owner requested further interface, code-quality, security and d
 - [x] 10,000-event stop boundary with no eviction; Clear/restart/exports remain explicit.
 - [x] Native 4,096-character entry limit; reserved filename hardening and controlled export errors.
 - [x] Official package/audit sources and explicit all-dependency advisory checking.
-- [x] 91 local tests (30 Core, 61 App), actual EXE close, controlled-picker real-I/O probe and genuine new captures.
+- [x] 92 local tests (30 Core, 62 App), actual EXE close, controlled-picker real-I/O probe and genuine new captures.
 - [x] User/security/code/architecture guides reconciled; historical evidence retained separately.
 - [x] Clean-checkout/publication receipt recorded; exact final-head hosted results tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6).
 - [ ] Owner approves the new interface/images and supplies remaining manual/second-computer evidence.

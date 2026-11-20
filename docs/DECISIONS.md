@@ -153,3 +153,7 @@ Context: the final requirements reconciliation confirmed that the course sheet e
 Decision: retain a native ListBox, subclassed as EventListBox with fixed-height column drawing and native header labels. A private immutable presentation row wraps the Core record and supplies a complete timestamp/type/name ToString for native item accessibility.
 
 Consequences: the improved aligned columns, alternating rows and native selection/navigation remain, without changing the required control family. Drawing uses the borrowed paint Graphics/font and disposes its temporary brush; row metrics are refreshed for font/DPI changes. Recording still adds model-derived rows and export still reads only the session snapshot. No table data is manufactured. Final captures must reference this implementation, not the earlier exploration.
+
+## ADR-022 — Derive the full-session explanation from state — 2026-11-20
+
+The recording-status projection prioritizes IsAtCapacity over the last stopped reason. Export/cancel/focus changes may update that history but cannot obscure why Start is unavailable. Clear releases the limit and restores a useful explicit-start message. A native UI regression verifies cancellation at capacity and another checks full-state minimum layout. Screenshots of non-full states remain visually accurate.

@@ -34,7 +34,7 @@ Only practiceText.KeyDown/KeyUp are subscribed. RecordEvent requires a recording
 
 Recording/export never reads practiceText.Text. Native editing remains native; MaxLength bounds ordinary user entry/paste to 4,096 characters. Every delivered Down/Up/repeat is separate. Tab stays navigation and no missing partner is synthesized. Count means events, not edits.
 
-Start retains history and focuses practice. Stop retains records. Clear clears model/rows/count while preserving practice text/state. At capacity, UI shows a specific stopped reason, disables Start and keeps Clear/Export available.
+Start retains history and focuses practice. Stop retains records. Clear clears model/rows/count while preserving practice text/state. At capacity, UI derives a specific stopped reason from the model, disables Start and keeps Clear/Export available. Export/cancellation/deactivation do not hide the full-session explanation.
 
 Deactivate/minimize stop; Activated/restore never start. Within-Form focus moves do not stop the session, but only focused-practice events are accepted. Closing stops before shutdown; canceled close permits an explicit new Start. Disposal stops and detaches subscriptions before disposing native controls, tooltip and all three owned fonts.
 
@@ -62,6 +62,6 @@ I/O remains synchronous, guarded against reentry. A 10,000-event limit bounds or
 
 ## Evidence boundary
 
-91 current cases (30 Core, 61 App) cover model/session, native input/layout and export/file behavior. UI probes/captures use synthetic local messages and a controlled picker with the real formatter/writer. They do not establish human native Save/desktop focus/display/F5 or second-computer acceptance.
+92 current cases (30 Core, 62 App) cover model/session, native input/layout and export/file behavior. UI probes/captures use synthetic local messages and a controlled picker with the real formatter/writer. They do not establish human native Save/desktop focus/display/F5 or second-computer acceptance.
 
 See [security boundary](SECURITY.md), [code walkthrough](CODE_GUIDE.md), [testing](TESTING.md) and [owner acceptance](SUBMISSION.md).

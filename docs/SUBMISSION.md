@@ -17,10 +17,10 @@ The selected public repository is [alaamadii/KeyEventLogger](https://github.com/
 - [x] Independent Core and programmatic Windows Forms App.
 - [x] Local explicit recording, timestamps, status, Stop/Clear and count.
 - [x] Local TXT snapshot export, cancellation/error retention and retry.
-- [x] Current regression: 91 cases (30 Core + 61 App), zero build warnings/errors/failures/skips.
+- [x] Current regression: 92 cases (30 Core + 62 App), zero build warnings/errors/failures/skips.
 - [x] Two authentic redesigned-interface screenshots from c393378; controlled picker explicitly disclosed; new owner approval pending.
 - [x] Source-linked [code walkthrough](CODE_GUIDE.md).
-- [x] New quality candidate d3bdfe5 clean-checkout, actual EXE close and public artifact receipt recorded in [TESTING](TESTING.md). Earlier 9254884 evidence is historical.
+- [ ] Updated quality-candidate clean-checkout receipt after the capacity-message fix; d3bdfe5 / 9254884 evidence is historical.
 - [x] Current quality-review hosted evidence tracked on [draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6), including the exact final-head SHA/run/result. PR #5 results are historical.
 - [ ] Owner manual results, image approval and second-computer evidence.
 - [ ] Owner approves final PR and course submission readiness.

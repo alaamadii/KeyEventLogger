@@ -2,15 +2,15 @@
 
 ## Current interface/security review — 2026-11-20
 
-Branch: feat/usability-security-review. Based on owner-merged PR #5, main 06045f3. Runtime/test source: c39337871269eb391c394db3ee39f71f4aaeb35f.
+Branch: feat/usability-security-review. Based on owner-merged PR #5, main 06045f3. Capture source: c39337871269eb391c394db3ee39f71f4aaeb35f. Current runtime/test SHA and hosted results are recorded on PR #6.
 
 Environment: Windows 10.0.22631 x64, SDK 10.0.402, WindowsDesktop 10.0.13, Git 2.53.0.windows.1.
 
 | Check | Executed result |
 | --- | --- |
 | ./scripts/dev.ps1 doctor | SDK/runtime/Git available |
-| ./scripts/dev.ps1 check | Restore/Release build/test/format pass; 30 Core + 61 App = 91; 0 failures/skips/build warnings/errors |
-| Capacity regression | Final event stops without eviction; full Start rejected; Clear releases capacity and requires explicit restart |
+| ./scripts/dev.ps1 check | Restore/Release build/test/format pass; 30 Core + 62 App = 92; 0 failures/skips/build warnings/errors |
+| Capacity regression | Final event stops without eviction; full Start rejected; Clear releases capacity and requires explicit restart; the full-session explanation survives export cancellation |
 | Native Space / Back | One native edit, separate Down/Up rows, correct count; caret explicitly positioned for the test |
 | Existing lifecycle/layout regression | Local focus/start/stop/clear/cancel-close gates, table presentation and minimum/resized bounds pass |
 | File policy and errors | Reserved superscript/whitespace aliases rejected before metadata access; controlled errors retain data and omit raw details |
@@ -34,7 +34,9 @@ See [security boundary](SECURITY.md), [user guide](USER_GUIDE.md), [capture prov
 
 
 
-## Current publication receipt — 2026-11-20
+The final capacity-message regression raised the current count to 92 (30 Core, 62 App). One intermediate export test failed its Start setup when native activation/focus was not established; the fixture now explicitly activates/focuses its owned Form and asserts native active-window identity before Start. The complete check passed afterward; production focus gates were not loosened. The min-size full-session layout is covered too. Existing source-c393378 screenshots still match their depicted non-full states.
+
+## Earlier candidate publication receipt — 2026-11-20
 
 [Draft PR #6](https://github.com/alaamadii/KeyEventLogger/pull/6) targets main from feat/usability-security-review.
 

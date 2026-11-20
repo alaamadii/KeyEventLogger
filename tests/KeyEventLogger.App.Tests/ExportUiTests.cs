@@ -212,6 +212,9 @@ public sealed class ExportUiTests
     private static void Seed(MainForm form)
     {
         Practice(form).Text = "demo";
+        WindowsUi.Activate(form);
+        Assert.True(Practice(form).Focus());
+        Assert.Equal(form.Handle, WindowsUi.ActiveWindow);
         Button(form, "startButton").PerformClick();
         Assert.True(Button(form, "stopButton").Enabled);
         SendKey(Practice(form), Keys.A, false);
@@ -283,5 +286,28 @@ public sealed class ExportUiTests
             Assert.False(Button(form, "stopButton").Enabled);
             Assert.True(Button(form, "exportButton").Enabled);
         }, picker: picker);
+    }
+
+    [Fact]
+    public void ExportAtCapacityKeepsTheLimitExplanationAndStartDisabled()
+    {
+        var picker = new Picker(_ => null);
+        WindowsUi.Run(form =>
+        {
+            Seed(form);
+            Assert.Contains("limit reached (2 events)", Status(form));
+            var before = Rows(form);
+            Button(form, "exportButton").PerformClick();
+            Assert.Contains("canceled", Feedback(form).Text);
+            Assert.Contains("limit reached (2 events)", Status(form));
+            Assert.Equal(before, Rows(form));
+            Assert.Equal("demo", Practice(form).Text);
+            Assert.False(Button(form, "startButton").Enabled);
+            Assert.False(Button(form, "stopButton").Enabled);
+            Assert.True(Button(form, "exportButton").Enabled);
+            Button(form, "clearButton").PerformClick();
+            Assert.True(Button(form, "startButton").Enabled);
+            Assert.DoesNotContain("limit reached", Status(form));
+        }, picker: picker, capacity: 2);
     }
 }

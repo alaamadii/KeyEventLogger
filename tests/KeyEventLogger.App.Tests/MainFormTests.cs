@@ -464,6 +464,7 @@ public sealed class MainFormTests
     {
         WindowsUi.Run(form =>
         {
+            form.Size = form.MinimumSize;
             Practice(form).Text = "sample";
             Start(form);
             SendPair(Practice(form), Keys.A);
@@ -471,6 +472,7 @@ public sealed class MainFormTests
             Assert.Equal(3, Events(form).Items.Count);
             Assert.Equal("3 events", Count(form));
             Assert.Contains("limit reached (3 events)", Status(form));
+            AssertLayout(form);
             Assert.False(Button(form, "startButton").Enabled);
             Assert.False(Button(form, "stopButton").Enabled);
             Assert.True(Button(form, "exportButton").Enabled);

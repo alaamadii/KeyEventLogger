@@ -81,11 +81,6 @@ public sealed partial class MainForm
         if (session.TryRecord(record))
         {
             eventList.AddRecord(record);
-            if (session.IsAtCapacity)
-            {
-                stoppedReason = string.Create(CultureInfo.InvariantCulture,
-                    $"Stopped — session limit reached ({session.Capacity:N0} events). Export or clear events before starting again.");
-            }
             RefreshPresentation();
         }
     }
@@ -102,7 +97,10 @@ public sealed partial class MainForm
 
     private void RefreshPresentation()
     {
-        recordingStatus.Text = session.IsRecording
+        recordingStatus.Text = session.IsAtCapacity
+            ? string.Create(CultureInfo.InvariantCulture,
+                $"Stopped — session limit reached ({session.Capacity:N0} events). Export or clear events before starting again.")
+            : session.IsRecording
             ? "Recording — practice area only."
             : stoppedReason;
         recordingStatus.AccessibleDescription = recordingStatus.Text;

@@ -77,4 +77,4 @@ The merged PR #5 is the historical preparation baseline. The owner then requeste
 | Dependency policy | Official NuGet sources, restore audit, dated advisory query | Known-source snapshot, no blanket security claim |
 | Precise explanation | [User guide](USER_GUIDE.md), [security boundary](SECURITY.md), source-linked CODE_GUIDE | Human native/focus/display/F5 and second-computer results remain separately pending |
 
-No statistics, filtering, global input capture, network delivery or automatic saving is added. Current full check: 91 cases (30 Core + 61 App), zero failures/skips/build warnings/errors.
+No statistics, filtering, global input capture, network delivery or automatic saving is added. Current full check: 92 cases (30 Core + 62 App), zero failures/skips/build warnings/errors.

@@ -26,7 +26,7 @@ GetSnapshot uses ToArray plus a read-only wrapper. A read-only interface alone w
 2. RecordEvent requires recording, activation, Form/practice focus and a live nonminimized/nonclosing window.
 3. App maps e.KeyCode.ToString() and supplies TimeProvider.GetLocalNow(); the default is System and tests can supply a fixed provider.
 4. Session accepts an immutable record; the Form adds one immutable display row to [EventListBox](../src/KeyEventLogger.App/Forms/EventListBox.cs), a native ListBox that draws aligned timestamp/type/name columns. Its complete ToString preserves native item accessibility.
-5. Presentation updates count/actions/state. At capacity it explains the stop and disables Start while preserving Export/Clear.
+5. Presentation updates count/actions/state. At capacity it derives the full-session explanation from the model and disables Start while preserving Export/Clear. Export/cancel/focus changes cannot replace that reason with a less useful stopped message.
 
 No snapshot/rebind occurs per key and no table string becomes a domain input. Recording/export never reads practiceText.Text. Native editing remains native; user entry/paste has a 4,096-character MaxLength.
 

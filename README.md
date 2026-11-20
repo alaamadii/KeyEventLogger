@@ -87,7 +87,7 @@ KeyEventLogger.slnx           Solution
 
 ## Validation
 
-On 2026-11-20, the full local check passed: **91 tests — 30 Core + 61 App**, zero failures/skips/build warnings/errors, formatting clean. Coverage includes focus/stop gates, native Space/Back editing, capacity, snapshots, file bytes, failure retention, reserved filenames, controlled error text and layouts.
+On 2026-11-20, the full local check passed: **92 tests — 30 Core + 62 App**, zero failures/skips/build warnings/errors, formatting clean. Coverage includes focus/stop gates, native Space/Back editing, capacity, snapshots, file bytes, failure retention, reserved filenames, controlled error text and layouts.
 
 The dependency query reported no known vulnerable packages in configured sources at that time; this is not a security guarantee. Actual EXE startup/normal close exited 0. Synthetic actual-Form probes checked real export bytes, cancel/read-only failure/retry and window layouts with a controlled picker.
 
