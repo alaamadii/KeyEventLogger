@@ -154,3 +154,13 @@ Branch: feat/usability-security-review. Based on owner-merged PR #5 (main 06045f
 
 - Published 72bc356dec053d4a1d9407a164ee582aba365cf6 and tested another fresh isolated checkout on the same Windows/SDK: doctor/check pass, 30 Core + 62 App = 92, no failures/skips/build warnings/errors and clean formatting. Actual cloned EXE title/Stopped/normal close exit 0 passed; tree clean.
 - Anonymous candidate README/USER_GUIDE/SECURITY/new-image URLs returned 200. Candidate hosted run 44684347808 passed. Final documentation-only receipt SHA and exact hosted run/results are tracked on PR #6. No second-computer or human/native acceptance is inferred.
+
+## 2026-11-20 — Single-press recording follow-up
+
+The owner reports G appearing twice for a short press and requests one recorded row. PR #6 is still open, so this follow-up continues feat/usability-security-review.
+
+- Identified separate KeyDown/KeyUp capture as the cause; removed App's KeyUp subscription/handler. The underlying Core value/formatter can still represent both event types; no persisted import is added.
+- One short delivered press now adds one KeyDown row. Release alone adds none. Intentional repeated presses and native held-key repeats are retained, without key/time deduplication.
+- Updated native input/lifecycle/export assertions for the new policy. Added G alongside Space/Back editing checks and two intentional G presses at identical test timestamps. Export fixtures now create two distinct presses rather than relying on a release.
+- ./scripts/dev.ps1 check passes: 30 Core + 64 App = 94, zero failures/skips/build warnings/errors and formatting clean. No focus, retention or file-security boundary was broadened.
+- Current user-facing documentation/captures and exact-head hosted evidence are updated separately after execution. No automatic merge.

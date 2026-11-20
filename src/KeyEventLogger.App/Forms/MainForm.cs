@@ -59,7 +59,7 @@ public sealed partial class MainForm : Form
         layout.Controls.Add(actions, 0, 2);
 
         var availability = CreateLabel("featureAvailability",
-            "One press usually creates KeyDown + KeyUp. Held keys may repeat. Export TXT stops recording before choosing a file.");
+            "One press creates one row. Release is not recorded; held keys may repeat. Export TXT stops recording before choosing a file.");
         availability.ForeColor = UiTheme.Muted;
         availability.Margin = new Padding(0, 10, 0, 18);
         layout.Controls.Add(availability, 0, 3);

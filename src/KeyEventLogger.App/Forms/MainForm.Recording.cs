@@ -24,7 +24,6 @@ public sealed partial class MainForm
     private void BindRecording()
     {
         practiceText.KeyDown += PracticeKeyDown;
-        practiceText.KeyUp += PracticeKeyUp;
         startButton.Click += StartClicked;
         stopButton.Click += StopClicked;
         clearButton.Click += ClearClicked;
@@ -65,11 +64,9 @@ public sealed partial class MainForm
         }
     }
 
-    private void PracticeKeyDown(object? sender, KeyEventArgs e) => RecordEvent(e, KeyEventType.KeyDown);
+    private void PracticeKeyDown(object? sender, KeyEventArgs e) => RecordEvent(e);
 
-    private void PracticeKeyUp(object? sender, KeyEventArgs e) => RecordEvent(e, KeyEventType.KeyUp);
-
-    private void RecordEvent(KeyEventArgs e, KeyEventType eventType)
+    private void RecordEvent(KeyEventArgs e)
     {
         if (!recordingReady || closing || IsDisposed || Disposing || !session.IsRecording ||
             !windowActive || !ContainsFocus || WindowState == FormWindowState.Minimized || !practiceText.Focused)
@@ -77,7 +74,7 @@ public sealed partial class MainForm
             return;
         }
 
-        var record = new KeyEventRecord(e.KeyCode.ToString(), eventType, clock.GetLocalNow());
+        var record = new KeyEventRecord(e.KeyCode.ToString(), KeyEventType.KeyDown, clock.GetLocalNow());
         if (session.TryRecord(record))
         {
             eventList.AddRecord(record);
@@ -171,7 +168,6 @@ public sealed partial class MainForm
 
         recordingReady = false;
         practiceText.KeyDown -= PracticeKeyDown;
-        practiceText.KeyUp -= PracticeKeyUp;
         startButton.Click -= StartClicked;
         stopButton.Click -= StopClicked;
         clearButton.Click -= ClearClicked;

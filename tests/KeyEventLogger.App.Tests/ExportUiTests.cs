@@ -95,7 +95,8 @@ public sealed class ExportUiTests
             Assert.Equal(2, records.Count);
             Assert.Equal("A", records[0].KeyName);
             Assert.Equal(KeyEventType.KeyDown, records[0].EventType);
-            Assert.Equal(KeyEventType.KeyUp, records[1].EventType);
+            Assert.Equal(KeyEventType.KeyDown, records[1].EventType);
+            Assert.Equal("B", records[1].KeyName);
             var list = Assert.IsAssignableFrom<IList<KeyEventRecord>>(records);
             Assert.Throws<NotSupportedException>(() => list.Clear());
             return path;
@@ -219,6 +220,8 @@ public sealed class ExportUiTests
         Assert.True(Button(form, "stopButton").Enabled);
         SendKey(Practice(form), Keys.A, false);
         SendKey(Practice(form), Keys.A, true);
+        SendKey(Practice(form), Keys.B, false);
+        SendKey(Practice(form), Keys.B, true);
         Assert.Equal(2, Events(form).Items.Count);
         Assert.True(Button(form, "exportButton").Enabled);
     }

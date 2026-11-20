@@ -196,7 +196,7 @@ public sealed partial class MainForm
         {
             Name = "eventList",
             AccessibleName = "Recorded events",
-            AccessibleDescription = "Read-only columns: local timestamp and UTC offset, KeyDown or KeyUp, and virtual-key name. A press normally has both events.",
+            AccessibleDescription = "Read-only columns: local timestamp and UTC offset, KeyDown (press), and virtual-key name. A short press creates one row; release is not recorded.",
             Dock = DockStyle.Fill,
             Margin = Padding.Empty,
             TabIndex = 0

@@ -157,3 +157,11 @@ Consequences: the improved aligned columns, alternating rows and native selectio
 ## ADR-022 — Derive the full-session explanation from state — 2026-11-20
 
 The recording-status projection prioritizes IsAtCapacity over the last stopped reason. Export/cancel/focus changes may update that history but cannot obscure why Start is unavailable. Clear releases the limit and restores a useful explicit-start message. A native UI regression verifies cancellation at capacity and another checks full-state minimum layout. Screenshots of non-full states remain visually accurate.
+
+## ADR-023 — One recorded row per short press — 2026-11-20
+
+Context: the owner again reported G appearing twice and wants one recorded row for a short press, rather than separate press/release records.
+
+Decision: App subscribes only to practice KeyDown. KeyUp is not a recording source. Retain every delivered KeyDown, including intentional consecutive presses, modifiers and native held-key repeats. Do not deduplicate by key name or timestamp.
+
+Consequences: this supersedes the earlier App Down/Up capture policy. Core's event type and formatter still support explicit KeyUp values for domain compatibility/tests, but the production UI/export session now contains only captured KeyDown records. Focus/start/stop/capacity/export boundaries are unchanged. Native editing is not suppressed. Current screenshots and documentation must reflect four DEMO presses producing four records.
